@@ -1,0 +1,361 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
+  <diagram name="Page-1" id="Dmv1GfopMEG3uRgbREsx">
+    <mxGraphModel dx="872" dy="563" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PINAVaPIAck_JHFycrt5-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-1" target="PINAVaPIAck_JHFycrt5-10" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-1" value="Student" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="40" y="260" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-64" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-4" target="PINAVaPIAck_JHFycrt5-59" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-4" value="Instructor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="40" y="830" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-10" target="PINAVaPIAck_JHFycrt5-48" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="210" y="199.9999999999999" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="180" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-10" value="Home" style="whiteSpace=wrap;html=1;aspect=fixed;shadow=1;" parent="1" vertex="1">
+          <mxGeometry x="140" y="250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-14" target="PINAVaPIAck_JHFycrt5-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="400" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="330" y="365" />
+              <mxPoint x="180" y="365" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-18" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PINAVaPIAck_JHFycrt5-17" vertex="1" connectable="0">
+          <mxGeometry x="0.0728" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-14" value="Login/Register" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="290" y="250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-16" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="230" y="338" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-19" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-19" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="465" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-19" value="Courses" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="425" y="250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-21" value="Single course" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="590" y="250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="465" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="620" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-23" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-23" value="Student Dashbord" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="425" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="770" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-25" value="Is the course Purchased" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="730" y="250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-28" value="Course Player&amp;nbsp;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="730" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-30" value="Check Out" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="730" y="110" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-31" value="Yes" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="750" y="338" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-35" value="Purchased Courses" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="270" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-37" value="Payments" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="425" y="550" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-39" value="WishList" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="570" y="400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-43" value="Profile Settings" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="270" y="550" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-45" value="Is the course Purchased" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="580" y="550" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-48" value="Contact" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="240" y="160" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-59" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-59" target="PINAVaPIAck_JHFycrt5-63" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="769.9999999999999" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="160" y="770" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-59" value="Home" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="120" y="820" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-60" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-61" target="PINAVaPIAck_JHFycrt5-59" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="970" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="310" y="935" />
+              <mxPoint x="160" y="935" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-61" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-74" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PINAVaPIAck_JHFycrt5-65" vertex="1" connectable="0">
+          <mxGeometry x="-0.0483" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-61" value="Login/Register" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="270" y="820" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-62" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="210" y="910" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-63" value="Contact" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="220" y="730" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="970" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="630" y="970" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-73" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="970" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-73" value="Instructor Dashbord" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="430" y="820" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-76" value="Create Courses" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="590" y="820" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-78" value="Created Courses" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="430" y="680" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-80" value="Payments" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="430" y="970" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-84" value="Profile" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="590" y="970" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-86" value="Notifications" style="whiteSpace=wrap;html=1;aspect=fixed;glass=0;rounded=0;shadow=0;" parent="1" vertex="1">
+          <mxGeometry x="300" y="970" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-88" value="Notifications" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FFFFFF;" parent="1" vertex="1">
+          <mxGeometry x="130" y="550" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-91" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-25" target="PINAVaPIAck_JHFycrt5-30" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="210" as="targetPoint" />
+            <mxPoint x="770" y="210" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-92" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PINAVaPIAck_JHFycrt5-91" vertex="1" connectable="0">
+          <mxGeometry x="-0.119" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-93" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-94" target="PINAVaPIAck_JHFycrt5-97" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-94" value="Admin&amp;nbsp;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1260" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-95" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-97" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="1290" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="270" y="1291" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-97" value="Home" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="120" y="1250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-98" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-101" target="PINAVaPIAck_JHFycrt5-97" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="1400" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="310" y="1365" />
+              <mxPoint x="160" y="1365" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-99" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-101" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="1290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-100" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="PINAVaPIAck_JHFycrt5-99" vertex="1" connectable="0">
+          <mxGeometry x="-0.0483" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-101" value="Login/Register" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="270" y="1250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-102" value="No" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="210" y="1340" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-104" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="1290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-105" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-106" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="PINAVaPIAck_JHFycrt5-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="1400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-107" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="630" y="1400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-108" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-109" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="1400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-109" value="Instructor Dashbord" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="430" y="1250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-110" value="Mange Users" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="590" y="1250" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-111" value="Mange Courses" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="430" y="1110" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-112" value="Payments" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="430" y="1400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-113" value="&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span style=&quot;white-space-collapse: preserve;&quot;&gt;Manage Categories&lt;/span&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="590" y="1400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-114" value="Notifications" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="300" y="1400" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="PINAVaPIAck_JHFycrt5-116" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;" parent="1" source="PINAVaPIAck_JHFycrt5-113" target="PINAVaPIAck_JHFycrt5-113" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="{&#xa;  &quot;users&quot;: [&#xa;    {&#xa;      &quot;id&quot;: &quot;u1&quot;,&#xa;      &quot;name&quot;: &quot;Omar Wael&quot;,&#xa;      &quot;email&quot;: &quot;omar@student.com&quot;,&#xa;      &quot;role&quot;: &quot;STUDENT&quot;,&#xa;      &quot;avatarUrl&quot;: &quot;/avatars/omar.png&quot;,&#xa;      &quot;enrolledCourses&quot;: [&quot;c1&quot;, &quot;c2&quot;],&#xa;      &quot;wishlist&quot;: [&quot;c3&quot;],&#xa;      &quot;payments&quot;: [&#xa;        {&#xa;          &quot;id&quot;: &quot;p1&quot;,&#xa;          &quot;courseId&quot;: &quot;c1&quot;,&#xa;          &quot;amount&quot;: 49.99,&#xa;          &quot;method&quot;: &quot;Visa&quot;,&#xa;          &quot;status&quot;: &quot;Paid&quot;,&#xa;          &quot;paidAt&quot;: &quot;2025-07-12T08:30:00Z&quot;&#xa;        },&#xa;        {&#xa;          &quot;id&quot;: &quot;p2&quot;,&#xa;          &quot;courseId&quot;: &quot;c2&quot;,&#xa;          &quot;amount&quot;: 0,&#xa;          &quot;method&quot;: &quot;Free&quot;,&#xa;          &quot;status&quot;: &quot;Completed&quot;,&#xa;          &quot;paidAt&quot;: &quot;2025-07-13T09:00:00Z&quot;&#xa;        }&#xa;      ],&#xa;      &quot;reviews&quot;: [&#xa;        {&#xa;          &quot;courseId&quot;: &quot;c1&quot;,&#xa;          &quot;rating&quot;: 5,&#xa;          &quot;comment&quot;: &quot;Amazing Nest.js course!&quot;,&#xa;          &quot;date&quot;: &quot;2025-07-14T10:00:00Z&quot;&#xa;        }&#xa;      ]&#xa;    },&#xa;    {&#xa;      &quot;id&quot;: &quot;u2&quot;,&#xa;      &quot;name&quot;: &quot;Sara Mostafa&quot;,&#xa;      &quot;email&quot;: &quot;sara@instructor.com&quot;,&#xa;      &quot;role&quot;: &quot;INSTRUCTOR&quot;,&#xa;      &quot;avatarUrl&quot;: &quot;/avatars/sara.png&quot;,&#xa;      &quot;myCourses&quot;: [&quot;c1&quot;, &quot;c2&quot;, &quot;c3&quot;]&#xa;    }&#xa;  ],&#xa;  &quot;courses&quot;: [&#xa;    {&#xa;      &quot;id&quot;: &quot;c1&quot;,&#xa;      &quot;title&quot;: &quot;Nest.js Mastery&quot;,&#xa;      &quot;description&quot;: &quot;Learn scalable backend development with Nest.js.&quot;,&#xa;      &quot;price&quot;: 49.99,&#xa;      &quot;thumbnail&quot;: &quot;/courses/nestjs.png&quot;,&#xa;      &quot;category&quot;: &quot;Backend&quot;,&#xa;      &quot;published&quot;: true,&#xa;      &quot;instructorId&quot;: &quot;u2&quot;,&#xa;      &quot;lessons&quot;: [&#xa;        {&#xa;          &quot;title&quot;: &quot;Intro to Nest.js&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/nestjs-intro.mp4&quot;&#xa;        },&#xa;        {&#xa;          &quot;title&quot;: &quot;Modules and Controllers&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/nestjs-modules.mp4&quot;&#xa;        }&#xa;      ],&#xa;      &quot;studentsEnrolled&quot;: [&quot;u1&quot;],&#xa;      &quot;reviews&quot;: [&#xa;        {&#xa;          &quot;userId&quot;: &quot;u1&quot;,&#xa;          &quot;rating&quot;: 5,&#xa;          &quot;comment&quot;: &quot;Amazing Nest.js course!&quot;,&#xa;          &quot;date&quot;: &quot;2025-07-14T10:00:00Z&quot;&#xa;        }&#xa;      ]&#xa;    },&#xa;    {&#xa;      &quot;id&quot;: &quot;c2&quot;,&#xa;      &quot;title&quot;: &quot;Intro to TypeScript&quot;,&#xa;      &quot;description&quot;: &quot;Type safety and modern JavaScript combined.&quot;,&#xa;      &quot;price&quot;: 0,&#xa;      &quot;thumbnail&quot;: &quot;/courses/typescript.png&quot;,&#xa;      &quot;category&quot;: &quot;Frontend&quot;,&#xa;      &quot;published&quot;: true,&#xa;      &quot;instructorId&quot;: &quot;u2&quot;,&#xa;      &quot;lessons&quot;: [&#xa;        {&#xa;          &quot;title&quot;: &quot;What is TypeScript?&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/ts-intro.mp4&quot;&#xa;        },&#xa;        {&#xa;          &quot;title&quot;: &quot;Types and Interfaces&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/ts-types.mp4&quot;&#xa;        }&#xa;      ],&#xa;      &quot;studentsEnrolled&quot;: [&quot;u1&quot;],&#xa;      &quot;reviews&quot;: []&#xa;    },&#xa;    {&#xa;      &quot;id&quot;: &quot;c3&quot;,&#xa;      &quot;title&quot;: &quot;MongoDB Essentials&quot;,&#xa;      &quot;description&quot;: &quot;Master NoSQL databases with real-world projects.&quot;,&#xa;      &quot;price&quot;: 29.99,&#xa;      &quot;thumbnail&quot;: &quot;/courses/mongodb.png&quot;,&#xa;      &quot;category&quot;: &quot;Database&quot;,&#xa;      &quot;published&quot;: true,&#xa;      &quot;instructorId&quot;: &quot;u2&quot;,&#xa;      &quot;lessons&quot;: [],&#xa;      &quot;studentsEnrolled&quot;: [],&#xa;      &quot;reviews&quot;: []&#xa;    }&#xa;  ]&#xa;}" link="{&#xa;  &quot;users&quot;: [&#xa;    {&#xa;      &quot;id&quot;: &quot;u1&quot;,&#xa;      &quot;name&quot;: &quot;Omar Wael&quot;,&#xa;      &quot;email&quot;: &quot;omar@student.com&quot;,&#xa;      &quot;role&quot;: &quot;STUDENT&quot;,&#xa;      &quot;avatarUrl&quot;: &quot;/avatars/omar.png&quot;,&#xa;      &quot;enrolledCourses&quot;: [&quot;c1&quot;, &quot;c2&quot;],&#xa;      &quot;wishlist&quot;: [&quot;c3&quot;],&#xa;      &quot;payments&quot;: [&#xa;        {&#xa;          &quot;id&quot;: &quot;p1&quot;,&#xa;          &quot;courseId&quot;: &quot;c1&quot;,&#xa;          &quot;amount&quot;: 49.99,&#xa;          &quot;method&quot;: &quot;Visa&quot;,&#xa;          &quot;status&quot;: &quot;Paid&quot;,&#xa;          &quot;paidAt&quot;: &quot;2025-07-12T08:30:00Z&quot;&#xa;        },&#xa;        {&#xa;          &quot;id&quot;: &quot;p2&quot;,&#xa;          &quot;courseId&quot;: &quot;c2&quot;,&#xa;          &quot;amount&quot;: 0,&#xa;          &quot;method&quot;: &quot;Free&quot;,&#xa;          &quot;status&quot;: &quot;Completed&quot;,&#xa;          &quot;paidAt&quot;: &quot;2025-07-13T09:00:00Z&quot;&#xa;        }&#xa;      ],&#xa;      &quot;reviews&quot;: [&#xa;        {&#xa;          &quot;courseId&quot;: &quot;c1&quot;,&#xa;          &quot;rating&quot;: 5,&#xa;          &quot;comment&quot;: &quot;Amazing Nest.js course!&quot;,&#xa;          &quot;date&quot;: &quot;2025-07-14T10:00:00Z&quot;&#xa;        }&#xa;      ]&#xa;    },&#xa;    {&#xa;      &quot;id&quot;: &quot;u2&quot;,&#xa;      &quot;name&quot;: &quot;Sara Mostafa&quot;,&#xa;      &quot;email&quot;: &quot;sara@instructor.com&quot;,&#xa;      &quot;role&quot;: &quot;INSTRUCTOR&quot;,&#xa;      &quot;avatarUrl&quot;: &quot;/avatars/sara.png&quot;,&#xa;      &quot;myCourses&quot;: [&quot;c1&quot;, &quot;c2&quot;, &quot;c3&quot;]&#xa;    }&#xa;  ],&#xa;  &quot;courses&quot;: [&#xa;    {&#xa;      &quot;id&quot;: &quot;c1&quot;,&#xa;      &quot;title&quot;: &quot;Nest.js Mastery&quot;,&#xa;      &quot;description&quot;: &quot;Learn scalable backend development with Nest.js.&quot;,&#xa;      &quot;price&quot;: 49.99,&#xa;      &quot;thumbnail&quot;: &quot;/courses/nestjs.png&quot;,&#xa;      &quot;category&quot;: &quot;Backend&quot;,&#xa;      &quot;published&quot;: true,&#xa;      &quot;instructorId&quot;: &quot;u2&quot;,&#xa;      &quot;lessons&quot;: [&#xa;        {&#xa;          &quot;title&quot;: &quot;Intro to Nest.js&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/nestjs-intro.mp4&quot;&#xa;        },&#xa;        {&#xa;          &quot;title&quot;: &quot;Modules and Controllers&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/nestjs-modules.mp4&quot;&#xa;        }&#xa;      ],&#xa;      &quot;studentsEnrolled&quot;: [&quot;u1&quot;],&#xa;      &quot;reviews&quot;: [&#xa;        {&#xa;          &quot;userId&quot;: &quot;u1&quot;,&#xa;          &quot;rating&quot;: 5,&#xa;          &quot;comment&quot;: &quot;Amazing Nest.js course!&quot;,&#xa;          &quot;date&quot;: &quot;2025-07-14T10:00:00Z&quot;&#xa;        }&#xa;      ]&#xa;    },&#xa;    {&#xa;      &quot;id&quot;: &quot;c2&quot;,&#xa;      &quot;title&quot;: &quot;Intro to TypeScript&quot;,&#xa;      &quot;description&quot;: &quot;Type safety and modern JavaScript combined.&quot;,&#xa;      &quot;price&quot;: 0,&#xa;      &quot;thumbnail&quot;: &quot;/courses/typescript.png&quot;,&#xa;      &quot;category&quot;: &quot;Frontend&quot;,&#xa;      &quot;published&quot;: true,&#xa;      &quot;instructorId&quot;: &quot;u2&quot;,&#xa;      &quot;lessons&quot;: [&#xa;        {&#xa;          &quot;title&quot;: &quot;What is TypeScript?&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/ts-intro.mp4&quot;&#xa;        },&#xa;        {&#xa;          &quot;title&quot;: &quot;Types and Interfaces&quot;,&#xa;          &quot;videoUrl&quot;: &quot;https://video-host.com/ts-types.mp4&quot;&#xa;        }&#xa;      ],&#xa;      &quot;studentsEnrolled&quot;: [&quot;u1&quot;],&#xa;      &quot;reviews&quot;: []&#xa;    },&#xa;    {&#xa;      &quot;id&quot;: &quot;c3&quot;,&#xa;      &quot;title&quot;: &quot;MongoDB Essentials&quot;,&#xa;      &quot;description&quot;: &quot;Master NoSQL databases with real-world projects.&quot;,&#xa;      &quot;price&quot;: 29.99,&#xa;      &quot;thumbnail&quot;: &quot;/courses/mongodb.png&quot;,&#xa;      &quot;category&quot;: &quot;Database&quot;,&#xa;      &quot;published&quot;: true,&#xa;      &quot;instructorId&quot;: &quot;u2&quot;,&#xa;      &quot;lessons&quot;: [],&#xa;      &quot;studentsEnrolled&quot;: [],&#xa;      &quot;reviews&quot;: []&#xa;    }&#xa;  ]&#xa;}" id="tKTW4y-12xVMTIhWLaj8-1">
+          <mxCell style="text;whiteSpace=wrap;" vertex="1" parent="1">
+            <mxGeometry x="40" y="1560" width="410" height="1650" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="tKTW4y-12xVMTIhWLaj8-2" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="402.5" y="1648" as="sourcePoint" />
+            <mxPoint x="277.5" y="1648" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tKTW4y-12xVMTIhWLaj8-3" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Data&amp;nbsp;&lt;/h1&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1630" width="60" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tKTW4y-12xVMTIhWLaj8-4" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;FrontEnd&lt;/h1&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="tKTW4y-12xVMTIhWLaj8-5" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;BackEnd&lt;/h1&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1510" width="120" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
