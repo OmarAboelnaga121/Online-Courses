@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  student
+  admin
+  instructor
+}
+
+enum Status {
+  Pay
+  Recieve
+}
+
+model User {
+  id               String     @id @default(uuid())
+  username         String     @unique
+  avatarUrl        String
+  role             Role
+  enrolledCourses  String[]
+  wishList         String[]
+  payments         Payment[]  
+  myCourses        Course[]   @relation("CoursesCreatedByInstructor")
+}
+
+model Course {
+  id                String    @id @default(uuid())
+  title             String
+  description       String
+  whatYouWillLearn  String
+  language          String
+  price             Float
+  thumbnail         String
+  category          String
+  published         Boolean
+  instructorId      String
+  lessons           Lesson[]
+  studentsEnrolled  String[]
+  reviews           Review[]
+  instructor        User     @relation("CoursesCreatedByInstructor", fields: [instructorId], references: [id])
+}
+
+model Lesson {
+  id        String   @id @default(uuid())
+  title     String
+  videoUrl  String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  rating    Int
+  comment   String
+  date      DateTime
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  amount    Float
+  date      DateTime @default(now())
+  courseId  Int
+  status    Status
+  method    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
