@@ -13,7 +13,9 @@ import { AuthModule } from './auth/auth.module';
         },
       ],
     }),
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     AuthModule,
  ],
 })

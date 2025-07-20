@@ -7,6 +7,7 @@ CREATE TYPE "Status" AS ENUM ('Pay', 'Recieve');
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "avatarUrl" TEXT NOT NULL,
     "role" "Role" NOT NULL,
