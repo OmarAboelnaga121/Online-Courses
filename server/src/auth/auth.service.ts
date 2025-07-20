@@ -63,12 +63,16 @@ export class AuthService {
     // Remove password before returning
     const { password, ...userWithoutPassword } = user;
     // Generate JWT token
-    const token = this.generateJwtToken(user);
-    return { user: userWithoutPassword, access_token: token };
+    const token = await this.generateJwtToken(user);
+    return { user: userWithoutPassword, access_token: token.access_token };
   }
 
-  private generateJwtToken(user: any): string {
+  async generateJwtToken(user: any): Promise<{ access_token: string; expiresIn: string }> {
     const payload = { sub: user.id, username: user.username, role: user.role };
-    return this.jwtService.sign(payload);
+
+    const access_token = await this.jwtService.signAsync(payload);
+
+    const expiresIn = '1d';
+    return { access_token, expiresIn };
   }
 }
