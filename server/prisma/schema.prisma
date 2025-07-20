@@ -37,6 +37,8 @@ model User {
   wishList         String[]
   payments         Payment[]  
   myCourses        Course[]   @relation("CoursesCreatedByInstructor")
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
 }
 
 model Course {

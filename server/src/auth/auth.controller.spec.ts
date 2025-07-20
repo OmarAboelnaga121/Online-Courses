@@ -10,6 +10,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     const mockAuthService = {
       register: jest.fn(),
+      login: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -41,6 +42,18 @@ describe('AuthController', () => {
 
       const result = await controller.registerStudent(dto);
       expect(authService.register).toHaveBeenCalledWith(dto);
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('login', () => {
+    it('should call AuthService.login with correct data and return its result', async () => {
+      const loginDto = { email: 'test@example.com', password: 'Password123!' };
+      const expectedResult = { user: { id: 1, email: 'test@example.com' }, access_token: 'jwt.token' };
+      (authService.login as jest.Mock).mockResolvedValue(expectedResult);
+
+      const result = await controller.login(loginDto);
+      expect(authService.login).toHaveBeenCalledWith(loginDto);
       expect(result).toEqual(expectedResult);
     });
   });

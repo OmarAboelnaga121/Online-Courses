@@ -5,12 +5,12 @@ import * as argon2 from 'argon2';
 import { Role } from '../../generated/prisma';
 import { LoginUserDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService, private readonly mailerService: MailerService) {}
 
   async register(registerData : RegisterUserDto) {
     // Check username
@@ -47,8 +47,6 @@ export class AuthService {
     return userWithoutPassword;
   }
 
-  
-
   async login(loginData: LoginUserDto) {
     // Find user by email
     const user = await prisma.user.findFirst({ where: { email: loginData.email } });
@@ -65,6 +63,61 @@ export class AuthService {
     // Generate JWT token
     const token = await this.generateJwtToken(user);
     return { user: userWithoutPassword, access_token: token.access_token };
+  }
+
+  async resetPassword(email: string){
+    const user = await prisma.user.findFirst({where:{email: email}});
+    if (!user) throw new Error('User not found');
+
+    // Generate a professional 6-digit numeric reset code
+    const token = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetPasswordToken: token,
+        resetPasswordExpires: expires,
+      },
+    });
+    // the styling of the sent gmail
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'EduFlex Password Reset Request',
+      text: `Dear ${user.name || 'User'},\n\nWe received a request to reset your EduFlex account password.\n\nYour password reset code is: ${token}\n\nThis code will expire in 1 hour. If you did not request a password reset, please ignore this email.\n\nBest regards,\nThe EduFlex Team`,
+      html: `
+        <div style="background:#f4f6fb;padding:40px 0;font-family:'Segoe UI',Arial,sans-serif;">
+          <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.07);padding:32px 28px 28px 28px;">
+            <div style="text-align:center;margin-bottom:24px;">
+              <span style="display:inline-block;background:#4f8cff;color:#fff;font-weight:600;font-size:1.3em;padding:8px 24px;border-radius:8px;letter-spacing:1px;">EduFlex</span>
+            </div>
+            <h2 style="color:#222;font-size:1.4em;margin-bottom:12px;text-align:center;">Password Reset Request</h2>
+            <p style="color:#444;font-size:1em;margin-bottom:24px;text-align:center;">Hi ${user.name || 'there'},<br>We received a request to reset your <b>EduFlex</b> account password.</p>
+            <div style="background:#f0f4ff;border-radius:8px;padding:24px 0;margin:0 auto 24px auto;text-align:center;">
+              <span style="display:inline-block;font-size:2.2em;font-weight:700;letter-spacing:6px;color:#2d5be3;">${token}</span>
+              <div style="font-size:0.95em;color:#888;margin-top:8px;">This code expires in 1 hour</div>
+            </div>
+            <p style="color:#444;font-size:1em;text-align:center;">If you did not request a password reset, you can safely ignore this email.<br><br>For your security, do not share this code with anyone.</p>
+            <div style="margin-top:32px;text-align:center;color:#aaa;font-size:0.95em;">Best regards,<br><b>The EduFlex Team</b></div>
+          </div>
+          <div style="text-align:center;margin-top:24px;color:#b0b0b0;font-size:0.9em;">&copy; ${new Date().getFullYear()} EduFlex. All rights reserved.</div>
+        </div>
+      `,
+    });
+  }
+
+  async updatePassword(token: string, newPassword: string): Promise<void> {
+    // Find user by reset token and check expiry (assuming expiry is handled)
+    const user = await prisma.user.findFirst({ where: { resetPasswordToken: token } });
+    if (!user) throw new Error('Invalid or expired token');
+
+    const hashedPassword = await argon2.hash(newPassword);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+      },
+    });
   }
 
   async generateJwtToken(user: any): Promise<{ access_token: string; expiresIn: string }> {
