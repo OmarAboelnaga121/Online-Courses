@@ -6,20 +6,24 @@ import { Role } from '../../generated/prisma';
 import { LoginUserDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class AuthService {
 
-  constructor(private readonly jwtService: JwtService, private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
-  async register(registerData : RegisterUserDto) {
+  async register(registerData: RegisterUserDto, photo?: Express.Multer.File) {
     // Check username
     const checkUsername = await prisma.user.findFirst({ where: { username: registerData.username } });
-
-    if(checkUsername){
-        return new BadRequestException("Username is already taken please enter new username");
+    
+    if (checkUsername) {
+      return new BadRequestException("Username is already taken please enter new username");
     }
-
     // Check Email
     const checkEmail = await prisma.user.findFirst({ where: { email: registerData.email } });
 
@@ -29,13 +33,20 @@ export class AuthService {
 
     // Hash Password
     const hashPassword = await argon2.hash(registerData.password);
-
+    // Handle photo upload
+    let avatarUrl = '';
+    if (photo) {
+      const uploadResult = await this.cloudinaryService.uploadFile(photo);
+      avatarUrl = uploadResult.secure_url;
+    } else {
+      avatarUrl = '';
+    }
     // Save User
     const newUser = await prisma.user.create({
       data: {
         name: registerData.name,
         username: registerData.username,
-        avatarUrl: registerData.avatarUrl,
+        avatarUrl,
         email: registerData.email,
         password: hashPassword,
         role: registerData.role as Role,

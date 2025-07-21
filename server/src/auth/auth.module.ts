@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       },
     }),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, CloudinaryService],
   controllers: [AuthController]
 })
 export class AuthModule {}

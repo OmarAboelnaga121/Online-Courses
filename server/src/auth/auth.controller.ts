@@ -1,8 +1,9 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, getSchemaPath, ApiConsumes } from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 // Add DTOs for forgot and reset password
 class ForgotPasswordDto {
@@ -19,12 +20,30 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @UseInterceptors(FileInterceptor('photo'))
   @ApiOperation({ summary: 'Register a new student' })
-  @ApiBody({ type: RegisterUserDto })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        username: { type: 'string' },
+        email: { type: 'string' },
+        password: { type: 'string' },
+        role: { type: 'string', enum: ['student', 'admin', 'instructor'] },
+        photo: { type: 'string', format: 'binary' },
+      },
+      required: ['name', 'username', 'email', 'password', 'role', 'photo'],
+    },
+  })
   @ApiResponse({ status: 201, description: 'Student registered successfully.' })
   @ApiResponse({ status: 400, description: 'Validation or registration error.' })
-  async registerStudent(@Body() registerData: RegisterUserDto) {
-    return this.authService.register(registerData);
+  async registerStudent(
+    @Body() registerData: RegisterUserDto,
+    @UploadedFile() photo: Express.Multer.File,
+  ) {
+    return this.authService.register(registerData, photo);
   }
 
   @Post('login')

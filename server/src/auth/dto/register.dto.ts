@@ -13,10 +13,9 @@ export class RegisterUserDto {
   @IsString()
   username: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
+  @ApiProperty({ required: false })
   @IsString()
-  avatarUrl: string;
+  avatarUrl?: string;
 
   @ApiProperty()
   @IsNotEmpty()

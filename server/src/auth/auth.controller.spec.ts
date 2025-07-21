@@ -11,6 +11,8 @@ describe('AuthController', () => {
     const mockAuthService = {
       register: jest.fn(),
       login: jest.fn(),
+      resetPassword: jest.fn(),
+      updatePassword: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -55,6 +57,26 @@ describe('AuthController', () => {
       const result = await controller.login(loginDto);
       expect(authService.login).toHaveBeenCalledWith(loginDto);
       expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('forgotPassword', () => {
+    it('should call AuthService.resetPassword with correct email and return success message', async () => {
+      (authService.resetPassword as jest.Mock).mockResolvedValue(undefined);
+      const body = { email: 'test@example.com' };
+      const result = await controller.forgotPassword(body);
+      expect(authService.resetPassword).toHaveBeenCalledWith(body.email);
+      expect(result).toEqual({ message: 'Password reset email sent.' });
+    });
+  });
+
+  describe('resetPassword', () => {
+    it('should call AuthService.updatePassword with correct token and newPassword and return success message', async () => {
+      (authService.updatePassword as jest.Mock).mockResolvedValue(undefined);
+      const body = { token: '123456', newPassword: 'NewPassword123!' };
+      const result = await controller.resetPassword(body);
+      expect(authService.updatePassword).toHaveBeenCalledWith(body.token, body.newPassword);
+      expect(result).toEqual({ message: 'Password has been reset.' });
     });
   });
 }); 
