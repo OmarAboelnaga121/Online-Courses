@@ -41,9 +41,9 @@ describe('AuthController', () => {
         };
       const expectedResult = { id: 1, ...dto };
       (authService.register as jest.Mock).mockResolvedValue(expectedResult);
-
-      const result = await controller.registerStudent(dto);
-      expect(authService.register).toHaveBeenCalledWith(dto);
+      const mockPhoto = undefined as unknown as Express.Multer.File; // Cast to correct type
+      const result = await controller.registerStudent(dto, mockPhoto);
+      expect(authService.register).toHaveBeenCalledWith(dto, mockPhoto);
       expect(result).toEqual(expectedResult);
     });
   });

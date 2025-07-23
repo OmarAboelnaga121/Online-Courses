@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import prisma from '../prismaClient';
-import { RegisterUserDto } from './dto';
+import { RegisterUserDto, UserDto } from './dto';
 import * as argon2 from 'argon2';
 import { Role } from '../../generated/prisma';
 import { LoginUserDto } from './dto/login.dto';
@@ -17,18 +17,23 @@ export class AuthService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async register(registerData: RegisterUserDto, photo?: Express.Multer.File) {
+  async register(registerData: RegisterUserDto, photo: Express.Multer.File) {
     // Check username
     const checkUsername = await prisma.user.findFirst({ where: { username: registerData.username } });
     
     if (checkUsername) {
-      return new BadRequestException("Username is already taken please enter new username");
+      throw new BadRequestException("Username is already taken please enter new username");
     }
     // Check Email
     const checkEmail = await prisma.user.findFirst({ where: { email: registerData.email } });
 
     if(checkEmail){
-        return new BadRequestException("Email is already taken please enter new Email Or login");
+        throw new BadRequestException("Email is already taken please enter new Email Or login");
+    }
+
+    // Enforce photo required (to match controller's required field)
+    if (!photo) {
+      throw new BadRequestException("Photo is required for registration");
     }
 
     // Hash Password
@@ -62,12 +67,12 @@ export class AuthService {
     // Find user by email
     const user = await prisma.user.findFirst({ where: { email: loginData.email } });
     if (!user) {
-      return new BadRequestException('Invalid email or password');
+      throw new BadRequestException('Invalid email or password');
     }
     // Check password
     const valid = await argon2.verify(user.password, loginData.password);
     if (!valid) {
-      return new BadRequestException('Invalid email or password');
+      throw new BadRequestException('Invalid email or password');
     }
     // Remove password before returning
     const { password, ...userWithoutPassword } = user;
@@ -117,9 +122,11 @@ export class AuthService {
   }
 
   async updatePassword(token: string, newPassword: string): Promise<void> {
-    // Find user by reset token and check expiry (assuming expiry is handled)
+    // Find user by reset token and check expiry
     const user = await prisma.user.findFirst({ where: { resetPasswordToken: token } });
-    if (!user) throw new Error('Invalid or expired token');
+    if (!user || !user.resetPasswordExpires || new Date() > user.resetPasswordExpires) {
+      throw new Error('Invalid or expired token');
+    }
 
     const hashedPassword = await argon2.hash(newPassword);
     await prisma.user.update({
@@ -127,16 +134,17 @@ export class AuthService {
       data: {
         password: hashedPassword,
         resetPasswordToken: null,
+        resetPasswordExpires: null,
       },
     });
   }
 
-  async generateJwtToken(user: any): Promise<{ access_token: string; expiresIn: string }> {
-    const payload = { sub: user.id, username: user.username, role: user.role };
+  async generateJwtToken(user: UserDto){
+    const payload = { sub: user.id, username: user.username};
+    console.log('payload in service:', payload);
 
     const access_token = await this.jwtService.signAsync(payload);
 
-    const expiresIn = '1d';
-    return { access_token, expiresIn };
+    return { access_token };
   }
 }

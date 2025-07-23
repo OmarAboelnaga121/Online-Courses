@@ -4,15 +4,7 @@ import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, getSchemaPath, ApiConsumes } from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-
-// Add DTOs for forgot and reset password
-class ForgotPasswordDto {
-  email: string;
-}
-class ResetPasswordDto {
-  token: string;
-  newPassword: string;
-}
+import { ForgotPasswordDto, ResetPasswordDto } from './dto';
 
 @ApiTags('Auth')
 @Controller('auth')

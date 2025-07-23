@@ -10,14 +10,7 @@ async function bootstrap() {
     .setTitle('Online Course (EduFlex)')
     .setDescription('The Documentation of Online Courses Website')
     .setVersion('1.0')
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      name: 'Authorization',
-      description: 'Enter JWT token',
-      in: 'header',
-    }, 'access-token')
+    .addBearerAuth()
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .addTag('Auth', 'Authentication and user management')
     .addTag('Courses', 'Course management')
