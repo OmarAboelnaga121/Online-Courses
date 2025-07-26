@@ -3,6 +3,8 @@ import prisma from '../prismaClient';
 import { CourseDto } from './dto/courses.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UserDto } from '../auth/dto';
+import { LessonDto } from './dto';
+import { ForbiddenException } from '@nestjs/common';
 
 @Injectable()
 export class CoursesService {
@@ -14,9 +16,6 @@ export class CoursesService {
     }
 
     async createCourses(courseData : CourseDto, photo: Express.Multer.File, user : UserDto){
-        console.log('user in service:', user);
-        console.log('courseData in service:', courseData);
-        console.log('photo in service:', photo);
 
         if (!photo) {
             throw new BadRequestException('Photo is required');
@@ -32,8 +31,6 @@ export class CoursesService {
             throw new BadRequestException('User is not an instructor');
         }
         
-        // put the lessons on cloudinary and get the url
-
         // Create course in DB
         const course = await prisma.course.create({
             data: {
@@ -59,5 +56,84 @@ export class CoursesService {
         }
         return course;
     }
-    async getPublishedCoures(){}
+
+    async getLessonsForCourse(id: string) {
+        // Fetch all lessons for the given course id
+        const lessons = await prisma.lesson.findMany({ where: { courseId: id } });
+        return lessons;
+    }
+    
+    async getPublishedCourses(){
+        const courses = await prisma.course.findMany({where:{published:true}})
+        return courses;
+    }
+
+    async updateCourseStatus(id: string, published: boolean, userId : string){
+        const course = await prisma.course.findUnique({
+            where: { id },
+        });
+        if (!course) {
+            throw new BadRequestException('Course not found');
+        }
+        // Check if user is instructor or admin
+        const checkUser = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+        if (!checkUser) {
+            throw new BadRequestException('User not found');
+        }
+        if (checkUser.role !== 'admin') {
+            throw new ForbiddenException('Not authorized to update this course');
+        }
+        
+        const updatedCourse = await prisma.course.update({
+            where: { id },
+            data: { published: published },
+        });
+        return updatedCourse;
+    }
+
+    async putLessons(id: string, lessons: LessonDto[], videos: Express.Multer.File[], user: UserDto) {
+        // Find Course
+        const course = await prisma.course.findUnique({ where: { id } });
+        if (!course) {
+            throw new BadRequestException('Course not found');
+        }
+        // Check if user is instructor
+        if (course.instructorId !== user.id) {
+            throw new BadRequestException('User is not the instructor of this course');
+        }
+        if (!Array.isArray(lessons) || !Array.isArray(videos) || lessons.length !== videos.length) {
+            throw new BadRequestException('Lessons and videos count mismatch');
+        }
+        // Upload each video to Cloudinary and update lesson videoUrl
+        const lessonsWithUrls = await Promise.all(
+            lessons.map(async (lesson, idx) => {
+                const videoFile = videos[idx];
+                if (!videoFile) throw new BadRequestException('Missing video file for lesson');
+                const uploadResult = await this.cloudinaryService.uploadVideoFile(videoFile);
+                if (!uploadResult || !uploadResult.url) {
+                    throw new BadRequestException('Failed to upload video');
+                }
+                return {
+                    ...lesson,
+                    videoUrl: uploadResult.url,
+                    courseId: id,
+                };
+            })
+        );
+        // Store lessons in DB
+        const created = await prisma.lesson.createMany({
+            data: lessonsWithUrls,
+        });
+
+        // Update the course to include the new lessons in its lessons field
+        // (Prisma will automatically relate lessons by courseId, but for clarity, fetch the updated course with lessons)
+        const updatedCourse = await prisma.course.update({
+            where: { id },
+            data: {}, // No data change, just to trigger the relation update
+            include: { lessons: true },
+        });
+        return updatedCourse.lessons;
+    }
 }

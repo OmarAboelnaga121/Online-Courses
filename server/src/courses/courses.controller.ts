@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, UploadedFile, UseInterceptors, Req, UseGuards, Param } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Post, Body, UploadedFile, UseInterceptors, Req, UseGuards, Param, UploadedFiles, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CoursesService } from './courses.service';
@@ -7,8 +7,10 @@ import { CourseDto } from './dto/courses.dto';
 import { RegisterUserDto, UserDto } from '../auth/dto/index';
 import { User } from '../auth/decorators/user.decorator';
 import { AuthGuard } from '@nestjs/passport';
+import { LessonDto } from './dto';
 
 @ApiTags('Courses')
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
@@ -20,11 +22,27 @@ export class CoursesController {
     return this.coursesService.getCourses();
   }
 
+  @Get('published')
+  @ApiOperation({ summary: 'Get all published courses' })
+  @ApiResponse({ status: 200, description: 'List of published courses', type: [CourseDto] })
+  async getPublishedCourses() {
+    return this.coursesService.getPublishedCourses();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single course by ID' })
   @ApiResponse({ status: 200, description: 'Single course', type: CourseDto })
   async getSingleCourse(@Param('id') id: string) {
     return this.coursesService.getSingleCourse(id);
+  }
+
+  @Get(':id/lessons')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all lessons for a course' })
+  @ApiResponse({ status: 200, description: 'List of lessons for the course', type: [LessonDto] })
+  async getLessonsForCourse(@Param('id') id: string) {
+    return this.coursesService.getLessonsForCourse(id);
   }
 
   @Post()
@@ -60,8 +78,72 @@ export class CoursesController {
     @Body() courseData: CourseDto,
     @UploadedFile() photo: Express.Multer.File
   ) {
-    console.log('user in controller:', user);
     return this.coursesService.createCourses(courseData, photo, user);
+  }
+
+
+  @Put(':id/publish')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Update the published status of a course' })
+  @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        published: { type: 'boolean', example: true },
+      },
+      required: ['published'],
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Course publish status updated', type: CourseDto })
+  async updateCoursePublishStatus(
+    @Param('id') id: string,
+    @Body('published') published: boolean,
+    @User() user : UserDto
+  ) {
+    return this.coursesService.updateCourseStatus(id, published, user.id);
+  }
+
+  @Post(':id/lessons/upload')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FilesInterceptor('videos'))
+  @ApiOperation({ summary: 'Upload lesson videos for a course (1 lesson = 1 video)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
+  @ApiBody({
+    description: 'Upload lessons, each with exactly one title and one video. The lessons field is a JSON array of lesson metadata (title, courseId, etc.), and the videos field is an array of video files. The order of lessons and videos must match: lessons[i] corresponds to videos[i].',
+    schema: {
+      type: 'object',
+      properties: {
+        lessons: {
+          type: 'string',
+          format: 'json',
+          description: 'Array of lesson metadata (title, courseId, etc.) as JSON string. Each lesson must have exactly one title and one video. The order must match the videos array.'
+        },
+        videos: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+            description: 'Video file for the lesson. The order must match the lessons array.'
+          },
+        },
+      },
+      required: ['lessons', 'videos'],
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Lessons uploaded and stored', type: [LessonDto] })
+  async uploadLessonVideos(
+    @Param('id') id: string,
+    @User() user: UserDto,
+    @Body('lessons') lessonsJson: string,
+    @UploadedFiles() videos: Express.Multer.File[],
+  ) {
+    const lessons: LessonDto[] = JSON.parse(lessonsJson);
+    if (lessons.length !== videos.length) {
+      throw new Error('Each lesson must have exactly one video. The number of lessons and videos must match.');
+    }
+    return this.coursesService.putLessons(id, lessons, videos, user);
   }
  
 }

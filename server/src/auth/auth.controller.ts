@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, UsePipes, ValidationPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, getSchemaPath, ApiConsumes } from '@nestjs/swagger';
@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto';
 
 @ApiTags('Auth')
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

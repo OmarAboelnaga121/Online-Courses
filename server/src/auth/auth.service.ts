@@ -65,7 +65,7 @@ export class AuthService {
 
   async login(loginData: LoginUserDto) {
     // Find user by email
-    const user = await prisma.user.findFirst({ where: { email: loginData.email } });
+    const user = await prisma.user.findUnique({ where: { email: loginData.email } });
     if (!user) {
       throw new BadRequestException('Invalid email or password');
     }
@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   async resetPassword(email: string){
-    const user = await prisma.user.findFirst({where:{email: email}});
+    const user = await prisma.user.findUnique({where:{email: email}});
     if (!user) throw new Error('User not found');
 
     // Generate a professional 6-digit numeric reset code
@@ -141,7 +141,6 @@ export class AuthService {
 
   async generateJwtToken(user: UserDto){
     const payload = { sub: user.id, username: user.username};
-    console.log('payload in service:', payload);
 
     const access_token = await this.jwtService.signAsync(payload);
 

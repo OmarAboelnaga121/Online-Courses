@@ -54,4 +54,10 @@ export class CourseDto {
   @ArrayNotEmpty()
   @IsString({ each: true })
   studentsEnrolled: string[];
+
+  @ApiProperty()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString()
+  lessons: string[];
 }
