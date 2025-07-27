@@ -145,5 +145,36 @@ export class CoursesController {
     }
     return this.coursesService.putLessons(id, lessons, videos, user);
   }
+
+  @Get(':id/reviews')
+  @ApiOperation({ summary: 'Get all reviews for a course' })
+  @ApiResponse({ status: 200, description: 'List of reviews for the course' })
+  async getCourseReviews(@Param('id') id: string) {
+    return this.coursesService.getCourseReviews(id);
+  }
+
+  @Post(':id/reviews')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a review for a course' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        rating: { type: 'integer', example: 5 },
+        comment: { type: 'string', example: 'Great course!' },
+      },
+      required: ['rating', 'comment'],
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Review created successfully' })
+  async createCourseReview(
+    @Param('id') id: string,
+    @User() user: UserDto,
+    @Body('rating') rating: number,
+    @Body('comment') comment: string,
+  ) {
+    return this.coursesService.createCourseReview(id, user.id, rating, comment);
+  }
  
 }

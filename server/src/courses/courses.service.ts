@@ -122,18 +122,65 @@ export class CoursesService {
                 };
             })
         );
+
         // Store lessons in DB
         const created = await prisma.lesson.createMany({
             data: lessonsWithUrls,
         });
 
-        // Update the course to include the new lessons in its lessons field
-        // (Prisma will automatically relate lessons by courseId, but for clarity, fetch the updated course with lessons)
+        
         const updatedCourse = await prisma.course.update({
             where: { id },
-            data: {}, // No data change, just to trigger the relation update
+            data: {},
             include: { lessons: true },
         });
         return updatedCourse.lessons;
+    }
+
+
+    async 
+    async getCourseReviews(courseId: string) {
+        // Fetch all reviews for the given course id
+        const reviews = await prisma.review.findMany({
+            where: { courseId },
+            orderBy: { date: 'desc' },
+        });
+        return reviews;
+    }
+
+    async createCourseReview(courseId: string, userId: string, rating: number, comment: string) {
+        // Check if course exists
+        const course = await prisma.course.findUnique({ where: { id: courseId } });
+        if (!course) {
+            throw new BadRequestException('Course not found');
+        }
+        // Optionally: Check if user already reviewed this course
+        const existingReview = await prisma.review.findFirst({ where: { courseId, userId } });
+        if (existingReview) {
+            throw new BadRequestException('User has already reviewed this course');
+        }
+
+        // Check if user is a student
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+
+        if (!user) {
+            throw new BadRequestException('User not found');
+        }
+
+        if (user.role !== 'student') {
+            throw new ForbiddenException('Only students can leave reviews');
+        }
+
+        // Create review
+        const review = await prisma.review.create({
+            data: {
+                courseId,
+                userId,
+                rating,
+                comment,
+                date: new Date(),
+            },
+        });
+        return review;
     }
 }

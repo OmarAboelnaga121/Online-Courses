@@ -16,6 +16,8 @@ describe('CoursesController', () => {
       createCourses: jest.fn(),
       updateCourseStatus: jest.fn(),
       putLessons: jest.fn(),
+      getCourseReviews: jest.fn(),
+      createCourseReview: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CoursesController],
@@ -165,6 +167,26 @@ describe('CoursesController', () => {
       const uploaded = [{ id: 'l1', title: 'L1', videoUrl: 'url', courseId: 'cid' }];
       jest.spyOn(service, 'putLessons').mockResolvedValue(uploaded);
       expect(await controller.uploadLessonVideos('cid', user, lessonsJson, videos)).toEqual(uploaded);
+    });
+  });
+
+  describe('getCourseReviews', () => {
+    it('should return reviews for a course', async () => {
+      const reviews = [
+        { id: 'r1', userId: 'u1', rating: 5, comment: 'Great!', date: new Date(), courseId: 'cid' },
+        { id: 'r2', userId: 'u2', rating: 4, comment: 'Good', date: new Date(), courseId: 'cid' },
+      ];
+      jest.spyOn(service, 'getCourseReviews').mockResolvedValue(reviews);
+      expect(await controller.getCourseReviews('cid')).toEqual(reviews);
+    });
+  });
+
+  describe('createCourseReview', () => {
+    it('should create a review for a course', async () => {
+      const review = { id: 'r1', userId: 'u1', rating: 5, comment: 'Great!', date: new Date(), courseId: 'cid' };
+      jest.spyOn(service, 'createCourseReview').mockResolvedValue(review);
+      const user = { id: 'u1', role: 'student', name: 'Test User', username: 'testuser', email: 'test@example.com' };
+      expect(await controller.createCourseReview('cid', user, 5, 'Great!')).toEqual(review);
     });
   });
 });
