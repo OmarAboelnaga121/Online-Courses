@@ -14,6 +14,7 @@ async function bootstrap() {
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .addTag('Auth', 'Authentication and user management')
     .addTag('Courses', 'Course management')
+    .addTag('Users', 'User management')
     .addServer('http://localhost:3000', 'Local server')
     .build();
 
