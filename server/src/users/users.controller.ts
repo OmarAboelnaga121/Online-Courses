@@ -1,9 +1,11 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { User } from 'src/auth/decorators/user.decorator';
 import { UserDto } from 'src/auth/dto';
 import { UsersService } from './users.service';
+import { updateUserDto } from './dto/updateUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -56,4 +58,50 @@ export class UsersController {
     }
 
     // TODO: Update User Profile
+    @Put('profile')
+    @UseGuards(AuthGuard('jwt'))
+    @UseInterceptors(FileInterceptor('photo'))
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Update user profile' })
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        description: 'User profile update with optional photo',
+        schema: {
+            type: 'object',
+            properties: {
+                name: { type: 'string', example: 'John Doe' },
+                username: { type: 'string', example: 'johndoe' },
+                photo: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Profile photo file'
+                }
+            }
+        }
+    })
+    @ApiResponse({
+        status: 200,
+        description: 'Profile updated successfully',
+        schema: {
+            type: 'object',
+            properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+                username: { type: 'string' },
+                email: { type: 'string' },
+                avatarUrl: { type: 'string' },
+                role: { type: 'string' },
+                enrolledCourses: { type: 'array', items: { type: 'string' } },
+                wishList: { type: 'array', items: { type: 'string' } }
+            }
+        }
+    })
+    @ApiResponse({ status: 400, description: 'Bad request - validation failed' })
+    async updateProfile(
+        @User() user: UserDto,
+        @Body() updateData: updateUserDto,
+        @UploadedFile() photo?: Express.Multer.File
+    ) {
+        return this.usersService.updateUserProfile(user, updateData, photo);
+    }
 }
