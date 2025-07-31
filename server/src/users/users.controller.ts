@@ -2,8 +2,8 @@ import { Body, Controller, Get, Param, Put, UploadedFile, UseGuards, UseIntercep
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { User } from 'src/auth/decorators/user.decorator';
-import { UserDto } from 'src/auth/dto';
+import { User } from '../auth/decorators/user.decorator';
+import { UserDto } from '../auth/dto';
 import { UsersService } from './users.service';
 import { updateUserDto } from './dto/updateUser.dto';
 

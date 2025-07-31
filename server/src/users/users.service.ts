@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserDto } from 'src/auth/dto';
-import prisma from 'src/prismaClient';
+import { UserDto } from '../auth/dto';
+import prisma from '../prismaClient';
 import { updateUserDto } from './dto/updateUser.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class UsersService {
-    constructor(private cloudinaryService: CloudinaryService) {}
+    constructor(
+        private cloudinaryService: CloudinaryService,
+        private redisService: RedisService
+    ) {}
 
     async updateUserProfile(user: UserDto, newData: updateUserDto, photo?: Express.Multer.File) {
         // Check if username is being changed and if it's already taken
@@ -53,11 +57,25 @@ export class UsersService {
             }
         });
 
+        // Invalidate instructor cache if user is an instructor
+        if (user.role === 'instructor') {
+            await this.redisService.del(`instructor:${user.id}`);
+        }
+
         return updatedUser;
     }
 
     // TODO: Get Instructor Profile
     async getInstructorProfile(instructorId: string) {
+        // Try to get from cache first
+        const cacheKey = `instructor:${instructorId}`;
+        const cachedInstructor = await this.redisService.get(cacheKey);
+        
+        if (cachedInstructor) {
+            return JSON.parse(cachedInstructor);
+        }
+
+        // If not in cache, fetch from database
         const instructor = await prisma.user.findUnique({
             where: { id: instructorId },
             select: {
@@ -74,6 +92,10 @@ export class UsersService {
         if (!instructor || instructor.role !== 'instructor') {
             throw new BadRequestException('Instructor not found or invalid role');
         }
+
+        // Cache the result for 15 minutes (900 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(instructor), 900);
+        
         return instructor;
     }
     

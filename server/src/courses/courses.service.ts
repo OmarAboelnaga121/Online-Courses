@@ -5,18 +5,34 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UserDto } from '../auth/dto';
 import { LessonDto } from './dto';
 import { ForbiddenException } from '@nestjs/common';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class CoursesService {
-    constructor(private cloudinaryService : CloudinaryService){}
+    constructor(
+        private cloudinaryService: CloudinaryService,
+        private redisService: RedisService
+    ) {}
 
-    async getCourses(){
-        const courses = await prisma.course.findMany()
+    async getCourses() {
+        // Try to get from cache first
+        const cacheKey = 'courses:all';
+        const cachedCourses = await this.redisService.get(cacheKey);
+        
+        if (cachedCourses) {
+            return JSON.parse(cachedCourses);
+        }
+
+        // If not in cache, fetch from database
+        const courses = await prisma.course.findMany();
+        
+        // Cache the result for 5 minutes (300 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(courses), 300);
+        
         return courses;
     }
 
-    async createCourses(courseData : CourseDto, photo: Express.Multer.File, user : UserDto){
-
+    async createCourses(courseData: CourseDto, photo: Express.Multer.File, user: UserDto) {
         if (!photo) {
             throw new BadRequestException('Photo is required');
         }
@@ -41,34 +57,76 @@ export class CoursesService {
                 price: Number(courseData.price),
                 thumbnail: uploadResult.url,
                 category: courseData.category,
-                published: false ,
+                published: false,
                 instructorId: user.id,
                 studentsEnrolled: [],
             },
         });
+
+        // Invalidate cache after creating new course
+        await this.invalidateCoursesCache();
+        
         return course;
     }
     
     async getSingleCourse(id: string) {
+        // Try to get from cache first
+        const cacheKey = `course:${id}`;
+        const cachedCourse = await this.redisService.get(cacheKey);
+        
+        if (cachedCourse) {
+            return JSON.parse(cachedCourse);
+        }
+
+        // If not in cache, fetch from database
         const course = await prisma.course.findUnique({ where: { id } });
         if (!course) {
             throw new BadRequestException('Course not found');
         }
+        
+        // Cache the result for 10 minutes (600 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(course), 600);
+        
         return course;
     }
 
     async getLessonsForCourse(id: string) {
-        // Fetch all lessons for the given course id
+        // Try to get from cache first
+        const cacheKey = `course:${id}:lessons`;
+        const cachedLessons = await this.redisService.get(cacheKey);
+        
+        if (cachedLessons) {
+            return JSON.parse(cachedLessons);
+        }
+
+        // If not in cache, fetch from database
         const lessons = await prisma.lesson.findMany({ where: { courseId: id } });
+        
+        // Cache the result for 15 minutes (900 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(lessons), 900);
+        
         return lessons;
     }
     
-    async getPublishedCourses(){
-        const courses = await prisma.course.findMany({where:{published:true}})
+    async getPublishedCourses() {
+        // Try to get from cache first
+        const cacheKey = 'courses:published';
+        const cachedCourses = await this.redisService.get(cacheKey);
+        
+        if (cachedCourses) {
+            return JSON.parse(cachedCourses);
+        }
+
+        // If not in cache, fetch from database
+        const courses = await prisma.course.findMany({ where: { published: true } });
+        
+        // Cache the result for 5 minutes (300 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(courses), 300);
+        
         return courses;
     }
 
-    async updateCourseStatus(id: string, published: boolean, userId : string){
+    async updateCourseStatus(id: string, published: boolean, userId: string) {
         const course = await prisma.course.findUnique({
             where: { id },
         });
@@ -90,7 +148,28 @@ export class CoursesService {
             where: { id },
             data: { published: published },
         });
+
+        // Invalidate cache after updating course status
+        await this.invalidateCoursesCache();
+        await this.invalidateCourseCache(id);
+        
         return updatedCourse;
+    }
+
+    // Helper method to invalidate courses cache
+    private async invalidateCoursesCache() {
+        await this.redisService.del('courses:all');
+        await this.redisService.del('courses:published');
+        
+        // Invalidate all course-related caches using pattern matching
+        await this.redisService.delByPattern('course:*');
+    }
+
+    // Helper method to invalidate specific course cache
+    private async invalidateCourseCache(courseId: string) {
+        await this.redisService.del(`course:${courseId}`);
+        await this.redisService.del(`course:${courseId}:lessons`);
+        await this.redisService.del(`course:${courseId}:reviews`);
     }
 
     async putLessons(id: string, lessons: LessonDto[], videos: Express.Multer.File[], user: UserDto) {
@@ -134,17 +213,32 @@ export class CoursesService {
             data: {},
             include: { lessons: true },
         });
+
+        // Invalidate course lessons cache after adding new lessons
+        await this.invalidateCourseCache(id);
+        
         return updatedCourse.lessons;
     }
 
 
-    async 
     async getCourseReviews(courseId: string) {
-        // Fetch all reviews for the given course id
+        // Try to get from cache first
+        const cacheKey = `course:${courseId}:reviews`;
+        const cachedReviews = await this.redisService.get(cacheKey);
+        
+        if (cachedReviews) {
+            return JSON.parse(cachedReviews);
+        }
+
+        // If not in cache, fetch from database
         const reviews = await prisma.review.findMany({
             where: { courseId },
             orderBy: { date: 'desc' },
         });
+        
+        // Cache the result for 10 minutes (600 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(reviews), 600);
+        
         return reviews;
     }
 
@@ -181,6 +275,10 @@ export class CoursesService {
                 date: new Date(),
             },
         });
+
+        // Invalidate course reviews cache after creating new review
+        await this.invalidateCourseCache(courseId);
+        
         return review;
     }
 }

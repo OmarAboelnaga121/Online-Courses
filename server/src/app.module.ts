@@ -5,9 +5,12 @@ import { AuthModule } from './auth/auth.module';
 import { CoursesModule } from './courses/courses.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UsersModule } from './users/users.module';
+import { StripeModule } from './stripe/stripe.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
+    RedisModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {
@@ -23,6 +26,7 @@ import { UsersModule } from './users/users.module';
     CoursesModule,
     CloudinaryModule,
     UsersModule,
+    StripeModule,
  ],
 })
 export class AppModule {}
