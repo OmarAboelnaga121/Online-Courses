@@ -62,6 +62,9 @@ export class UsersService {
             await this.redisService.del(`instructor:${user.id}`);
         }
 
+        // Invalidate comprehensive user profile cache
+        await this.redisService.del(`user:${user.id}:comprehensive`);
+
         return updatedUser;
     }
 
@@ -97,6 +100,140 @@ export class UsersService {
         await this.redisService.set(cacheKey, JSON.stringify(instructor), 900);
         
         return instructor;
+    }
+
+    // Get comprehensive user profile with all related data
+    async getComprehensiveUserProfile(userId: string) {
+        // Try to get from cache first
+        const cacheKey = `user:${userId}:comprehensive`;
+        const cachedUser = await this.redisService.get(cacheKey);
+        
+        if (cachedUser) {
+            return JSON.parse(cachedUser);
+        }
+
+        // If not in cache, fetch comprehensive data from database
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                payments: {
+                    orderBy: {
+                        date: 'desc'
+                    }
+                },
+                myCourses: {
+                    include: {
+                        lessons: {
+                            select: {
+                                id: true,
+                                title: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!user) {
+            throw new BadRequestException('User not found');
+        }
+
+        // Get enrolled courses details
+        const enrolledCoursesDetails = await prisma.course.findMany({
+            where: {
+                id: {
+                    in: user.enrolledCourses
+                }
+            },
+            include: {
+                instructor: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                        avatarUrl: true
+                    }
+                },
+                lessons: {
+                    select: {
+                        id: true,
+                        title: true
+                    }
+                }
+            }
+        });
+
+        // Get wishlist courses details
+        const wishlistCoursesDetails = await prisma.course.findMany({
+            where: {
+                id: {
+                    in: user.wishList
+                }
+            },
+            include: {
+                instructor: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                        avatarUrl: true
+                    }
+                }
+            }
+        });
+
+        // Get payment details with course information
+        const paymentsWithCourses = await Promise.all(
+            user.payments.map(async (payment) => {
+                const course = await prisma.course.findUnique({
+                    where: { id: payment.courseId.toString() },
+                    include: {
+                        instructor: {
+                            select: {
+                                id: true,
+                                name: true,
+                                username: true,
+                                avatarUrl: true
+                            }
+                        }
+                    }
+                });
+                
+                return {
+                    ...payment,
+                    course: course
+                };
+            })
+        );
+
+        // Calculate total spent
+        const totalSpent = user.payments.reduce((sum, payment) => sum + payment.amount, 0);
+
+        // Prepare comprehensive user data
+        const comprehensiveUserData = {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            avatarUrl: user.avatarUrl,
+            role: user.role,
+            enrolledCourses: enrolledCoursesDetails,
+            wishList: wishlistCoursesDetails,
+            payments: paymentsWithCourses,
+            myCourses: user.myCourses,
+            statistics: {
+                totalSpent: totalSpent,
+                totalCoursesEnrolled: user.enrolledCourses.length,
+                totalWishlistItems: user.wishList.length,
+                totalCoursesCreated: user.myCourses.length,
+                totalPayments: user.payments.length
+            }
+        };
+
+        // Cache the result for 10 minutes (600 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(comprehensiveUserData), 600);
+        
+        return comprehensiveUserData;
     }
     
 }

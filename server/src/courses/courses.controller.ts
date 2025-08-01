@@ -8,6 +8,7 @@ import { RegisterUserDto, UserDto } from '../auth/dto/index';
 import { User } from '../auth/decorators/user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { LessonDto } from './dto';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('Courses')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))

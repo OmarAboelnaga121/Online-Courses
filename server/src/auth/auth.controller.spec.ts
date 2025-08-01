@@ -1,82 +1,182 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { RegisterUserDto } from './dto/register.dto';
+import { RegisterUserDto, LoginUserDto, ForgotPasswordDto, ResetPasswordDto } from './dto';
+import { BadRequestException } from '@nestjs/common';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
 
-  beforeEach(async () => {
-    const mockAuthService = {
-      register: jest.fn(),
-      login: jest.fn(),
-      resetPassword: jest.fn(),
-      updatePassword: jest.fn(),
-    };
+  const mockAuthService = {
+    register: jest.fn(),
+    login: jest.fn(),
+    resetPassword: jest.fn(),
+    updatePassword: jest.fn(),
+  };
 
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-        controllers: [AuthController],
-        providers: [
-            {
-            provide: AuthService,
-            useValue: mockAuthService,
-            },
-        ],
+      controllers: [AuthController],
+      providers: [
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
+      ],
     }).compile();
 
-        controller = module.get<AuthController>(AuthController);
-        authService = module.get<AuthService>(AuthService);
+    controller = module.get<AuthController>(AuthController);
+    authService = module.get<AuthService>(AuthService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('registerStudent', () => {
+    const mockRegisterData: RegisterUserDto = {
+      name: 'John Doe',
+      username: 'johndoe',
+      email: 'john@example.com',
+      password: 'password123',
+      role: 'student',
+    };
+
+    const mockPhoto = {
+      fieldname: 'photo',
+      originalname: 'test.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      buffer: Buffer.from('test'),
+      size: 1024,
+    } as Express.Multer.File;
+
+    const mockUserResponse = {
+      id: 'user-123',
+      name: 'John Doe',
+      username: 'johndoe',
+      email: 'john@example.com',
+      avatarUrl: 'https://example.com/avatar.jpg',
+      role: 'student',
+    };
+
+    it('should register a new student successfully', async () => {
+      mockAuthService.register.mockResolvedValue(mockUserResponse);
+
+      const result = await controller.registerStudent(mockRegisterData, mockPhoto);
+
+      expect(authService.register).toHaveBeenCalledWith(mockRegisterData, mockPhoto);
+      expect(result).toEqual(mockUserResponse);
     });
 
-    describe('registerStudent', () => {
-    it('should call AuthService.registerStudent with correct data and return its result', async () => {
-        const dto: RegisterUserDto = {
-            name: 'Test Student',
-            username: 'teststudent',
-            avatarUrl: 'http://example.com/avatar.png',
-            email: 'test@example.com',
-            password: 'Password123!',
-            role: 'student',
-        };
-      const expectedResult = { id: 1, ...dto };
-      (authService.register as jest.Mock).mockResolvedValue(expectedResult);
-      const mockPhoto = undefined as unknown as Express.Multer.File; // Cast to correct type
-      const result = await controller.registerStudent(dto, mockPhoto);
-      expect(authService.register).toHaveBeenCalledWith(dto, mockPhoto);
-      expect(result).toEqual(expectedResult);
+    it('should throw BadRequestException when registration fails', async () => {
+      const errorMessage = 'Username is already taken';
+      mockAuthService.register.mockRejectedValue(new BadRequestException(errorMessage));
+
+      await expect(controller.registerStudent(mockRegisterData, mockPhoto))
+        .rejects
+        .toThrow(BadRequestException);
+      
+      expect(authService.register).toHaveBeenCalledWith(mockRegisterData, mockPhoto);
     });
   });
 
   describe('login', () => {
-    it('should call AuthService.login with correct data and return its result', async () => {
-      const loginDto = { email: 'test@example.com', password: 'Password123!' };
-      const expectedResult = { user: { id: 1, email: 'test@example.com' }, access_token: 'jwt.token' };
-      (authService.login as jest.Mock).mockResolvedValue(expectedResult);
+    const mockLoginData: LoginUserDto = {
+      email: 'john@example.com',
+      password: 'password123',
+    };
 
-      const result = await controller.login(loginDto);
-      expect(authService.login).toHaveBeenCalledWith(loginDto);
-      expect(result).toEqual(expectedResult);
+    const mockLoginResponse = {
+      user: {
+        id: 'user-123',
+        name: 'John Doe',
+        username: 'johndoe',
+        email: 'john@example.com',
+        avatarUrl: 'https://example.com/avatar.jpg',
+        role: 'student',
+      },
+      access_token: 'jwt-token-123',
+    };
+
+    it('should login user successfully', async () => {
+      mockAuthService.login.mockResolvedValue(mockLoginResponse);
+
+      const result = await controller.login(mockLoginData);
+
+      expect(authService.login).toHaveBeenCalledWith(mockLoginData);
+      expect(result).toEqual(mockLoginResponse);
+    });
+
+    it('should throw BadRequestException when login fails', async () => {
+      const errorMessage = 'Invalid email or password';
+      mockAuthService.login.mockRejectedValue(new BadRequestException(errorMessage));
+
+      await expect(controller.login(mockLoginData))
+        .rejects
+        .toThrow(BadRequestException);
+      
+      expect(authService.login).toHaveBeenCalledWith(mockLoginData);
     });
   });
 
   describe('forgotPassword', () => {
-    it('should call AuthService.resetPassword with correct email and return success message', async () => {
-      (authService.resetPassword as jest.Mock).mockResolvedValue(undefined);
-      const body = { email: 'test@example.com' };
-      const result = await controller.forgotPassword(body);
-      expect(authService.resetPassword).toHaveBeenCalledWith(body.email);
+    const mockForgotPasswordData: ForgotPasswordDto = {
+      email: 'john@example.com',
+    };
+
+    it('should send password reset email successfully', async () => {
+      mockAuthService.resetPassword.mockResolvedValue(undefined);
+
+      const result = await controller.forgotPassword(mockForgotPasswordData);
+
+      expect(authService.resetPassword).toHaveBeenCalledWith(mockForgotPasswordData.email);
       expect(result).toEqual({ message: 'Password reset email sent.' });
+    });
+
+    it('should throw error when password reset fails', async () => {
+      const errorMessage = 'User not found';
+      mockAuthService.resetPassword.mockRejectedValue(new Error(errorMessage));
+
+      await expect(controller.forgotPassword(mockForgotPasswordData))
+        .rejects
+        .toThrow(Error);
+      
+      expect(authService.resetPassword).toHaveBeenCalledWith(mockForgotPasswordData.email);
     });
   });
 
   describe('resetPassword', () => {
-    it('should call AuthService.updatePassword with correct token and newPassword and return success message', async () => {
-      (authService.updatePassword as jest.Mock).mockResolvedValue(undefined);
-      const body = { token: '123456', newPassword: 'NewPassword123!' };
-      const result = await controller.resetPassword(body);
-      expect(authService.updatePassword).toHaveBeenCalledWith(body.token, body.newPassword);
+    const mockResetPasswordData: ResetPasswordDto = {
+      token: 'reset-token-123',
+      newPassword: 'newpassword123',
+    };
+
+    it('should reset password successfully', async () => {
+      mockAuthService.updatePassword.mockResolvedValue(undefined);
+
+      const result = await controller.resetPassword(mockResetPasswordData);
+
+      expect(authService.updatePassword).toHaveBeenCalledWith(
+        mockResetPasswordData.token,
+        mockResetPasswordData.newPassword
+      );
       expect(result).toEqual({ message: 'Password has been reset.' });
+    });
+
+    it('should throw error when password reset fails', async () => {
+      const errorMessage = 'Invalid or expired token';
+      mockAuthService.updatePassword.mockRejectedValue(new Error(errorMessage));
+
+      await expect(controller.resetPassword(mockResetPasswordData))
+        .rejects
+        .toThrow(Error);
+      
+      expect(authService.updatePassword).toHaveBeenCalledWith(
+        mockResetPasswordData.token,
+        mockResetPasswordData.newPassword
+      );
     });
   });
 }); 

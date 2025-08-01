@@ -1,14 +1,15 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Logger, Post, Headers, Req, RawBodyRequest, BadRequestException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Logger, Post, Headers, Req, RawBodyRequest, BadRequestException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { Stripe } from 'stripe';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/auth/decorators/user.decorator';
-import { UserDto } from 'src/auth/dto';
+import { User } from '../auth/decorators/user.decorator';
+import { UserDto } from '../auth/dto';
 import { CreateCheckoutSessionDto } from './dto/order.dto';
 
 @ApiTags('stripe')
 @Controller('stripe')
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class StripeController {
     private readonly logger = new Logger(StripeController.name);
     constructor(private readonly stripeService: StripeService) {}
@@ -22,6 +23,10 @@ export class StripeController {
     @ApiBody({ type: CreateCheckoutSessionDto })
     async createCheckoutSession(@Body() body: CreateCheckoutSessionDto, @User() user: UserDto) {
         try {
+            console.log('Received body:', body);
+            console.log('CourseId type:', typeof body.courseId);
+            console.log('CourseId value:', body.courseId);
+            
             const session = await this.stripeService.createOrderByStripe(body.courseId, user);
             return {
                 success: true,

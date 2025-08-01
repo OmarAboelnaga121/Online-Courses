@@ -1,10 +1,10 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
-import prisma from 'src/prismaClient';
-import { UserDto } from 'src/auth/dto';
+import prisma from '../prismaClient';
+import { UserDto } from '../auth/dto';
 import { FORBIDDEN_MESSAGE } from '@nestjs/core/guards';
-import { CourseDto } from 'src/courses/dto';
+import { CourseDto } from '../courses/dto';
 
 @Injectable()
 export class StripeService {
@@ -51,21 +51,68 @@ export class StripeService {
                 success_url: this.configService.get<string>('FRONTEND_URL'),
                 cancel_url: this.configService.get<string>('FRONTEND_URL'),
                 client_reference_id: user.id,
-                customer_email: user.email
+                customer_email: user.email,
+                metadata: {
+                    courseId: courseId,
+                    userId: user.id
+                }
             });
-
-            // await prisma.payment.create({
-            //     data: {
-            //         userId: user.id,
-            //         courseId: courseId,
-            //         amount: course.price,
-            //     }
-            // })
             
+            this.handlePaymentSuccess(session);
+
             return session;
         } catch (error) {
             console.error('Error creating Stripe session:', error);
             throw new Error(`Failed to create payment session: ${error.message}`);
         }
     }
+
+    async handlePaymentSuccess(session: Stripe.Checkout.Session) {
+        try {
+            if (!session.metadata?.courseId || !session.metadata?.userId) {
+                throw new Error('Missing required metadata in session');
+            }
+
+            const { courseId, userId } = session.metadata;
+            const amount = session.amount_total ? session.amount_total / 100 : 0; // Convert from cents to dollars
+
+            // Store payment in database
+            const payment = await prisma.payment.create({
+                data: {
+                    amount: amount,
+                    courseId: parseInt(courseId),
+                    status: 'Pay',
+                    method: 'stripe',
+                    userId: userId,
+                }
+            });
+
+            // Add course to user's enrolled courses
+            await prisma.user.update({
+                where: { id: userId },
+                data: {
+                    enrolledCourses: {
+                        push: courseId
+                    }
+                }
+            });
+
+            // Add user to course's enrolled students
+            await prisma.course.update({
+                where: { id: courseId },
+                data: {
+                    studentsEnrolled: {
+                        push: userId
+                    }
+                }
+            });
+
+            return payment;
+        } catch (error) {
+            console.error('Error handling payment success:', error);
+            throw new Error(`Failed to process payment success: ${error.message}`);
+        }
+    }
+
+    
 }

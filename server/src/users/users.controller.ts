@@ -14,12 +14,146 @@ export class UsersController {
     // TODO: Get User Profile
     @Get('profile')
     @UseGuards(AuthGuard('jwt'))
-    @ApiOperation({ summary: 'Get user profile' })
+    @ApiOperation({ summary: 'Get comprehensive user profile with all related data' })
     @ApiBearerAuth()
-    getProfile(
-        @User() user : UserDto
-    ) {
-        return user;
+    @ApiResponse({
+        status: 200,
+        description: 'Comprehensive user profile retrieved successfully',
+        schema: {
+            type: 'object',
+            properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+                username: { type: 'string' },
+                email: { type: 'string' },
+                avatarUrl: { type: 'string' },
+                role: { type: 'string' },
+                enrolledCourses: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string' },
+                            title: { type: 'string' },
+                            description: { type: 'string' },
+                            thumbnail: { type: 'string' },
+                            price: { type: 'number' },
+                            instructor: {
+                                type: 'object',
+                                properties: {
+                                    id: { type: 'string' },
+                                    name: { type: 'string' },
+                                    username: { type: 'string' },
+                                    avatarUrl: { type: 'string' }
+                                }
+                            },
+                            lessons: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        id: { type: 'string' },
+                                        title: { type: 'string' }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                wishList: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string' },
+                            title: { type: 'string' },
+                            description: { type: 'string' },
+                            thumbnail: { type: 'string' },
+                            price: { type: 'number' },
+                            instructor: {
+                                type: 'object',
+                                properties: {
+                                    id: { type: 'string' },
+                                    name: { type: 'string' },
+                                    username: { type: 'string' },
+                                    avatarUrl: { type: 'string' }
+                                }
+                            }
+                        }
+                    }
+                },
+                payments: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string' },
+                            amount: { type: 'number' },
+                            date: { type: 'string', format: 'date-time' },
+                            status: { type: 'string' },
+                            method: { type: 'string' },
+                            course: {
+                                type: 'object',
+                                properties: {
+                                    id: { type: 'string' },
+                                    title: { type: 'string' },
+                                    description: { type: 'string' },
+                                    thumbnail: { type: 'string' },
+                                    price: { type: 'number' },
+                                    instructor: {
+                                        type: 'object',
+                                        properties: {
+                                            id: { type: 'string' },
+                                            name: { type: 'string' },
+                                            username: { type: 'string' },
+                                            avatarUrl: { type: 'string' }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                myCourses: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id: { type: 'string' },
+                            title: { type: 'string' },
+                            description: { type: 'string' },
+                            thumbnail: { type: 'string' },
+                            price: { type: 'number' },
+                            published: { type: 'boolean' },
+                            studentsEnrolled: { type: 'array', items: { type: 'string' } },
+                            lessons: {
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        id: { type: 'string' },
+                                        title: { type: 'string' }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                statistics: {
+                    type: 'object',
+                    properties: {
+                        totalSpent: { type: 'number' },
+                        totalCoursesEnrolled: { type: 'number' },
+                        totalWishlistItems: { type: 'number' },
+                        totalCoursesCreated: { type: 'number' },
+                        totalPayments: { type: 'number' }
+                    }
+                }
+            }
+        }
+    })
+    async getProfile(@User() user: UserDto) {
+        return this.usersService.getComprehensiveUserProfile(user.id);
     }
 
     @Get('instructor/:id')

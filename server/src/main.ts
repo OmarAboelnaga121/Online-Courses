@@ -27,7 +27,7 @@ async function bootstrap() {
     .addTag('Auth', 'Authentication and user management')
     .addTag('Courses', 'Course management')
     .addTag('Users', 'User management')
-    .addTag('Payments', 'Payment management')
+    .addTag('Stripe', 'Stripe payment management')
     .addServer('http://localhost:3000', 'Local server')
     .build();
 
