@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   redis:
     image: redis:latest
@@ -25,11 +23,13 @@ services:
     restart: always
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/eduflex
+      REDIS_URL: redis://redis:6379
       # Add other environment variables as needed
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - redis
 
 volumes:
   redis_data:
