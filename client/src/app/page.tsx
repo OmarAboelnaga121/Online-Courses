@@ -1,25 +1,116 @@
 import Image from "next/image";
+// import { useEffect, useState } from "react";
 
-export default function Home() {
+
+const categories = [
+  {
+    id: 1,
+    title: "Programming",
+    link:""
+  },
+  {
+    id: 2,
+    title: "Markting",
+    link:""
+  },
+  {
+    id: 3,
+    title: "Designing",
+    link:""
+  },
+  {
+    id: 4,
+    title: "business",
+    link:""
+  },
+  {
+    id: 5,
+    title: "Photography",
+    link:""
+  },
+]
+
+type coursesType = {
+  id: string
+  title: string
+  description: string
+  whatYouWillLearn: string
+  language: string
+  price: number
+  thumbnail: string
+  category: string
+  published: boolean
+  instructorId: string
+  studentsEnrolled: string[]
+}
+
+export default async function Home() {
+  // const [courses, useCourses] = useState<coursesType[]>([])
+
+  // Get Courses 
+  const getCourses = async() =>{
+    const response = await fetch('http://localhost:3000/courses',{
+      cache: 'no-store'
+    })
+
+    if(!response.ok){
+      console.log("Error");
+      return [];
+    }
+
+    const data  = await response.json();
+    return data.slice(0, 3);
+  }
+
+  const courses = await getCourses()
+
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center mt-10 px-4 lg:px-16 max-w-7xl mx-auto gap-y-8 lg:gap-y-0 lg:gap-x-16">
-      <div className="w-full lg:w-1/2 flex justify-center text-center">
-        <Image
-          src="/heroPic.png"
-          alt="logo"
-          width={500}
-          height={500}
-          className="max-w-xs md:max-w-md lg:max-w-lg w-full h-auto"
-        />
+    <div className="flex flex-col gap-10 justify-center text-center">
+      <div className="flex flex-col lg:flex-row items-center justify-center mt-10 px-4 lg:px-16 max-w-7xl mx-auto gap-y-8 lg:gap-y-0 lg:gap-x-16">
+        <div className="w-full lg:w-1/2 flex justify-center text-center">
+          <Image
+            src="/heroPic.png"
+            alt="logo"
+            width={500}
+            height={500}
+            className="max-w-xs md:max-w-md lg:max-w-lg w-full h-auto"
+          />
+        </div>
+        <div className="w-full lg:w-1/2 flex flex-col gap-6 items-center lg:items-start text-center lg:text-left">
+          <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold">
+            Learn Anything. Anytime. Anywhere.
+          </h1>
+          <p className="text-base md:text-lg lg:text-xl">
+            Join thousands of learners today.
+          </p>
+          <button className="primaryBtn w-full ">Browse Courses</button>
+        </div>
       </div>
-      <div className="w-full lg:w-1/2 flex flex-col gap-6 items-center lg:items-start text-center lg:text-left">
-        <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold">
-          Learn Anything. Anytime. Anywhere.
-        </h1>
-        <p className="text-base md:text-lg lg:text-xl">
-          Join thousands of learners today.
-        </p>
-        <button className="primaryBtn w-full ">Browse Courses</button>
+      <div className="flex justify-center gap-5 flex-wrap">
+        {categories.map((category) => (
+          <div className="bg-[#d3d6dc] p-3 border-0 rounded-md" key={category.id}>
+            {category.title}
+          </div>
+        ))}
+      </div>
+      <div className="flex w-full justify-center text-center">
+        <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured courses</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {courses.slice(0, 3).map((course : coursesType) => (
+              <div key={course.id} className="p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                <Image src={course.thumbnail} alt="course image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
+                <div className="flex flex-col gap-2 justify-start text-start">
+                  <h2 className="text-lg font-bold">{course.title}</h2>
+                  <h2 className="text-sm">{course.description}</h2>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div>
+        Testimonials
       </div>
     </div>
   );

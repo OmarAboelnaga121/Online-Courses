@@ -54,7 +54,7 @@ export class CoursesService {
                 description: courseData.description,
                 whatYouWillLearn: courseData.whatYouWillLearn,
                 language: courseData.language,
-                price: Number(courseData.price),
+                price: courseData.price,
                 thumbnail: uploadResult.url,
                 category: courseData.category,
                 published: false,
