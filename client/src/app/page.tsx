@@ -30,6 +30,27 @@ const categories = [
   },
 ]
 
+const testimonials = [
+  {
+    id:1,
+    name:"Sophia",
+    image:"testimonial1.png",
+    description:"EduFlex has transformed my learning experience. The courses are engaging and the instructors are top-notch."
+  },
+  {
+    id:2,
+    name:"Sophia",
+    image:"testimonial2.png",
+    description:"I've gained valuable skills in web development thanks to EduFlex's comprehensive courses and hands-on projects."
+  },
+  {
+    id:3,
+    name:"Sophia",
+    image:"testimonial3.png",
+    description:"The design courses on EduFlex are incredibly creative and inspiring. I've learned so much from the expert instructors."
+  },
+]
+
 type coursesType = {
   id: string
   title: string
@@ -93,24 +114,33 @@ export default async function Home() {
           </div>
         ))}
       </div>
-      <div className="flex w-full justify-center text-center">
-        <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured courses</h1>
+      <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured courses</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {courses.slice(0, 3).map((course : coursesType) => (
+            <div key={course.id} className="p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+              <Image src={course.thumbnail} alt="course image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
+              <div className="flex flex-col gap-2 justify-start text-start">
+                <h2 className="text-lg font-bold">{course.title}</h2>
+                <h2 className="text-sm">{course.description}</h2>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div>
+         <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Testimonials</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {courses.slice(0, 3).map((course : coursesType) => (
-              <div key={course.id} className="p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-                <Image src={course.thumbnail} alt="course image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
-                <div className="flex flex-col gap-2 justify-start text-start">
-                  <h2 className="text-lg font-bold">{course.title}</h2>
-                  <h2 className="text-sm">{course.description}</h2>
-                </div>
+            {testimonials.map((testimonial)=> (
+              <div key={testimonial.id} className="p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+                <Image src={`/${testimonial.image}`} alt="testimonial image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
+                <h2>{testimonial.name}</h2>
+                <p>"{testimonial.description}"</p>
               </div>
             ))}
           </div>
         </div>
-      </div>
-      <div>
-        Testimonials
       </div>
     </div>
   );
