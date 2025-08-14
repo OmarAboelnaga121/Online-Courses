@@ -112,7 +112,7 @@ export class CoursesController {
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @ApiBody({
-    description: 'Upload lessons, each with exactly one title and one video. The lessons field is a JSON array of lesson metadata (title, courseId, etc.), and the videos field is an array of video files. The order of lessons and videos must match: lessons[i] corresponds to videos[i].',
+    description: 'Upload lessons, each with exactly one title and one video. The lessons field is a JSON array of lesson metadata (title, courseId, etc.), and the videos field is an array of video files. The order of lessons and videos must match: lessons[i] corresponds to videos[i]. Like this: [{"title":"First Lesson"}]',
     schema: {
       type: 'object',
       properties: {

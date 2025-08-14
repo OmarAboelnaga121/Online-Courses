@@ -118,8 +118,10 @@ export default async function Home() {
         <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured courses</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {courses.slice(0, 3).map((course : coursesType) => (
-            <div key={course.id} className="p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-              <Image src={course.thumbnail} alt="course image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
+            <div key={course.id} className="flex flex-col p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
+              <div className="h-48 mb-2">
+                <Image src={course.thumbnail} alt="course image" width={300} height={200} className="w-full h-full object-cover rounded-md"/>
+              </div>
               <div className="flex flex-col gap-2 justify-start text-start">
                 <h2 className="text-lg font-bold">{course.title}</h2>
                 <h2 className="text-sm">{course.description}</h2>
