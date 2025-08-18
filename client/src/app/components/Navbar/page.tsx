@@ -32,8 +32,8 @@ export default function Navbar() {
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
           </Link>
           <div className="flex items-center gap-3 ml-4">
-            <Link href={"/"} className="primaryBtn">Register</Link>
-            <Link href={"/"} className="secondryBtn">Login</Link>
+            <Link href={"/register"} className="primaryBtn">Register</Link>
+            <Link href={"/login"} className="secondryBtn">Login</Link>
           </div>
         </div>
 

@@ -53,3 +53,40 @@ body{
 .primaryBtn:active, .secondryBtn:active {
   transform: translateY(0);
 }
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  outline: none;
+  background: #FFFFFF;
+}
+
+.input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(36, 140, 242, 0.1);
+}
+
+.input::placeholder {
+  color: #9CA3AF;
+}
+
+.fileInput {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px dashed #D1D5DB;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #FAFAFA;
+}
+
+.fileInput:hover {
+  border-color: var(--primary-color);
+  background: rgba(36, 140, 242, 0.05);
+}

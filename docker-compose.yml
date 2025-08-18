@@ -31,6 +31,17 @@ services:
       - db
       - redis
 
+  prisma-studio:
+    build: ./server
+    restart: always
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/eduflex
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    command: npx prisma studio --hostname 0.0.0.0
+
 volumes:
   redis_data:
   db_data:
