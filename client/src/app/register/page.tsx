@@ -121,6 +121,7 @@ export default function Register() {
                 />
               </div>
               <div>
+                
                 <label className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors cursor-pointer text-center">
                   <input type="file" className="hidden" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
                   <span className="text-gray-600">
