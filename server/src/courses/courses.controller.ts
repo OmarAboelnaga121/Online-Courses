@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, UploadedFile, UseInterceptors, Req, UseGuards, Param, UploadedFiles, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiCookieAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CoursesService } from './courses.service';
 import { CourseDto } from './dto/courses.dto';
@@ -39,7 +39,7 @@ export class CoursesController {
 
   @Get(':id/lessons')
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Get all lessons for a course' })
   @ApiResponse({ status: 200, description: 'List of lessons for the course', type: [LessonDto] })
   async getLessonsForCourse(@Param('id') id: string) {
@@ -49,9 +49,9 @@ export class CoursesController {
   @Post()
   @UseGuards(AuthGuard('jwt')) 
   @UseInterceptors(FileInterceptor('photo'))
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Create a new course' })
   @ApiConsumes('multipart/form-data')
-  @ApiBearerAuth()
   @ApiBody({
     description: 'Course creation payload',
     schema: {
@@ -85,8 +85,8 @@ export class CoursesController {
 
   @Put(':id/publish')
   @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Update the published status of a course' })
-  @ApiBearerAuth()
   @ApiBody({
     schema: {
       type: 'object',
@@ -108,9 +108,9 @@ export class CoursesController {
   @Post(':id/lessons/upload')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FilesInterceptor('videos'))
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Upload lesson videos for a course (1 lesson = 1 video)' })
   @ApiConsumes('multipart/form-data')
-  @ApiBearerAuth()
   @ApiBody({
     description: 'Upload lessons, each with exactly one title and one video. The lessons field is a JSON array of lesson metadata (title, courseId, etc.), and the videos field is an array of video files. The order of lessons and videos must match: lessons[i] corresponds to videos[i]. Like this: [{"title":"First Lesson"}]',
     schema: {
@@ -156,7 +156,7 @@ export class CoursesController {
 
   @Post(':id/reviews')
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
+  @ApiCookieAuth()
   @ApiOperation({ summary: 'Create a review for a course' })
   @ApiBody({
     schema: {

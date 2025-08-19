@@ -1,4 +1,5 @@
-import { Controller, Post, Body, UseGuards, Req, Get, UsePipes, ValidationPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, UsePipes, ValidationPipe, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { RegisterUserDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, getSchemaPath, ApiConsumes } from '@nestjs/swagger';
@@ -44,8 +45,18 @@ export class AuthController {
   @ApiBody({ type: LoginUserDto })
   @ApiResponse({ status: 201, description: 'User logged in successfully, returns JWT token and user data.' })
   @ApiResponse({ status: 400, description: 'Invalid email or password.' })
-  async login(@Body() loginData: LoginUserDto) {
-    return this.authService.login(loginData);
+  async login(@Body() loginData: LoginUserDto, @Res({ passthrough: true }) res: Response,) {
+    const result = await this.authService.login(loginData);
+
+    // store token in cookie
+    res.cookie('access_token', result.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // true on production (https)
+      sameSite: 'strict',
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    });
+
+    return { user: result.user }; 
   }
 
   @Post('forgot-password')
@@ -64,5 +75,13 @@ export class AuthController {
   async resetPassword(@Body() body: ResetPasswordDto) {
     await this.authService.updatePassword(body.token, body.newPassword);
     return { message: 'Password has been reset.' };
+  }
+
+  @Post('logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: 200, description: 'Logged out successfully.' })
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token');
+    return { message: 'Logged out successfully' };
   }
 }

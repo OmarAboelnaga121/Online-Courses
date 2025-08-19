@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { User } from '../auth/decorators/user.decorator';
 import { UserDto } from '../auth/dto';
 import { UsersService } from './users.service';
@@ -14,8 +14,8 @@ export class UsersController {
     // TODO: Get User Profile
     @Get('profile')
     @UseGuards(AuthGuard('jwt'))
+    @ApiCookieAuth()
     @ApiOperation({ summary: 'Get comprehensive user profile with all related data' })
-    @ApiBearerAuth()
     @ApiResponse({
         status: 200,
         description: 'Comprehensive user profile retrieved successfully',
@@ -195,7 +195,7 @@ export class UsersController {
     @Put('profile')
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(FileInterceptor('photo'))
-    @ApiBearerAuth()
+    @ApiCookieAuth()
     @ApiOperation({ summary: 'Update user profile' })
     @ApiConsumes('multipart/form-data')
     @ApiBody({

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Logger, Post, Headers, Req, RawBodyRequest, BadRequestException, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { Stripe } from 'stripe';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiCookieAuth, ApiBody } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/decorators/user.decorator';
 import { UserDto } from '../auth/dto';
@@ -16,7 +16,7 @@ export class StripeController {
 
     @Post('create-checkout-session')
     @UseGuards(AuthGuard('jwt'))
-    @ApiBearerAuth()
+    @ApiCookieAuth()
     @ApiOperation({ summary: 'Create a Stripe checkout session' })
     @ApiResponse({ status: 201, description: 'Checkout session created successfully' })
     @ApiResponse({ status: 400, description: 'Bad request' })

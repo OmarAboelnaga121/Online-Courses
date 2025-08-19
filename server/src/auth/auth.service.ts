@@ -76,6 +76,7 @@ export class AuthService {
     }
     // Remove password before returning
     const { password, ...userWithoutPassword } = user;
+    
     // Generate JWT token
     const token = await this.generateJwtToken(user);
     return { user: userWithoutPassword, access_token: token.access_token };
