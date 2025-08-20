@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 type RegisterBody = {
@@ -20,7 +21,8 @@ export default function Register() {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
-  const [role] = useState<string>("student");
+  const [isInstructor, setIsInstructor] = useState<boolean>(false);
+  const role = isInstructor ? "instructor" : "student";
   const [errors, setErrors] = useState<string[]>([]);
   const route = useRouter()
 
@@ -121,7 +123,6 @@ export default function Register() {
                 />
               </div>
               <div>
-                
                 <label className="block w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors cursor-pointer text-center">
                   <input type="file" className="hidden" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
                   <span className="text-gray-600">
@@ -129,6 +130,22 @@ export default function Register() {
                   </span>
                 </label>
               </div>
+              <div className="flex items-center">
+                <input 
+                  type="checkbox" 
+                  id="instructor" 
+                  className="mr-2" 
+                  checked={isInstructor}
+                  onChange={(e) => setIsInstructor(e.target.checked)}
+                />
+                <label htmlFor="instructor" className="text-sm text-gray-600">
+                  Register as an Instructor
+                </label>
+              </div>
+              <input type="checkbox" id="terms" className="mr-2" required/>
+              <label htmlFor="terms" className="text-sm text-gray-600">
+                I agree to the <Link href="/terms" className="text-blue-500">terms</Link> and <Link href="/privacy" className="text-blue-500">privacy policy</Link>
+              </label>
               <button
                 type="submit"
                 className="primaryBtn w-full"
