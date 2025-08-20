@@ -36,7 +36,7 @@ export default function Login() {
       }
       
       setErrors([]);
-      router.push("/courses");
+      router.push("/");
     } catch (error) {
       setErrors(["Network error. Please try again."]);
     }

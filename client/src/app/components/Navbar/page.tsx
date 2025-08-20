@@ -1,14 +1,53 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+type UserProfile = {
+  name: string;
+  email: string;
+  avatarUrl : string;
+  role: string;
+};
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const getUserProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/users/profile", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const profile = await getUserProfile();
+      if (profile) {
+        setUserProfile(profile);
+        setIsLoggedIn(true);
+      }
+    };
+    fetchProfile();
+  }, []);
+
 
   return (
     <div className="relative">
@@ -31,9 +70,21 @@ export default function Navbar() {
             Contact
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
           </Link>
-          <div className="flex items-center gap-3 ml-4">
-            <Link href={"/register"} className="primaryBtn">Register</Link>
-            <Link href={"/login"} className="secondryBtn">Login</Link>
+          <div className="flex items-center gap-3">
+            {isLoggedIn ? (
+              <Link href={"/profile"} className="flex items-center gap-2 px-3 py-2 transition-all duration-300 relative group">
+                <Image src={userProfile?.avatarUrl || "/default-avatar.png"} alt="User Avatar" width={40} height={40} className="rounded-full" />
+                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 relative">
+                  Welcome, {userProfile?.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+                </span>
+              </Link>
+            ) : (
+              <>
+                <Link href={"/register"} className="primaryBtn">Register</Link>
+                <Link href={"/login"} className="secondryBtn">Login</Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -96,8 +147,17 @@ export default function Navbar() {
             Contact
           </Link>
           <div className="flex flex-col gap-2 pt-4 pb-3">
-            <button className="primaryBtn w-full text-center">Register</button>
-            <button className="secondryBtn w-full text-center">Login</button>
+            {isLoggedIn ? (
+              <Link href={"/profile"} className="flex items-center gap-3 px-3 py-2 text-gray-700">
+                <Image src={userProfile?.avatarUrl || "/default-avatar.png"} alt="User Avatar" width={40} height={40} className="rounded-full" />
+                <span>Welcome, {userProfile?.name}</span>
+              </Link>
+            ) : (
+              <>
+                <Link href={"/register"} className="primaryBtn w-full text-center" onClick={() => setIsMobileMenuOpen(false)}>Register</Link>
+                <Link href={"/login"} className="secondryBtn w-full text-center" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
