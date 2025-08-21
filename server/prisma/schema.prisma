@@ -81,7 +81,7 @@ model Payment {
   id        String   @id @default(uuid())
   amount    Float
   date      DateTime @default(now())
-  courseId  Int
+  courseId  String
   status    Status
   method    String
   user      User     @relation(fields: [userId], references: [id])

@@ -1,51 +1,51 @@
 import Image from "next/image";
-// import { useEffect, useState } from "react";
+import Link from "next/link";
 
 
 const categories = [
   {
     id: 1,
     title: "Programming",
-    link:""
+    link:"/courses?category=Programming"
   },
   {
     id: 2,
-    title: "Markting",
-    link:""
+    title: "Marketing",
+    link:"/courses?category=Marketing"
   },
   {
     id: 3,
     title: "Designing",
-    link:""
+    link:"/courses?category=Designing"
   },
   {
     id: 4,
-    title: "business",
-    link:""
+    title: "Business",
+    link:"/courses?category=Business"
   },
   {
     id: 5,
     title: "Photography",
-    link:""
+    link:"/courses?category=Photography"
   },
 ]
 
 const testimonials = [
   {
     id:1,
-    name:"Sophia",
+    name:"Sarah Johnson",
     image:"testimonial1.png",
     description:"EduFlex has transformed my learning experience. The courses are engaging and the instructors are top-notch."
   },
   {
     id:2,
-    name:"Sophia",
+    name:"Mike Chen",
     image:"testimonial2.png",
     description:"I've gained valuable skills in web development thanks to EduFlex's comprehensive courses and hands-on projects."
   },
   {
     id:3,
-    name:"Sophia",
+    name:"Emma Davis",
     image:"testimonial3.png",
     description:"The design courses on EduFlex are incredibly creative and inspiring. I've learned so much from the expert instructors."
   },
@@ -104,44 +104,42 @@ export default async function Home() {
           <p className="text-base md:text-lg lg:text-xl">
             Join thousands of learners today.
           </p>
-          <button className="primaryBtn w-full ">Browse Courses</button>
+          <Link href="/courses" className="primaryBtn w-full text-center">Browse Courses</Link>
         </div>
       </div>
       <div className="flex justify-center gap-5 flex-wrap">
         {categories.map((category) => (
-          <div className="bg-[#d3d6dc] p-3 border-0 rounded-md" key={category.id}>
+          <Link href={category.link} key={category.id} className="bg-[#d3d6dc] p-3 rounded-md hover:bg-[#c1c5cc] transition-colors duration-200 cursor-pointer">
             {category.title}
-          </div>
+          </Link>
         ))}
       </div>
       <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
-        <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured courses</h1>
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured Courses</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courses.slice(0, 3).map((course : coursesType) => (
-            <div key={course.id} className="flex flex-col p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-              <div className="h-48 mb-2">
-                <Image src={course.thumbnail} alt="course image" width={300} height={200} className="w-full h-full object-cover rounded-md"/>
-              </div>
-              <div className="flex flex-col gap-2 justify-start text-start">
-                <h2 className="text-lg font-bold">{course.title}</h2>
-                <h2 className="text-sm">{course.description}</h2>
-              </div>
+          {courses.map((course : coursesType) => (
+            <div key={course.id} className="p-4 bg-white rounded-lg shadow-md cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                    <Image src={course.thumbnail} alt={course.title} width={300} height={200} className="w-full h-48 object-cover rounded-md mb-3" />
+                    <h3 className="font-semibold text-lg mb-2">{course.title}</h3>
+                    <p className="text-gray-600 mb-3">{course.description}</p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-600 font-bold">${course.price}</span>
+                        <span className="text-sm text-gray-500">{course.category}</span>
+                    </div>
+                </div>
+            ))}
+            </div>
+        </div>
+      <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16 mx-auto">
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">What Our Students Say</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {testimonials.map((testimonial)=> (
+            <div key={testimonial.id} className="p-4 bg-white rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <Image src={`/${testimonial.image}`} alt="testimonial image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
+              <h2>{testimonial.name}</h2>
+              <p>"{testimonial.description}"</p>
             </div>
           ))}
-        </div>
-      </div>
-      <div>
-         <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Testimonials</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {testimonials.map((testimonial)=> (
-              <div key={testimonial.id} className="p-3 border-0 rounded-md cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-                <Image src={`/${testimonial.image}`} alt="testimonial image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
-                <h2>{testimonial.name}</h2>
-                <p>"{testimonial.description}"</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

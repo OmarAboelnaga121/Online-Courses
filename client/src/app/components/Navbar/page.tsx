@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 type UserProfile = {
   name: string;
@@ -11,6 +12,7 @@ type UserProfile = {
 };
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,10 +45,13 @@ export default function Navbar() {
       if (profile) {
         setUserProfile(profile);
         setIsLoggedIn(true);
+      } else {
+        setUserProfile(null);
+        setIsLoggedIn(false);
       }
     };
     fetchProfile();
-  }, []);
+  }, [pathname]);
 
 
   return (

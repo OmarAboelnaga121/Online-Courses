@@ -80,10 +80,12 @@ export class StripeService {
             const payment = await prisma.payment.create({
                 data: {
                     amount: amount,
-                    courseId: parseInt(courseId),
+                    courseId: courseId,
                     status: 'Pay',
                     method: 'stripe',
-                    userId: userId,
+                    user: {
+                        connect: { id: userId }
+                    }
                 }
             });
 
