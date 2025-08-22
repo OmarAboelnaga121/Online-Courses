@@ -4,6 +4,9 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto, LoginUserDto, ForgotPasswordDto, ResetPasswordDto } from './dto';
 import { BadRequestException } from '@nestjs/common';
 
+const TEST_PASSWORD = 'testPassword123';
+const TEST_NEW_PASSWORD = 'newTestPassword123';
+
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
@@ -39,7 +42,7 @@ describe('AuthController', () => {
       name: 'John Doe',
       username: 'johndoe',
       email: 'john@example.com',
-      password: 'password123',
+      password: TEST_PASSWORD,
       role: 'student',
     };
 
@@ -85,7 +88,7 @@ describe('AuthController', () => {
   describe('login', () => {
     const mockLoginData: LoginUserDto = {
       email: 'john@example.com',
-      password: 'password123',
+      password: TEST_PASSWORD,
     };
 
     const mockLoginResponse = {
@@ -100,20 +103,25 @@ describe('AuthController', () => {
       access_token: 'jwt-token-123',
     };
 
+    const mockResponse = {
+      cookie: jest.fn(),
+    } as any;
+
     it('should login user successfully', async () => {
       mockAuthService.login.mockResolvedValue(mockLoginResponse);
 
-      const result = await controller.login(mockLoginData);
+      const result = await controller.login(mockLoginData, mockResponse);
 
       expect(authService.login).toHaveBeenCalledWith(mockLoginData);
-      expect(result).toEqual(mockLoginResponse);
+      expect(result).toEqual({ user: mockLoginResponse.user });
+      expect(mockResponse.cookie).toHaveBeenCalled();
     });
 
     it('should throw BadRequestException when login fails', async () => {
       const errorMessage = 'Invalid email or password';
       mockAuthService.login.mockRejectedValue(new BadRequestException(errorMessage));
 
-      await expect(controller.login(mockLoginData))
+      await expect(controller.login(mockLoginData, mockResponse))
         .rejects
         .toThrow(BadRequestException);
       
@@ -135,13 +143,13 @@ describe('AuthController', () => {
       expect(result).toEqual({ message: 'Password reset email sent.' });
     });
 
-    it('should throw error when password reset fails', async () => {
+    it('should throw BadRequestException when password reset fails', async () => {
       const errorMessage = 'User not found';
-      mockAuthService.resetPassword.mockRejectedValue(new Error(errorMessage));
+      mockAuthService.resetPassword.mockRejectedValue(new BadRequestException(errorMessage));
 
       await expect(controller.forgotPassword(mockForgotPasswordData))
         .rejects
-        .toThrow(Error);
+        .toThrow(BadRequestException);
       
       expect(authService.resetPassword).toHaveBeenCalledWith(mockForgotPasswordData.email);
     });
@@ -150,7 +158,7 @@ describe('AuthController', () => {
   describe('resetPassword', () => {
     const mockResetPasswordData: ResetPasswordDto = {
       token: 'reset-token-123',
-      newPassword: 'newpassword123',
+      newPassword: TEST_NEW_PASSWORD,
     };
 
     it('should reset password successfully', async () => {
@@ -165,13 +173,13 @@ describe('AuthController', () => {
       expect(result).toEqual({ message: 'Password has been reset.' });
     });
 
-    it('should throw error when password reset fails', async () => {
+    it('should throw BadRequestException when password reset fails', async () => {
       const errorMessage = 'Invalid or expired token';
-      mockAuthService.updatePassword.mockRejectedValue(new Error(errorMessage));
+      mockAuthService.updatePassword.mockRejectedValue(new BadRequestException(errorMessage));
 
       await expect(controller.resetPassword(mockResetPasswordData))
         .rejects
-        .toThrow(Error);
+        .toThrow(BadRequestException);
       
       expect(authService.updatePassword).toHaveBeenCalledWith(
         mockResetPasswordData.token,

@@ -23,10 +23,6 @@ export class StripeController {
     @ApiBody({ type: CreateCheckoutSessionDto })
     async createCheckoutSession(@Body() body: CreateCheckoutSessionDto, @User() user: UserDto) {
         try {
-            console.log('Received body:', body);
-            console.log('CourseId type:', typeof body.courseId);
-            console.log('CourseId value:', body.courseId);
-            
             const session = await this.stripeService.createOrderByStripe(body.courseId, user);
             return {
                 success: true,
@@ -34,7 +30,7 @@ export class StripeController {
                 url: session.url
             };
         } catch (error) {
-            return new BadRequestException(`Failed to create checkout session: ${error.message}`);
+            throw new BadRequestException(`Failed to create checkout session: ${error.message}`);
         }
     }
 }

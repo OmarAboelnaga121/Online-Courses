@@ -3,7 +3,7 @@ import { StripeController } from './stripe.controller';
 import { StripeService } from './stripe.service';
 import { CreateCheckoutSessionDto } from './dto/order.dto';
 import { UserDto } from '../auth/dto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 
 describe('StripeController', () => {
   let controller: StripeController;
@@ -70,32 +70,21 @@ describe('StripeController', () => {
       });
     });
 
-    it('should handle service errors and return BadRequestException', async () => {
+    it('should throw BadRequestException when service fails', async () => {
       const errorMessage = 'Course not found';
       mockStripeService.createOrderByStripe.mockRejectedValue(new Error(errorMessage));
 
-      const result = await controller.createCheckoutSession(mockBody, mockUser);
+      await expect(controller.createCheckoutSession(mockBody, mockUser))
+        .rejects
+        .toThrow(BadRequestException);
 
       expect(stripeService.createOrderByStripe).toHaveBeenCalledWith(
         mockBody.courseId,
         mockUser
       );
-      expect(result).toBeInstanceOf(BadRequestException);
-      expect((result as BadRequestException).message).toBe(`Failed to create checkout session: ${errorMessage}`);
     });
 
-    it('should log request details for debugging', async () => {
-      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-      mockStripeService.createOrderByStripe.mockResolvedValue(mockStripeSession);
 
-      await controller.createCheckoutSession(mockBody, mockUser);
-
-      expect(consoleSpy).toHaveBeenCalledWith('Received body:', mockBody);
-      expect(consoleSpy).toHaveBeenCalledWith('CourseId type:', 'string');
-      expect(consoleSpy).toHaveBeenCalledWith('CourseId value:', mockBody.courseId);
-
-      consoleSpy.mockRestore();
-    });
   });
 
   describe('controller initialization', () => {

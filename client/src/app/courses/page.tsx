@@ -88,7 +88,7 @@ export default function Courses() {
     };
 
     const getData = async() => {
-        const response = await fetch("http://localhost:3000/courses",
+        const response = await fetch("http://localhost:3000/courses/published",
             {
                 method: "GET",
                 credentials: "include",

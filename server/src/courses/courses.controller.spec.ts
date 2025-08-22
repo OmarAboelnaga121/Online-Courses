@@ -170,14 +170,13 @@ describe('CoursesController', () => {
       role: 'instructor',
     };
 
-    const mockCourseData: any = {
+    const mockCourseData: CourseDto = {
       title: 'New Course',
       description: 'Course description',
       whatYouWillLearn: 'Learning objectives',
       language: 'English',
       price: 49.99,
       category: 'Programming',
-      published: false,
     };
 
     const mockPhoto = {
@@ -286,13 +285,15 @@ describe('CoursesController', () => {
       role: 'instructor',
     };
 
-    const mockLessons: any[] = [
+    const mockLessons: LessonDto[] = [
       {
         title: 'Lesson 1',
+        videoUrl: 'https://example.com/video1.mp4',
         courseId: courseId,
       },
       {
         title: 'Lesson 2',
+        videoUrl: 'https://example.com/video2.mp4',
         courseId: courseId,
       },
     ];

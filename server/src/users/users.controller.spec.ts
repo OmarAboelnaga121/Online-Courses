@@ -5,6 +5,15 @@ import { UserDto } from '../auth/dto';
 import { updateUserDto } from './dto/updateUser.dto';
 import { BadRequestException } from '@nestjs/common';
 
+const MOCK_USER: UserDto = {
+  id: 'user-123',
+  name: 'John Doe',
+  username: 'johndoe',
+  email: 'john@example.com',
+  avatarUrl: 'https://example.com/avatar.jpg',
+  role: 'student',
+};
+
 describe('UsersController', () => {
   let controller: UsersController;
   let usersService: UsersService;
@@ -35,15 +44,6 @@ describe('UsersController', () => {
   });
 
   describe('getProfile', () => {
-    const mockUser: UserDto = {
-      id: 'user-123',
-      name: 'John Doe',
-      username: 'johndoe',
-      email: 'john@example.com',
-      avatarUrl: 'https://example.com/avatar.jpg',
-      role: 'student',
-    };
-
     const mockComprehensiveProfile = {
       id: 'user-123',
       name: 'John Doe',
@@ -122,9 +122,9 @@ describe('UsersController', () => {
     it('should return comprehensive user profile', async () => {
       mockUsersService.getComprehensiveUserProfile.mockResolvedValue(mockComprehensiveProfile);
 
-      const result = await controller.getProfile(mockUser);
+      const result = await controller.getProfile(MOCK_USER);
 
-      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(mockUser.id);
+      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(MOCK_USER.id);
       expect(result).toEqual(mockComprehensiveProfile);
     });
 
@@ -134,16 +134,16 @@ describe('UsersController', () => {
         new BadRequestException(errorMessage)
       );
 
-      await expect(controller.getProfile(mockUser))
+      await expect(controller.getProfile(MOCK_USER))
         .rejects
         .toThrow(BadRequestException);
       
-      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(mockUser.id);
+      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(MOCK_USER.id);
     });
 
     it('should return profile with instructor data for instructor users', async () => {
       const instructorUser: UserDto = {
-        ...mockUser,
+        ...MOCK_USER,
         role: 'instructor',
       };
 
@@ -264,15 +264,6 @@ describe('UsersController', () => {
   });
 
   describe('updateProfile', () => {
-    const mockUser: UserDto = {
-      id: 'user-123',
-      name: 'John Doe',
-      username: 'johndoe',
-      email: 'john@example.com',
-      avatarUrl: 'https://example.com/avatar.jpg',
-      role: 'student',
-    };
-
     const mockUpdateData: updateUserDto = {
       name: 'John Updated',
       username: 'johnupdated',
@@ -301,10 +292,10 @@ describe('UsersController', () => {
     it('should update user profile successfully', async () => {
       mockUsersService.updateUserProfile.mockResolvedValue(mockUpdatedProfile);
 
-      const result = await controller.updateProfile(mockUser, mockUpdateData, mockPhoto);
+      const result = await controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto);
 
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
-        mockUser,
+        MOCK_USER,
         mockUpdateData,
         mockPhoto
       );
@@ -314,10 +305,10 @@ describe('UsersController', () => {
     it('should update profile without photo', async () => {
       mockUsersService.updateUserProfile.mockResolvedValue(mockUpdatedProfile);
 
-      const result = await controller.updateProfile(mockUser, mockUpdateData, undefined);
+      const result = await controller.updateProfile(MOCK_USER, mockUpdateData, undefined);
 
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
-        mockUser,
+        MOCK_USER,
         mockUpdateData,
         undefined
       );
@@ -329,12 +320,12 @@ describe('UsersController', () => {
         new BadRequestException('Username already taken')
       );
 
-      await expect(controller.updateProfile(mockUser, mockUpdateData, mockPhoto))
+      await expect(controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto))
         .rejects
         .toThrow(BadRequestException);
       
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
-        mockUser,
+        MOCK_USER,
         mockUpdateData,
         mockPhoto
       );
@@ -345,7 +336,7 @@ describe('UsersController', () => {
         new BadRequestException('Failed to upload photo')
       );
 
-      await expect(controller.updateProfile(mockUser, mockUpdateData, mockPhoto))
+      await expect(controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto))
         .rejects
         .toThrow(BadRequestException);
     });
@@ -362,10 +353,10 @@ describe('UsersController', () => {
 
       mockUsersService.updateUserProfile.mockResolvedValue(partialUpdatedProfile);
 
-      const result = await controller.updateProfile(mockUser, partialUpdateData, undefined);
+      const result = await controller.updateProfile(MOCK_USER, partialUpdateData, undefined);
 
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
-        mockUser,
+        MOCK_USER,
         partialUpdateData,
         undefined
       );
