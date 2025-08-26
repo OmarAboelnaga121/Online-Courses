@@ -46,6 +46,7 @@ model Course {
   id                String    @id @default(uuid())
   title             String
   description       String
+  overView          String
   whatYouWillLearn  String
   language          String
   price             Float

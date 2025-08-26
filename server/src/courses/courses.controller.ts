@@ -59,6 +59,7 @@ export class CoursesController {
       properties: {
         title: { type: 'string', example: 'Introduction to Programming' },
         description: { type: 'string', example: 'Learn the basics of programming using Python.' },
+        overView: { type: 'string', example: 'This comprehensive course covers fundamental programming concepts including variables, data types, control structures, and object-oriented programming principles.' },
         whatYouWillLearn: { type: 'string', example: 'Variables, Loops, Functions, OOP' },
         language: { type: 'string', example: 'English' },
         price: { type: 'number', example: 49.99 },
@@ -70,7 +71,7 @@ export class CoursesController {
           description: 'Course thumbnail image file '
         }
       },
-      required: ['title', 'description', 'whatYouWillLearn', 'language', 'price', 'category', 'published']
+      required: ['title', 'description', 'overView', 'whatYouWillLearn', 'language', 'price', 'category', 'published']
     }
   })
   @ApiResponse({ status: 201, description: 'Course created successfully', type: CourseDto })

@@ -13,6 +13,11 @@ export class CourseDto {
   @IsNotEmpty()
   description: string;
 
+  @ApiProperty({ example: 'This comprehensive course covers fundamental programming concepts including variables, data types, control structures, and object-oriented programming principles.', description: 'Overview of the course content and structure' })
+  @IsString()
+  @IsNotEmpty()
+  overView: string;
+
   @ApiProperty({ example: 'Variables, Loops, Functions, OOP', description: 'What students will learn in this course' })
   @IsString()
   @IsNotEmpty()

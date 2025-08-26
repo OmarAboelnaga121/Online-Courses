@@ -52,6 +52,7 @@ export class CoursesService {
             data: {
                 title: courseData.title,
                 description: courseData.description,
+                overView: courseData.overView,
                 whatYouWillLearn: courseData.whatYouWillLearn,
                 language: courseData.language,
                 price: courseData.price,
