@@ -1,93 +1,44 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
-type Course = {
-    id: string
-    title: string
-    description: string
-    overView: string
-    whatYouWillLearn: string
-    language: string
-    price: number
-    thumbnail: string
-    category: string
-    published: boolean
-    instructorId: string
-    studentsEnrolled: string[]
-}
-
-type UserProfile = {
-    id: string
-    name: string
-    email: string
-    enrolledCourses: string[]
-    role: string
-}
-
-type Review = {
-    id: string
-    userId: string
-    rating: number
-    comment: string
-    date: string
-    courseId: string
-}
-
-
+import { Course, UserProfile } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
+import { useCourse } from '@/hooks/useCourse';
+import { apiService } from '@/services/api';
+import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
+import ErrorMessage from '@/app/components/ui/ErrorMessage';
 
 export default function SingleCourse() {
     const params = useParams();
     const courseId = params.id as string;
-
-    const [course, setCourse] = useState<Course | null>(null);
-    const [reviews, setReviews] = useState<Review[]>([]);
     const [activeTab, setActiveTab] = useState('overview');
+    const { userProfile, isLoggedIn } = useAuth();
+    const { course, reviews, instructor, loading, error, getAverageRating } = useCourse(courseId);
 
-    const getCourseDetails = async() => {
+    const checkOutCourse = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/courses/${courseId}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch course details");
-            }
-            const data = await response.json();
-            setCourse(data)
-        } catch (error) {
-            setCourse(null);
+            const data = await apiService.initiateCheckout(courseId);
+            window.location.href = data.url;
+        } catch (err) {
+            console.error('Failed to initiate checkout:', err);
         }
     }
 
-    const getReviews = async() => {
-        try {
-            const response = await fetch(`http://localhost:3000/courses/${courseId}/reviews`);
-            if (response.ok) {
-                const data = await response.json();
-                setReviews(data);
-            }
-        } catch (error) {
-            console.error('Failed to fetch reviews');
-        }
+    const handleTabClick = (tab: string) => {
+        setActiveTab(tab);
+        document.getElementById(tab)?.scrollIntoView({ behavior: 'smooth' });
     }
 
-    const getAverageRating = () => {
-        if (reviews.length === 0) return 0;
-        const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-        return (sum / reviews.length).toFixed(1);
-    }
-
-    useEffect(() => {
-        getCourseDetails();
-        getReviews();
-    }, [courseId]);
+    if (loading) return <LoadingSpinner />;
+    if (error) return <ErrorMessage message={error} />;
 
     return (
         <div className="min-h-screen w-full">
-            {
-                course !== null ? 
-                <div className="flex h-screen w-full px-10">
-                    <div className="w-1/2 flex flex-col p-8">
+            {course ? 
+                <div className="flex flex-col-reverse lg:flex-row w-full px-10 ">
+                    <div className="w-full lg:w-1/2 flex flex-col p-8 mb-5">
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">{course.title}</h2>
                             <p className="text-gray-600 mb-6">{course.description}</p>
@@ -101,29 +52,29 @@ export default function SingleCourse() {
                         <ul className="flex gap-6 mb-6">
                             <li 
                                 className={`cursor-pointer pb-2 ${activeTab === 'overview' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
-                                onClick={() => setActiveTab('overview')}
+                                onClick={() => handleTabClick('overview')}
                             >
                                 Overview
                             </li>
                             <li 
                                 className={`cursor-pointer pb-2 ${activeTab === 'learn' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
-                                onClick={() => setActiveTab('learn')}
+                                onClick={() => handleTabClick('learn')}
                             >
                                 What You Will Learn
                             </li>
                             <li 
                                 className={`cursor-pointer pb-2 ${activeTab === 'review' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
-                                onClick={() => setActiveTab('review')}
+                                onClick={() => handleTabClick('review')}
                             >
                                 Review
                             </li>
                         </ul>
                         <div className="flex flex-col gap-5">
-                            <div>
+                            <div id="overview">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Course Overview</h2>
                                 <p>{course.overView}</p>
                             </div>
-                            <div>
+                            <div id="learn">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-5">What you'll learn</h2>
                                 <ul className="flex flex-col gap-5">
                                     {course.whatYouWillLearn.split(',').map((item, index) => (
@@ -139,11 +90,48 @@ export default function SingleCourse() {
                                     ))}
                                 </ul>
                             </div>
-                            
+                            <div id="instructor">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-5">Instructor</h2>
+                                {instructor && (
+                                    <div className="flex items-center gap-5">
+                                        <div>
+                                            <Image 
+                                            src={instructor.avatarUrl} 
+                                            alt={instructor.name} 
+                                            width={100} 
+                                            height={100}
+                                            />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900">{instructor.name}</h3>
+                                            <p className="text-gray-600">{instructor.username}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div id="review">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-5">Reviews</h2>
+                                {reviews.length > 0 ? (
+                                    <div className="space-y-4">
+                                        {reviews.map((review) => (
+                                            <div key={review.id} className="bg-gray-50 p-4 rounded-lg">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <div className="flex text-yellow-500">
+                                                        {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                                                    </div>
+                                                </div>
+                                                <p className="text-gray-700">{review.comment}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-500">No reviews yet.</p>
+                                )}
+                            </div>
                         </div>
                     </div>  
-                    <div className="w-1/2 gap-10 flex flex-col items-end justify-start m-8">
-                        <div className="w-[300px] gap-10 flex flex-col">
+                    <div className="w-full lg:w-1/2 gap-10 flex flex-col items-center lg:items-end justify-start m-8">
+                        <div className="w-full max-w-[300px] gap-10 flex flex-col">
                             <Image 
                                 src={course.thumbnail} 
                                 alt={course.title} 
@@ -151,12 +139,23 @@ export default function SingleCourse() {
                                 height={200} 
                                 className="object-cover"
                             />
-                            <Link 
-                                href={`/checkout/${course.id}`} 
+                            {userProfile?.enrolledCourses?.some(enrolledCourse => enrolledCourse.id === course.id) ?
+                                <Link 
+                                    href={`/`} 
+                                    className="primaryBtn w-full block text-center"
+                                >
+                                    Continue Learning
+                                </Link>
+                            : 
+                            <button 
+                                type="button"
+                                onClick={checkOutCourse}
                                 className="primaryBtn w-full block"
                             >
                                 Enroll Now
-                            </Link>
+                            </button>
+                            }
+                            
                         </div>
                     </div>
                 </div>
@@ -177,3 +176,5 @@ export default function SingleCourse() {
         </div>
     );
 }
+
+

@@ -24,12 +24,18 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/eduflex
       REDIS_URL: redis://redis:6379
-      # Add other environment variables as needed
+      NODE_ENV: development
     ports:
       - "3000:3000"
     depends_on:
       - db
       - redis
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
 
   prisma-studio:
     build: ./server

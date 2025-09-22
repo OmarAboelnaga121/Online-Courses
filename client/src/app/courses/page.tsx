@@ -4,43 +4,26 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
-type Course = {
-    id: string
-    title: string
-    description: string
-    whatYouWillLearn: string
-    language: string
-    price: number
-    thumbnail: string
-    category: string
-    published: boolean
-    instructorId: string
-    studentsEnrolled: string[]
-}
-
-type UserProfile = {
-    id: string
-    name: string
-    email: string
-    enrolledCourses: string[]
-    role: string
-}
+import { Course, UserProfile } from '@/types';
+import { useAuth } from '@/hooks/useAuth';
+import { apiService } from '@/services/api';
+import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
+import ErrorMessage from '@/app/components/ui/ErrorMessage';
 
 export default function Courses() {
     const searchParams = useSearchParams();
     const categoryParam = searchParams.get('category');
+    const { userProfile, isLoggedIn, loading: authLoading } = useAuth();
 
     const [courses, setCourses] = useState<Course[]>([]);
     const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
-    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [filters, setFilters] = useState({
         category: categoryParam || "All",
         language: "All",
         price: "All",
     });
-    // For Mobile
     const [showFilters, setShowFilters] = useState(false);
     const categories = ['All', 'Programming', 'Marketing', 'Designing', 'Business', 'Photography'];
     const languages = ['All', 'English', 'Spanish', 'French', 'German'];
@@ -71,56 +54,33 @@ export default function Courses() {
         setFilteredCourses(filtered);
     }, [filters, courses]);
 
-    const getUserProfile = async () => {
-        try {
-            const response = await fetch("http://localhost:3000/users/profile", {
-                method: "GET",
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                return null;
-            }
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            return null;
-        }
-    };
-
     const getData = async() => {
-        const response = await fetch("http://localhost:3000/courses/published",
-            {
-                method: "GET",
-                credentials: "include",
-            }
-        );
-        const data = await response.json();
-
-        setCourses(data);
-        setFilteredCourses(data);
+        try {
+            setLoading(true);
+            const data = await apiService.getPublishedCourses();
+            setCourses(data);
+            setFilteredCourses(data);
+        } catch (err) {
+            setError('Failed to load courses');
+        } finally {
+            setLoading(false);
+        }
     }
 
 
 
     const isEnrolled = (courseId: string) => {
         if (!userProfile) return false;
-        return userProfile.enrolledCourses?.includes(courseId) || 
-               courses.find(c => c.id === courseId)?.studentsEnrolled?.includes(userProfile.id);
+        return userProfile.enrolledCourses?.some(course => course.id === courseId) || 
+        courses.find(c => c.id === courseId)?.studentsEnrolled?.includes(userProfile.id);
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            await getData();
-            const profile = await getUserProfile();
-            if (profile) {
-                setUserProfile(profile);
-                setIsLoggedIn(true);
-            }
-        };
-        fetchData();
+        getData();
     }, []);
+
+    if (loading || authLoading) return <LoadingSpinner />;
+    if (error) return <ErrorMessage message={error} />;
 
     return (
         <div className="flex flex-col lg:flex-row gap-6 p-4 lg:p-6">
@@ -205,8 +165,15 @@ export default function Courses() {
                     <h2 className="text-2xl font-bold">Courses</h2>
                     <p className="text-gray-600">{filteredCourses.length} courses found</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {filteredCourses.map((course) => (
+                {!Array.isArray(filteredCourses) || filteredCourses.length === 0 ? (
+                    <div className="text-center py-12">
+                        <div className="text-gray-400 text-6xl mb-4">📚</div>
+                        <h3 className="text-xl font-semibold text-gray-700 mb-2">No courses found</h3>
+                        <p className="text-gray-500">Try adjusting your filters or check back later for new courses.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {filteredCourses.map((course) => (
                     <div key={course.id} className="p-4 bg-white rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl w-full">
                         <Link href={`/courses/${course.id}`}>
                             <Image src={course.thumbnail} alt={course.title} width={300} height={200} className="w-full h-32 sm:h-48 object-cover rounded-md mb-3 cursor-pointer" />
@@ -232,8 +199,9 @@ export default function Courses() {
                             )}
                         </div>
                     </div>
-                ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

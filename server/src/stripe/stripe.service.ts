@@ -31,6 +31,16 @@ export class StripeService {
             if(user.role !== 'student'){    
                 throw new ForbiddenException('User is not a student');
             }
+
+            // Check if user already purchased this course
+            const userWithCourses = await prisma.user.findUnique({
+                where: { id: user.id },
+                select: { enrolledCourses: true }
+            });
+            
+            if(userWithCourses?.enrolledCourses?.includes(courseId)){
+                throw new ForbiddenException('Course already purchased');
+            }
             
             const session = await this.stripe.checkout.sessions.create({
                 line_items: [

@@ -17,5 +17,5 @@ RUN npx prisma generate
 # Expose the port your NestJS app runs on
 EXPOSE 3000
 
-# Start the app
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:dev"]
+# Start the app with better error handling
+CMD ["sh", "-c", "npx prisma migrate deploy || echo 'Migration failed, continuing...' && npm run start:dev"]

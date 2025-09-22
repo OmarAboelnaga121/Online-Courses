@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import { Course } from '@/types';
+import { apiService } from '@/services/api';
 
 const categories = [
   {
@@ -51,36 +52,17 @@ const testimonials = [
   },
 ]
 
-type coursesType = {
-  id: string
-  title: string
-  description: string
-  whatYouWillLearn: string
-  language: string
-  price: number
-  thumbnail: string
-  category: string
-  published: boolean
-  instructorId: string
-  studentsEnrolled: string[]
-}
-
 export default async function Home() {
   // const [courses, useCourses] = useState<coursesType[]>([])
 
-  // Get Courses 
-  const getCourses = async() =>{
-    const response = await fetch('http://localhost:3000/courses',{
-      cache: 'no-store'
-    })
-
-    if(!response.ok){
-      console.log("Error");
+  const getCourses = async() => {
+    try {
+      const data = await apiService.getCourses();
+      return data.slice(0, 3);
+    } catch (error) {
+      console.error('Failed to fetch courses:', error);
       return [];
     }
-
-    const data  = await response.json();
-    return data.slice(0, 3);
   }
 
   const courses = await getCourses()
@@ -117,7 +99,7 @@ export default async function Home() {
       <div className="flex justify-center text-center flex-col gap-4 max-w-7xl w-full px-4 lg:px-16">
         <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">Featured Courses</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courses.map((course : coursesType) => (
+          {courses.map((course: Course) => (
             <div key={course.id} className="p-4 bg-white rounded-lg shadow-md cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
                     <Image src={course.thumbnail} alt={course.title} width={300} height={200} className="w-full h-48 object-cover rounded-md mb-3" />
                     <h3 className="font-semibold text-lg mb-2">{course.title}</h3>

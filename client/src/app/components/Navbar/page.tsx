@@ -1,57 +1,16 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
-
-type UserProfile = {
-  name: string;
-  email: string;
-  avatarUrl : string;
-  role: string;
-};
+import { useState } from "react";
+import { useAuth } from '@/hooks/useAuth';
 
 export default function Navbar() {
-  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { userProfile, isLoggedIn } = useAuth();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
-  const getUserProfile = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/users/profile", {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        return null;
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const profile = await getUserProfile();
-      if (profile) {
-        setUserProfile(profile);
-        setIsLoggedIn(true);
-      } else {
-        setUserProfile(null);
-        setIsLoggedIn(false);
-      }
-    };
-    fetchProfile();
-  }, [pathname]);
 
 
   return (
