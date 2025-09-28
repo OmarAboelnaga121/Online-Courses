@@ -1,3 +1,8 @@
+export interface Lesson {
+  id: string;
+  title: string;
+}
+
 export interface Course {
   id: string;
   title: string;
@@ -11,15 +16,41 @@ export interface Course {
   published: boolean;
   instructorId: string;
   studentsEnrolled: string[];
+  instructor?: Instructor;
+  lessons?: Lesson[];
+}
+
+export interface Payment {
+  id: string;
+  amount: number;
+  date: string;
+  courseId: string;
+  status: string;
+  method: string;
+  userId: string;
+  course?: Course;
+}
+
+export interface Statistics {
+  totalSpent: number;
+  totalCoursesEnrolled: number;
+  totalWishlistItems: number;
+  totalCoursesCreated: number;
+  totalPayments: number;
 }
 
 export interface UserProfile {
   id: string;
   name: string;
+  username: string;
   email: string;
   avatarUrl: string;
   role: string;
-  enrolledCourses?: Course[];
+  enrolledCourses: Course[];
+  wishList: string[];
+  payments: Payment[];
+  myCourses: Course[];
+  statistics: Statistics;
 }
 
 export interface Review {
