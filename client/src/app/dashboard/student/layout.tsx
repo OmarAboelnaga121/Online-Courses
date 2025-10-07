@@ -1,20 +1,36 @@
 'use client'
 
+import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
+import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect } from 'react';
 
 export default function StudentDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const { isLoggedIn, loading: authLoading } = useAuth();
   const pathname = usePathname()
+  const route = useRouter()
 
   const tabs = [
     { name: 'Overview', href: '/dashboard/student/overview' },
     { name: 'Enrolled Courses', href: '/dashboard/student/courses' },
     { name: 'Profile', href: '/dashboard/student/profile' }
   ]
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    if (isLoggedIn === false) {
+      route.push('/login');
+    }
+  })
+
+
+
 
   return (
     <div className=" max-w-6xl flex gap-8">

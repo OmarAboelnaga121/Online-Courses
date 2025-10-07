@@ -19,19 +19,6 @@ export default function Overview() {
         return <LoadingSpinner />;
     }
 
-    // get User Courses
-    // const fetchUserCourses = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const data = await apiService.getUserCourses(userProfile?.id || '');
-    //         setCourses(data);
-    //     } catch (error) {
-            
-    //     }
-    // }
-
-
-
     return(
         <div>
             <h2 className="text-2xl font-bold mb-4">Welcome Back, {userProfile?.name}</h2>

@@ -1,13 +1,24 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
+  const { isLoggedIn, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    if(isLoggedIn === true) {
+      
+      router.push('/');
+    }
+  })
 
   const sendData = async(e : React.FormEvent) => {
     e.preventDefault();

@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 
 type RegisterBody = {
@@ -25,6 +26,15 @@ export default function Register() {
   const role = isInstructor ? "instructor" : "student";
   const [errors, setErrors] = useState<string[]>([]);
   const route = useRouter()
+  const { isLoggedIn, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (authLoading) return;
+    
+    if(isLoggedIn === true) {
+      route.push('/');
+    }
+  })
 
   const sendData = async (e: React.FormEvent) => {
     e.preventDefault();
