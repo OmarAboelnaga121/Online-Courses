@@ -36,7 +36,7 @@ export default function Navbar() {
           </Link>
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
-              <Link href={"/profile"} className="flex items-center gap-2 px-3 py-2 transition-all duration-300 relative group">
+              <Link href={`/dashboard/${userProfile?.role}/overview`} className="flex items-center gap-2 px-3 py-2 transition-all duration-300 relative group">
                 <Image src={userProfile?.avatarUrl || "/default-avatar.png"} alt="User Avatar" width={40} height={40} className="rounded-full" />
                 <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 relative">
                   Welcome, {userProfile?.name}
@@ -112,7 +112,7 @@ export default function Navbar() {
           </Link>
           <div className="flex flex-col gap-2 pt-4 pb-3">
             {isLoggedIn ? (
-              <Link href={"/profile"} className="flex items-center gap-3 px-3 py-2 text-gray-700">
+              <Link href={`/dashboard/${userProfile?.role}/overview`} className="flex items-center gap-3 px-3 py-2 text-gray-700">
                 <Image src={userProfile?.avatarUrl || "/default-avatar.png"} alt="User Avatar" width={40} height={40} className="rounded-full" />
                 <span>Welcome, {userProfile?.name}</span>
               </Link>
