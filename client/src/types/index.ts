@@ -70,3 +70,9 @@ export interface Instructor {
   username: string;
   avatarUrl: string;
 }
+
+export interface EmailContactBody{
+  name: string;
+  email: string;
+  message: string;
+}

@@ -8,6 +8,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { UsersModule } from './users/users.module';
 import { StripeModule } from './stripe/stripe.module';
 import { RedisModule } from './redis/redis.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RedisModule } from './redis/redis.module';
     CloudinaryModule,
     UsersModule,
     StripeModule,
+    ContactModule,
  ],
   providers: [
     {

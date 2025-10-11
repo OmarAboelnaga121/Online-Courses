@@ -1,4 +1,4 @@
-import { Course, UserProfile, Review, Instructor } from '@/types';
+import { Course, UserProfile, Review, Instructor, EmailContactBody } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -109,6 +109,26 @@ class ApiService {
       return response.json();
     } catch (error) {
       throw new Error('Failed to initiate checkout');
+    }
+  }
+
+  async contact(emailBody : EmailContactBody)  {
+    try {
+      const response = await fetch(`${API_BASE_URL}/contact`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailBody)
+      });
+
+      if(!response.ok) {
+        throw new Error('Failed to contact support');
+      }
+
+      return response.json();
+
+    } catch (error) {
+      throw new Error('Failed to contact support');
     }
   }
 }
