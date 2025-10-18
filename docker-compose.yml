@@ -24,7 +24,8 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/eduflex
       REDIS_URL: redis://redis:6379
-      NODE_ENV: development
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=8192
     ports:
       - "3000:3000"
     depends_on:
@@ -33,9 +34,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 10G
         reservations:
-          memory: 512M
+          memory: 4G
 
   prisma-studio:
     build: ./server

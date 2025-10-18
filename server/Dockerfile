@@ -11,6 +11,9 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Build the application
+RUN npm run build
+
 # Generate Prisma client for the target platform
 RUN npx prisma generate
 
@@ -18,4 +21,4 @@ RUN npx prisma generate
 EXPOSE 3000
 
 # Start the app with better error handling
-CMD ["sh", "-c", "npx prisma migrate deploy || echo 'Migration failed, continuing...' && npm run start:dev"]
+CMD ["sh", "-c", "npx prisma migrate deploy || echo 'Migration failed, continuing...' && npm run start:prod"]
