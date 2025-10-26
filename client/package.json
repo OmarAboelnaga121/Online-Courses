@@ -15,8 +15,10 @@
     "@fortawesome/free-solid-svg-icons": "^7.0.0",
     "@fortawesome/react-fontawesome": "^0.2.3",
     "next": "15.4.5",
+    "next-cloudinary": "^6.16.1",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "vdocipher": "^1.2.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

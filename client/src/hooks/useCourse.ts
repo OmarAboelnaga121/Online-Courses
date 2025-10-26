@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Course, Review, Instructor } from '@/types';
+import { Course, Review, Instructor, LessonBody } from '@/types';
 import { apiService } from '@/services/api';
 
 export const useCourse = (courseId: string) => {
@@ -8,18 +8,21 @@ export const useCourse = (courseId: string) => {
   const [instructor, setInstructor] = useState<Instructor | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lessons, setLessons] = useState<LessonBody[]>([]);
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
         setLoading(true);
-        const [courseData, reviewsData] = await Promise.all([
+        const [courseData, reviewsData, lessonsData] = await Promise.all([
           apiService.getCourseById(courseId),
-          apiService.getCourseReviews(courseId)
+          apiService.getCourseReviews(courseId),
+          apiService.getCourseLessons(courseId)
         ]);
         
         setCourse(courseData);
         setReviews(reviewsData);
+        setLessons(lessonsData);
         
         if (courseData.instructorId) {
           const instructorData = await apiService.getInstructor(courseData.instructorId);
@@ -42,5 +45,5 @@ export const useCourse = (courseId: string) => {
     return (sum / reviews.length).toFixed(1);
   };
 
-  return { course, reviews, instructor, loading, error, getAverageRating };
+  return { course, reviews, instructor, loading, error, lessons, getAverageRating };
 };

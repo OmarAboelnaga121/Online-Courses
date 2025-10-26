@@ -12,7 +12,6 @@ export default function Overview() {
     // Variables
     const [loading, setLoading] = useState(false);
     const { userProfile, isLoggedIn, loading: authLoading } = useAuth();
-    const [courses, setCourses] = useState([]);
 
     
     if(authLoading || loading) {

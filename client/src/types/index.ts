@@ -1,6 +1,10 @@
 export interface Lesson {
   id: string;
   title: string;
+  content?: string;
+  videoId?: string;
+  otp?: string;
+  playbackInfo?: string;
 }
 
 export interface Course {
@@ -75,4 +79,11 @@ export interface EmailContactBody{
   name: string;
   email: string;
   message: string;
+}
+
+export interface LessonBody {
+  id: string;
+  title: string;
+  videoUrl: string;
+  courseId: string;
 }

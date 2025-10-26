@@ -131,6 +131,21 @@ class ApiService {
       throw new Error('Failed to contact support');
     }
   }
+
+  async getCourseLessons(courseId: string){
+    try {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons`, {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch course lessons');
+      }
+      return response.json();
+    } catch (error) {
+      throw new Error('Failed to fetch course lessons');
+    }
+  }
+
 }
 
 export const apiService = new ApiService();
