@@ -173,6 +173,7 @@ describe('CoursesController', () => {
     const mockCourseData: CourseDto = {
       title: 'New Course',
       description: 'Course description',
+      overView: 'Course overview',
       whatYouWillLearn: 'Learning objectives',
       language: 'English',
       price: 49.99,

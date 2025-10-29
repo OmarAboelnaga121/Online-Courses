@@ -2,14 +2,14 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
-  const { isLoggedIn, loading: authLoading } = useAuth();
+  const { isLoggedIn, loading: authLoading, refreshAuth } = useAuth();
 
   useEffect(() => {
     if (authLoading) return;
@@ -47,6 +47,7 @@ export default function Login() {
       }
       
       setErrors([]);
+      await refreshAuth();
       router.push("/");
     } catch (error) {
       setErrors(["Network error. Please try again."]);
