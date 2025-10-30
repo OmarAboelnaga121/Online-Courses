@@ -13,7 +13,7 @@ class ApiService {
         throw new Error('Failed to fetch courses');
       }
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to fetch courses');
     }
   }
@@ -27,7 +27,7 @@ class ApiService {
         throw new Error('Failed to fetch published courses');
       }
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to fetch published courses');
     }
   }
@@ -60,7 +60,7 @@ class ApiService {
         return null;
       }
       return response.json();
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -74,7 +74,7 @@ class ApiService {
         throw new Error('Failed to fetch course reviews');
       }
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to fetch course reviews');
     }
   }
@@ -86,11 +86,11 @@ class ApiService {
         credentials: 'include'
       });
       if (!response.ok) {
-        const errorText = await response.text();
+        await response.text();
         throw new Error(`Failed to fetch instructor: ${response.status}`);
       }
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to fetch instructor details');
     }
   }
@@ -107,7 +107,7 @@ class ApiService {
         throw new Error('Failed to initiate checkout');
       }
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to initiate checkout');
     }
   }
@@ -127,7 +127,7 @@ class ApiService {
 
       return response.json();
 
-    } catch (error) {
+    } catch {
       throw new Error('Failed to contact support');
     }
   }
@@ -141,11 +141,25 @@ class ApiService {
         throw new Error('Failed to fetch course lessons');
       }
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to fetch course lessons');
     }
   }
 
+  async logOut(){
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to log out');
+      }
+      return response.json();
+    } catch {
+      throw new Error('Failed to log out');
+    }
+  }
 }
 
 export const apiService = new ApiService();

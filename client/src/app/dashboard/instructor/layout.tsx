@@ -1,38 +1,54 @@
-'use client'
-
-
+'use client';
+import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api';
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react';
 
-export default function StudentDashboardLayout({
+export default function InstructorDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { isLoggedIn, loading: authLoading, refreshAuth } = useAuth();
+  const { userProfile, isLoggedIn, loading: authLoading, refreshAuth } = useAuth();
   const pathname = usePathname()
   const route = useRouter()
 
   const tabs = [
-    { name: 'Overview', href: '/dashboard/student/overview' },
-    { name: 'Profile', href: '/dashboard/student/profile' }
+    { name: 'Overview', href: '/dashboard/instructor/overview' },
+    { name: 'My Courses', href: '/dashboard/instructor/courses' },
+    { name: 'Profile', href: '/dashboard/instructor/profile' }
   ]
 
   useEffect(() => {
     if (authLoading) return;
 
     if (isLoggedIn === false) {
-      route.push('/login');
+      route.replace('/login');
+      return;
     }
-  })
+
+    const role = userProfile?.role;
+    if (role && role !== 'instructor') {
+      route.replace(`/dashboard/${role}/overview`);
+      return;
+    }
+
+  }, [authLoading, isLoggedIn, userProfile, route]);
+
+
 
   const handleLogout = () => {
     apiService.logOut()
-      .then(async() => {
-        await refreshAuth();
+      .then(async () => {
+        // refresh auth context (like login does) so UI updates before redirect
+        try {
+          await refreshAuth();
+        } catch (err) {
+          // ignore refresh errors, still redirect
+          console.error('refreshAuth error:', err);
+        }
         route.replace('/');
       })
       .catch((error) => {
@@ -60,16 +76,16 @@ export default function StudentDashboardLayout({
                 </Link>
               </li>
             ))}
-
-            <li>
-              <button
-                onClick={handleLogout}
-                className="cursor-pointer block w-full text-left px-4 py-3 rounded-md text-md font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Log out
-              </button>
-            </li>
           </ul>
+        </div>
+
+        <div className="mt-auto">
+            <button
+              onClick={handleLogout}
+              className="cursor-pointer block w-full text-left px-4 py-3 rounded-md text-md font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Log out
+            </button>
         </div>
       </nav>
       <main className="flex-1">

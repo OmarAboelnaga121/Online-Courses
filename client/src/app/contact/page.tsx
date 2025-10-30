@@ -40,7 +40,7 @@ export default function Contact() {
             setName("");
             setEmail("");
             setMessage("");
-        } catch (error) {
+        } catch {
             setStatus("Failed to send message. Please try again.");
         }
     }

@@ -12,7 +12,7 @@ export default function CoursePlayerPage() {
     useEffect(() => {
         console.log("course:" + JSON.stringify(course));
         console.log("lessons:" + JSON.stringify(lessons));
-    }, [course]);
+    }, [course, lessons]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;

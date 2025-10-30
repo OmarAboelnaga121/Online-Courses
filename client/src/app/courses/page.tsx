@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Course, UserProfile } from '@/types';
+import { Course } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
 import { apiService } from '@/services/api';
 import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
@@ -60,7 +60,7 @@ export default function Courses() {
             const data = await apiService.getPublishedCourses();
             setCourses(data);
             setFilteredCourses(data);
-        } catch (err) {
+        } catch {
             setError('Failed to load courses');
         } finally {
             setLoading(false);

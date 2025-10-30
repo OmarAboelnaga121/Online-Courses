@@ -49,7 +49,7 @@ export default function Login() {
       setErrors([]);
       await refreshAuth();
       router.push("/");
-    } catch (error) {
+    } catch {
       setErrors(["Network error. Please try again."]);
     }
   };  

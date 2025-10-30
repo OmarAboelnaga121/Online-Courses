@@ -84,7 +84,7 @@ export default function About() {
               Our platform combines cutting-edge technology with proven educational methods to create an engaging, accessible learning experience.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
-              Today, we're proud to serve thousands of learners worldwide, guided by our core values of quality, flexibility, affordability, and accessibility.
+              Today, we&apos;re proud to serve thousands of learners worldwide, guided by our core values of quality, flexibility, affordability, and accessibility.
             </p>
           </div>
         </section>

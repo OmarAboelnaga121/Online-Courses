@@ -12,7 +12,7 @@ export default function Privacy() {
     { id: "cookies", title: "Cookies and Tracking" },
     { id: "security", title: "Data Storage and Security" },
     { id: "rights", title: "User Rights" },
-    { id: "children", title: "Children's Privacy" },
+    { id: "children", title: "Children&apos;s Privacy" },
     { id: "changes", title: "Changes to Privacy Policy" },
     { id: "contact", title: "Contact Information" }
   ];
@@ -227,7 +227,7 @@ export default function Privacy() {
             <section id="children" className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <span className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">8</span>
-                Children's Privacy
+                Children&apos;s Privacy
               </h2>
               <p className="text-gray-700 leading-relaxed mb-4">
                 EduFlex is intended for users aged 18 and above. Users under 18 require parental consent to create an account.

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Terms() {
   const [activeSection, setActiveSection] = useState("introduction");
@@ -94,27 +94,27 @@ export default function Terms() {
               </h2>
               <div className="grid gap-4">
                 <div className="border-l-4 border-blue-500 pl-4">
-                  <strong className="text-gray-900">"Platform" or "Website":</strong>
+                  <strong className="text-gray-900">&quot;Platform&quot; or &quot;Website&quot;:</strong>
                   <p className="text-gray-700 mt-1">The EduFlex website and mobile applications</p>
                 </div>
                 <div className="border-l-4 border-green-500 pl-4">
-                  <strong className="text-gray-900">"User," "Student," or "You":</strong>
+                  <strong className="text-gray-900">&quot;User,&quot; &quot;Student,&quot; or &quot;You&quot;:</strong>
                   <p className="text-gray-700 mt-1">Any person who accesses or uses our services</p>
                 </div>
                 <div className="border-l-4 border-purple-500 pl-4">
-                  <strong className="text-gray-900">"Instructor":</strong>
+                  <strong className="text-gray-900">&quot;Instructor&quot;:</strong>
                   <p className="text-gray-700 mt-1">Content creators who provide courses on our platform</p>
                 </div>
                 <div className="border-l-4 border-orange-500 pl-4">
-                  <strong className="text-gray-900">"Content":</strong>
+                  <strong className="text-gray-900">&quot;Content&quot;:</strong>
                   <p className="text-gray-700 mt-1">All materials, courses, videos, and resources available on EduFlex</p>
                 </div>
                 <div className="border-l-4 border-teal-500 pl-4">
-                  <strong className="text-gray-900">"Services":</strong>
+                  <strong className="text-gray-900">&quot;Services&quot;:</strong>
                   <p className="text-gray-700 mt-1">All features and functionalities provided by EduFlex</p>
                 </div>
                 <div className="border-l-4 border-pink-500 pl-4">
-                  <strong className="text-gray-900">"Account":</strong>
+                  <strong className="text-gray-900">&quot;Account&quot;:</strong>
                   <p className="text-gray-700 mt-1">Your registered user profile on our platform</p>
                 </div>
               </div>
@@ -325,7 +325,7 @@ export default function Terms() {
               </h2>
               <div className="prose prose-gray max-w-none">
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  EduFlex's liability is limited to the maximum extent permitted by law. In no event shall our 
+                  EduFlex&apos;s liability is limited to the maximum extent permitted by law. In no event shall our 
                   total liability exceed the amount you paid for services in the 6 months preceding the claim.
                 </p>
                 <p className="text-gray-700 leading-relaxed">

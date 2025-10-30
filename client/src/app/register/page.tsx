@@ -6,13 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 
 
-type RegisterBody = {
-  name : string;
-  username : string;
-  email : string;
-  password : string;
-  role : string;
-}
+
 
 export default function Register() {
 
@@ -68,7 +62,7 @@ export default function Register() {
       }
       setErrors([]);
       route.push("/login");
-    } catch (error) {
+    } catch {
       setErrors(["Network error. Please try again."]);
     }
   }

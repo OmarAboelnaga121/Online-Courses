@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const profile = await apiService.getUserProfile();
       setUserProfile(profile);
       setIsLoggedIn(!!profile);
-    } catch (error) {
+    } catch {
       setUserProfile(null);
       setIsLoggedIn(false);
     } finally {

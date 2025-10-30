@@ -13,7 +13,7 @@ export const useAuth = () => {
         const profile = await apiService.getUserProfile();
         setUserProfile(profile);
         setIsLoggedIn(!!profile);
-      } catch (error) {
+      } catch {
         setUserProfile(null);
         setIsLoggedIn(false);
       } finally {

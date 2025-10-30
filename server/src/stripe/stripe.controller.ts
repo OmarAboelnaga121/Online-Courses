@@ -8,7 +8,7 @@ import { UserDto } from '../auth/dto';
 import { CreateCheckoutSessionDto } from './dto/order.dto';
 
 @ApiTags('stripe')
-@Controller('stripe')
+@Controller('Stripe')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class StripeController {
     private readonly logger = new Logger(StripeController.name);

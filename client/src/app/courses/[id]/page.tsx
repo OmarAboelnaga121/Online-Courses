@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Course, UserProfile } from '@/types';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useCourse } from '@/hooks/useCourse';
 import { apiService } from '@/services/api';
@@ -14,7 +14,7 @@ export default function SingleCourse() {
     const params = useParams();
     const courseId = params.id as string;
     const [activeTab, setActiveTab] = useState('overview');
-    const { userProfile, isLoggedIn } = useAuth();
+    const { userProfile } = useAuth();
     const { course, reviews, instructor, loading, error, getAverageRating } = useCourse(courseId);
 
     const checkOutCourse = async () => {
@@ -75,7 +75,7 @@ export default function SingleCourse() {
                                 <p>{course.overView}</p>
                             </div>
                             <div id="learn">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-5">What you'll learn</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-5">What you&apos;ll learn</h2>
                                 <ul className="flex flex-col gap-5">
                                     {course.whatYouWillLearn.split(',').map((item, index) => (
                                         <li key={index} className="flex items-center gap-3 mx-5">
@@ -117,7 +117,7 @@ export default function SingleCourse() {
                                             <div key={review.id} className="bg-gray-50 p-4 rounded-lg">
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <div className="flex text-yellow-500">
-                                                        {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                                                        {Array(review.rating).fill('★').join('')}{Array(5 - review.rating).fill('☆').join('')}
                                                     </div>
                                                 </div>
                                                 <p className="text-gray-700">{review.comment}</p>
@@ -141,7 +141,7 @@ export default function SingleCourse() {
                             />
                             {userProfile?.enrolledCourses?.some(enrolledCourse => enrolledCourse.id === course.id) ?
                                 <Link 
-                                    href={`/`} 
+                                    href={`/course-player/${course.id}`} 
                                     className="primaryBtn w-full block text-center"
                                 >
                                     Continue Learning

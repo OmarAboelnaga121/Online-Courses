@@ -1,20 +1,19 @@
 "use client"
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import { useAuth } from "@/hooks/useAuth";
-import { apiService } from "@/services/api";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+
 
 
 export default function Overview() {
 
     // Variables
-    const [loading, setLoading] = useState(false);
-    const { userProfile, isLoggedIn, loading: authLoading } = useAuth();
+    const { userProfile, loading: authLoading } = useAuth();
 
     
-    if(authLoading || loading) {
+    if(authLoading) {
         return <LoadingSpinner />;
     }
 
@@ -60,7 +59,7 @@ export default function Overview() {
                     {userProfile?.enrolledCourses?.length === 0 ? (
                         <p className="text-gray-500">You have not enrolled in any courses yet.</p>
                     ) : (
-                        userProfile?.enrolledCourses?.slice(0, 3).map((course) => (
+                        userProfile?.enrolledCourses?.map((course) => (
                             <Link href={`/course-player/${course.id}`} key={course.id} className="p-4 bg-white rounded-lg shadow-md cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl">
                                 <Image src={course.thumbnail} alt={course.title} width={300} height={200} className="w-full h-48 object-cover rounded-md mb-3" />
                                 <h3 className="font-semibold text-lg mb-2">{course.title}</h3>

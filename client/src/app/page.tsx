@@ -119,7 +119,7 @@ export default async function Home() {
             <div key={testimonial.id} className="p-4 bg-white rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl">
               <Image src={`/${testimonial.image}`} alt="testimonial image" width={300} height={200} className="w-full h-auto rounded-md mb-2"/>
               <h2>{testimonial.name}</h2>
-              <p>"{testimonial.description}"</p>
+              <p>&quot;{testimonial.description}&quot;</p>
             </div>
           ))}
         </div>
