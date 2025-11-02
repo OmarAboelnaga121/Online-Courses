@@ -326,4 +326,64 @@ describe('CoursesService', () => {
         .rejects.toThrow(ForbiddenException);
     });
   });
+
+  describe('getAllCourseReviews', () => {
+    const instructorId = 'instructor-1';
+
+    it('should return cached reviews if available', async () => {
+      const mockReviews = [
+        { id: 'review-1', courseId: 'course-1', rating: 5, comment: 'Great!' },
+        { id: 'review-2', courseId: 'course-2', rating: 4, comment: 'Good!' },
+      ];
+      const mockInstructor = { id: instructorId, role: 'instructor' };
+      mockPrisma.user.findUnique.mockResolvedValue(mockInstructor);
+      mockRedisService.get.mockResolvedValue(JSON.stringify(mockReviews));
+
+      const result = await service.getAllCourseReviews(instructorId);
+
+      expect(mockRedisService.get).toHaveBeenCalledWith(`instructor:${instructorId}:reviews`);
+      expect(result).toEqual(mockReviews);
+      expect(mockPrisma.course.findMany).not.toHaveBeenCalled();
+    });
+
+    it('should fetch reviews from database and cache if not in cache', async () => {
+      const mockCourses = [
+        { id: 'course-1', instructorId },
+        { id: 'course-2', instructorId },
+      ];
+      const mockReviews1 = [{ id: 'review-1', courseId: 'course-1', rating: 5, comment: 'Great!' }];
+      const mockReviews2 = [{ id: 'review-2', courseId: 'course-2', rating: 4, comment: 'Good!' }];
+      const mockInstructor = { id: instructorId, role: 'instructor' };
+
+      mockPrisma.user.findUnique.mockResolvedValue(mockInstructor);
+      mockRedisService.get.mockResolvedValue(null);
+      mockPrisma.course.findMany.mockResolvedValue(mockCourses);
+      mockPrisma.review.findMany
+        .mockResolvedValueOnce(mockReviews1)
+        .mockResolvedValueOnce(mockReviews2);
+
+      const result = await service.getAllCourseReviews(instructorId);
+
+      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({ where: { instructorId } });
+      expect(mockPrisma.review.findMany).toHaveBeenCalledTimes(2);
+      expect(mockRedisService.set).toHaveBeenCalledWith(
+        `instructor:${instructorId}:reviews`,
+        JSON.stringify([...mockReviews1, ...mockReviews2]),
+        600
+      );
+      expect(result).toEqual([...mockReviews1, ...mockReviews2]);
+    });
+
+    it('should return empty array if instructor has no courses', async () => {
+      const mockInstructor = { id: instructorId, role: 'instructor' };
+      mockPrisma.user.findUnique.mockResolvedValue(mockInstructor);
+      mockRedisService.get.mockResolvedValue(null);
+      mockPrisma.course.findMany.mockResolvedValue([]);
+
+      const result = await service.getAllCourseReviews(instructorId);
+
+      expect(result).toEqual([]);
+      expect(mockPrisma.review.findMany).not.toHaveBeenCalled();
+    });
+  });
 });

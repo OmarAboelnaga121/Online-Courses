@@ -30,6 +30,13 @@ export class CoursesController {
     return this.coursesService.getPublishedCourses();
   }
 
+  @Get('instructor/:instructorId/reviews')
+  @ApiOperation({ summary: 'Get all reviews for instructor courses' })
+  @ApiResponse({ status: 200, description: 'List of all reviews for instructor courses' })
+  async getInstructorReviews(@Param('instructorId') instructorId: string) {
+    return this.coursesService.getAllCourseReviews(instructorId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single course by ID' })
   @ApiResponse({ status: 200, description: 'Single course', type: CourseDto })
@@ -178,5 +185,5 @@ export class CoursesController {
   ) {
     return this.coursesService.createCourseReview(id, user.id, rating, comment);
   }
- 
+
 }

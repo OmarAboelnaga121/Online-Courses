@@ -160,6 +160,23 @@ class ApiService {
       throw new Error('Failed to log out');
     }
   }
+
+  async getInstructorReviews(instructorId: string){
+    try {
+      const response = await fetch(`${API_BASE_URL}/courses/instructor/${instructorId}/reviews`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed To get Instructor Review');
+      }
+
+      return response.json();
+    } catch (error) {
+      throw new Error('Failed To get Instructor Review');
+    }
+  }
 }
 
 export const apiService = new ApiService();

@@ -282,4 +282,35 @@ export class CoursesService {
         
         return review;
     }
+
+    async getAllCourseReviews(instructorId: string) {
+        // Check if user is an instructor
+        const instructor = await prisma.user.findUnique({ where: { id: instructorId } });
+        if (!instructor) {
+            throw new BadRequestException('Instructor not found');
+        }
+        if (instructor.role !== 'instructor') {
+            throw new BadRequestException('User is not an instructor');
+        }
+        // Try to get from cache
+        const cacheKey = `instructor:${instructorId}:reviews`;
+        const cachedReviews = await this.redisService.get(cacheKey);
+        
+        if (cachedReviews) {
+            return JSON.parse(cachedReviews);
+        }
+
+        // find the courses by instructorId
+        const courses = await prisma.course.findMany({ where: { instructorId } });
+        // for each course, get the reviews
+        const reviews: any[] = [];
+        for (const course of courses) {
+            const courseReviews = await prisma.review.findMany({ where: { courseId: course.id } });
+            reviews.push(...courseReviews);
+        }
+        // Cache the result for 10 minutes (600 seconds)
+        await this.redisService.set(cacheKey, JSON.stringify(reviews), 600);
+        
+        return reviews;
+    }
 }
