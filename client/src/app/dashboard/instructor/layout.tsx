@@ -58,7 +58,7 @@ export default function InstructorDashboardLayout({
 
 
   return (
-    <div className=" max-w-6xl flex gap-8">
+    <div className="w-full flex gap-8 ">
       <nav className="w-64 flex-shrink-0">
         <div className="p-4">
           <ul className="space-y-1">
@@ -88,7 +88,7 @@ export default function InstructorDashboardLayout({
             </button>
         </div>
       </nav>
-      <main className="flex-1">
+      <main className="flex-1 pr-4">
         {children}
       </main>
     </div>
