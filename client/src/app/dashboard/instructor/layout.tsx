@@ -5,6 +5,8 @@ import { apiService } from '@/services/api';
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartPie, faBookOpen, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function InstructorDashboardLayout({
   children,
@@ -16,9 +18,9 @@ export default function InstructorDashboardLayout({
   const route = useRouter()
 
   const tabs = [
-    { name: 'Overview', href: '/dashboard/instructor/overview' },
-    { name: 'My Courses', href: '/dashboard/instructor/courses' },
-    { name: 'Profile', href: '/dashboard/instructor/profile' }
+    { name: 'Overview', href: '/dashboard/instructor/overview', icon: faChartPie },
+    { name: 'My Courses', href: '/dashboard/instructor/courses', icon: faBookOpen },
+    { name: 'Profile', href: '/dashboard/instructor/profile', icon: faUser }
   ]
 
   useEffect(() => {
@@ -42,11 +44,9 @@ export default function InstructorDashboardLayout({
   const handleLogout = () => {
     apiService.logOut()
       .then(async () => {
-        // refresh auth context (like login does) so UI updates before redirect
         try {
           await refreshAuth();
         } catch (err) {
-          // ignore refresh errors, still redirect
           console.error('refreshAuth error:', err);
         }
         route.replace('/');
@@ -58,37 +58,54 @@ export default function InstructorDashboardLayout({
 
 
   return (
-    <div className="w-full flex gap-8 ">
-      <nav className="w-64 flex-shrink-0">
-        <div className="p-4">
-          <ul className="space-y-1">
-            {tabs.map((tab) => (
-              <li key={tab.href}>
-                <Link
-                  href={tab.href}
-                  className={`block px-4 py-3 rounded-md text-md font-medium transition-colors ${
-                    pathname === tab.href
-                      ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500'
-                      : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                >
-                  <span className="ml-0">{tab.name}</span>
-                </Link>
-              </li>
-            ))}
+    <div className="w-full flex min-h-screen bg-gray-50">
+      <nav className="w-72 mr-5 flex-shrink-0 bg-white border-r border-gray-100 flex flex-col">
+        <div className="p-6">
+          <div className="mb-8 px-4">
+            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Instructor Portal</h2>
+          </div>
+          <ul className="space-y-2">
+            {tabs.map((tab) => {
+              const isActive = pathname === tab.href;
+              return (
+                <li key={tab.href}>
+                  <Link
+                    href={tab.href}
+                    className={`group flex items-center px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 ease-in-out ${isActive
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 translate-x-1'
+                        : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600 hover:translate-x-1'
+                      }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={tab.icon}
+                      className={`w-5 h-5 mr-3 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'
+                        }`}
+                    />
+                    <span>{tab.name}</span>
+                    {isActive && (
+                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/50" />
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
-        <div className="mt-auto">
-            <button
-              onClick={handleLogout}
-              className="cursor-pointer block w-full text-left px-4 py-3 rounded-md text-md font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Log out
-            </button>
+        <div className="cursor-pointer mt-auto p-6 border-t border-gray-50">
+          <button
+            onClick={handleLogout}
+            className="group w-full flex items-center px-4 py-3.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 ease-in-out"
+          >
+            <FontAwesomeIcon
+              icon={faSignOutAlt}
+              className="w-5 h-5 mr-3 transition-transform duration-200 group-hover:-translate-x-1"
+            />
+            <span>Log out</span>
+          </button>
         </div>
       </nav>
-      <main className="flex-1 pr-4">
+      <main className="flex-1 pr-4 pt-5">
         {children}
       </main>
     </div>
