@@ -24,6 +24,18 @@ export interface Course {
   lessons?: Lesson[];
 }
 
+export interface CreateCourse {
+    title: string;
+    description: string;
+    overView: string;
+    whatYouWillLearn: string;
+    language: string;
+    price: number;
+    category: string;
+    published: boolean;
+    photo?: File;
+}
+
 export interface Payment {
   id: string;
   amount: number;

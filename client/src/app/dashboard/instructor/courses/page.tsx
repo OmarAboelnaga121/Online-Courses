@@ -3,17 +3,20 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCourse } from "@/hooks/useCourse";
 import { Course } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function MyCourses() {
 
     const {userProfile, isLoggedIn, loading: authLoading} = useAuth()
     const instructorCourses = userProfile?.myCourses
 
+
+
     return (
         <div className="flex flex-col gap-5 w-full pt-5">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-800">My Courses</h1>
-                <button className="primaryBtn">Add Course</button>
+                <Link href="/dashboard/instructor/courses/createCourse" className="primaryBtn">Add Course</Link>
             </div>
             <div className="grid grid-cols-3 gap-6">
                 {instructorCourses?.map((course : Course) => (
@@ -25,6 +28,7 @@ export default function MyCourses() {
                                 <span className="text-blue-600 font-bold">${course.price}</span>
                                 <span className="text-sm text-gray-500">{course.category}</span>
                             </div>
+                            <button className="primaryBtn w-full mt-3">See Course Content</button>
                         </div>
                 ))}
             </div>

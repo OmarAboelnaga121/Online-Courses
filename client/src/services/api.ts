@@ -1,4 +1,4 @@
-import { Course, UserProfile, Review, Instructor, EmailContactBody } from '@/types';
+import { Course, UserProfile, Review, Instructor, EmailContactBody, CreateCourse } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -112,7 +112,7 @@ class ApiService {
     }
   }
 
-  async contact(emailBody : EmailContactBody)  {
+  async contact(emailBody: EmailContactBody) {
     try {
       const response = await fetch(`${API_BASE_URL}/contact`, {
         method: 'POST',
@@ -121,7 +121,7 @@ class ApiService {
         body: JSON.stringify(emailBody)
       });
 
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error('Failed to contact support');
       }
 
@@ -132,7 +132,7 @@ class ApiService {
     }
   }
 
-  async getCourseLessons(courseId: string){
+  async getCourseLessons(courseId: string) {
     try {
       const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons`, {
         credentials: 'include'
@@ -146,7 +146,7 @@ class ApiService {
     }
   }
 
-  async logOut(){
+  async logOut() {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
@@ -161,7 +161,7 @@ class ApiService {
     }
   }
 
-  async getInstructorReviews(instructorId: string){
+  async getInstructorReviews(instructorId: string) {
     try {
       const response = await fetch(`${API_BASE_URL}/courses/instructor/${instructorId}/reviews`, {
         method: 'GET',
@@ -175,6 +175,41 @@ class ApiService {
       return response.json();
     } catch (error) {
       throw new Error('Failed To get Instructor Review');
+    }
+  }
+
+  async createCourse(courseData: CreateCourse) {
+    try {
+      const formData = new FormData();
+      formData.append('title', courseData.title);
+      formData.append('description', courseData.description);
+      formData.append('overView', courseData.overView);
+      formData.append('whatYouWillLearn', courseData.whatYouWillLearn);
+      formData.append('language', courseData.language);
+      formData.append('price', courseData.price.toString());
+      formData.append('category', courseData.category);
+      formData.append('published', courseData.published.toString());
+
+      if (courseData.photo) {
+        formData.append('photo', courseData.photo);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/courses`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Create course failed:', errorData);
+        throw errorData;
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Create course error:', error);
+      throw new Error('Failed to create course');
     }
   }
 }

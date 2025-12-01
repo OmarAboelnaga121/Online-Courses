@@ -77,6 +77,10 @@ export default function Profile() {
                     <div className="text-gray-500">No courses created yet.</div>
                      )}
             </div>
+            <div className="bg-white p-4 rounded border w-full">
+                <h3 className="font-semibold mb-2">My Payments</h3>
+
+            </div>
         </div>
     );
 }
