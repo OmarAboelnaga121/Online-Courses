@@ -99,3 +99,8 @@ export interface LessonBody {
   videoUrl: string;
   courseId: string;
 }
+
+export interface confirmPasswordBody {
+  token: string;
+  newPassword: string;
+}

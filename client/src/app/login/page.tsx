@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import Link from "next/link";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,18 +15,18 @@ export default function Login() {
   useEffect(() => {
     if (authLoading) return;
 
-    if(isLoggedIn === true) {
-      
+    if (isLoggedIn === true) {
+
       router.push('/');
     }
   })
 
-  const sendData = async(e : React.FormEvent) => {
+  const sendData = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
 
-      if(email === "" || password === ""){
+      if (email === "" || password === "") {
         setErrors(["Email and password are required"]);
         return;
       }
@@ -37,69 +38,75 @@ export default function Login() {
         credentials: "include",
         body: JSON.stringify({ email, password }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         const errorMessages = Array.isArray(data.message) ? data.message : [data.message || "Login failed"];
         setErrors(errorMessages);
         return;
       }
-      
+
       setErrors([]);
       await refreshAuth();
       router.push("/");
     } catch {
       setErrors(["Network error. Please try again."]);
     }
-  };  
+  };
 
   return (
     <div className="flex justify-between items-center">
-        <div className="flex-1 flex justify-center">
-          <div className="w-full max-w-md">
-            <h1 className="text-3xl font-bold mb-8 text-gray-800">Welcome Back</h1>
-            {errors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <ul className="text-red-600 text-sm space-y-1">
-                  {errors.map((error, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-red-500 mr-2">•</span>
-                      {error}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <form className="space-y-6" onSubmit={sendData}>
-              <div>
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="input"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="input"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <button
-                type="submit"
-                className="primaryBtn w-full"
-              >
-                Sign In
-              </button>
-            </form>
-          </div>
+      <div className="flex-1 flex justify-center">
+        <div className="w-full max-w-md">
+          <h1 className="text-3xl font-bold mb-8 text-gray-800">Welcome Back</h1>
+          {errors.length > 0 && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <ul className="text-red-600 text-sm space-y-1">
+                {errors.map((error, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-red-500 mr-2">•</span>
+                    {error}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <form className="space-y-6" onSubmit={sendData}>
+            <div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="input"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                className="input"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Link
+              href={"/forgetPassword"}
+              className="mb-5 text-sm text-[#248CF2] hover:text-[#1a6ec4] font-medium transition-colors duration-300 hover:underline"
+            >
+              Forget Password?
+            </Link>
+            <button
+              type="submit"
+              className="primaryBtn w-full mt-5"
+            >
+              Sign In
+            </button>
+          </form>
         </div>
-        <div className="flex-1 flex justify-center">
-          <Image src="/login.png" alt="Logo" width={500} height={500} />
-        </div>
+      </div>
+      <div className="flex-1 flex justify-center">
+        <Image src="/login.png" alt="Logo" width={500} height={500} />
+      </div>
     </div>
   );
 }

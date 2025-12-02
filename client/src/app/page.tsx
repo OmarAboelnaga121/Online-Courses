@@ -57,7 +57,7 @@ export default async function Home() {
 
   const getCourses = async() => {
     try {
-      const data = await apiService.getCourses();
+      const data = await apiService.getPublishedCourses();
       return data.slice(0, 3);
     } catch (error) {
       console.error('Failed to fetch courses:', error);

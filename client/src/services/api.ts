@@ -1,4 +1,4 @@
-import { Course, UserProfile, Review, Instructor, EmailContactBody, CreateCourse } from '@/types';
+import { Course, UserProfile, Review, Instructor, EmailContactBody, CreateCourse, confirmPasswordBody } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -202,7 +202,6 @@ class ApiService {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Create course failed:', errorData);
         throw errorData;
       }
 
@@ -210,6 +209,46 @@ class ApiService {
     } catch (error) {
       console.error('Create course error:', error);
       throw new Error('Failed to create course');
+    }
+  }
+
+  async forgetPassword(data: { email: string }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw errorData;
+      }
+
+      return response.json();
+    } catch (error) {
+      throw new Error('Failed to send mail');
+    }
+  }
+
+  async confirmPassword(confirmPassword: confirmPasswordBody) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(confirmPassword)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw errorData;
+      }
+
+      return response.json();
+    } catch (error) {
+      throw new Error('Failed to change password');
     }
   }
 }
