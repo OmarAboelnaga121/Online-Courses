@@ -72,8 +72,8 @@ export default function InstructorDashboardLayout({
                   <Link
                     href={tab.href}
                     className={`group flex items-center px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 ease-in-out ${isActive
-                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 translate-x-1'
-                        : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600 hover:translate-x-1'
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-200 translate-x-1'
+                      : 'text-gray-500 hover:bg-blue-50 hover:text-blue-600 hover:translate-x-1'
                       }`}
                   >
                     <FontAwesomeIcon

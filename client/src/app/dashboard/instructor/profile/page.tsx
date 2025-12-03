@@ -21,7 +21,7 @@ export default function Profile() {
         );
     }
 
-    const totalStudents = Array.isArray(userProfile.myCourses) 
+    const totalStudents = Array.isArray(userProfile.myCourses)
         ? userProfile.myCourses.reduce((sum, course) => sum + (course.studentsEnrolled?.length ?? 0), 0)
         : 0;
 
@@ -75,11 +75,39 @@ export default function Profile() {
                     </ul>
                 ) : (
                     <div className="text-gray-500">No courses created yet.</div>
-                     )}
+                )}
             </div>
-            <div className="bg-white p-4 rounded border w-full">
-                <h3 className="font-semibold mb-2">My Payments</h3>
 
+            <div className="bg-white p-4 rounded border w-full">
+                <h3 className="font-semibold mb-2">Enrolled Students</h3>
+                {Array.isArray(userProfile.myCourses) && userProfile.myCourses.some(course => course.studentsEnrolled && course.studentsEnrolled.length > 0) ? (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full text-left text-sm">
+                            <thead>
+                                <tr className="border-b">
+                                    <th className="py-2 font-medium text-gray-600">Course</th>
+                                    <th className="py-2 font-medium text-gray-600">Student ID</th>
+                                    <th className="py-2 font-medium text-gray-600 text-right">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {userProfile.myCourses.flatMap((course) =>
+                                    (course.studentsEnrolled || []).map((studentId, index) => (
+                                        <tr key={`${course.id}-${studentId}-${index}`} className="border-b last:border-0 hover:bg-gray-50">
+                                            <td className="py-3">{course.title}</td>
+                                            <td className="py-3 text-gray-500 font-mono text-xs">{studentId}</td>
+                                            <td className="py-3 text-right font-medium text-green-600">
+                                                ${typeof course.price === 'number' ? course.price.toFixed(2) : course.price}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="text-gray-500">No students enrolled yet.</div>
+                )}
             </div>
         </div>
     );
