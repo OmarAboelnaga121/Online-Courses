@@ -313,4 +313,19 @@ export class CoursesService {
         
         return reviews;
     }
+
+    async deleteLesson(lessonId: string) {
+        // Find lesson
+        const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } });
+        if (!lesson) {
+            throw new BadRequestException('Lesson not found');
+        }
+        // Delete lesson
+        await prisma.lesson.delete({ where: { id: lessonId } });
+        
+        // Invalidate course lessons cache after deleting lesson
+        await this.invalidateCourseCache(lesson.courseId);
+        
+        return lesson;
+    }
 }

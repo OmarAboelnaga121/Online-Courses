@@ -251,6 +251,57 @@ class ApiService {
       throw new Error('Failed to change password');
     }
   }
+
+  async createLessons(courseId: string, lessons: { title: string }[], videos: File[]) {
+    try {
+      const formData = new FormData();
+
+      // Add lessons as JSON string
+      formData.append('lessons', JSON.stringify(lessons.map(lesson => ({
+        title: lesson.title,
+        courseId: courseId
+      }))));
+
+      // Add video files - order must match lessons array
+      videos.forEach((video) => {
+        formData.append('videos', video);
+      });
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons/upload`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw errorData;
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Create lessons error:', error);
+      throw new Error('Failed to create lessons');
+    }
+  }
+
+  async deleteLesson(lessonId: string, courseId : string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons/${lessonId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw errorData;
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Delete lesson error:', error);
+      throw new Error('Failed to delete lesson');
+    }
+  }
 }
 
 export const apiService = new ApiService();

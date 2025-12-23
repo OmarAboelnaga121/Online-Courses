@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UploadedFile, UseInterceptors, Req, UseGuards, Param, UploadedFiles, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, UploadedFile, UseInterceptors, Req, UseGuards, Param, UploadedFiles, Put, UsePipes, ValidationPipe, Delete } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody, ApiCookieAuth } from '@nestjs/swagger';
 import { Request } from 'express';
@@ -186,4 +186,12 @@ export class CoursesController {
     return this.coursesService.createCourseReview(id, user.id, rating, comment);
   }
 
+  @Delete(':id/lessons/:lessonId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'Delete a lesson' })
+  @ApiResponse({ status: 200, description: 'Lesson deleted successfully' })
+  async deleteLesson(@Param('lessonId') lessonId: string) {
+    return this.coursesService.deleteLesson(lessonId);
+  }
 }
