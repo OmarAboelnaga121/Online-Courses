@@ -91,7 +91,9 @@ describe('CoursesController', () => {
     ];
 
     it('should return only published courses', async () => {
-      mockCoursesService.getPublishedCourses.mockResolvedValue(mockPublishedCourses);
+      mockCoursesService.getPublishedCourses.mockResolvedValue(
+        mockPublishedCourses,
+      );
 
       const result = await controller.getPublishedCourses();
 
@@ -122,13 +124,13 @@ describe('CoursesController', () => {
 
     it('should throw BadRequestException when course not found', async () => {
       mockCoursesService.getSingleCourse.mockRejectedValue(
-        new BadRequestException('Course not found')
+        new BadRequestException('Course not found'),
       );
 
-      await expect(controller.getSingleCourse(courseId))
-        .rejects
-        .toThrow(BadRequestException);
-      
+      await expect(controller.getSingleCourse(courseId)).rejects.toThrow(
+        BadRequestException,
+      );
+
       expect(coursesService.getSingleCourse).toHaveBeenCalledWith(courseId);
     });
   });
@@ -206,29 +208,33 @@ describe('CoursesController', () => {
     it('should create a new course successfully', async () => {
       mockCoursesService.createCourses.mockResolvedValue(mockCreatedCourse);
 
-      const result = await controller.createCourse(mockUser, mockCourseData, mockPhoto);
+      const result = await controller.createCourse(
+        mockUser,
+        mockCourseData,
+        mockPhoto,
+      );
 
       expect(coursesService.createCourses).toHaveBeenCalledWith(
         mockCourseData,
         mockPhoto,
-        mockUser
+        mockUser,
       );
       expect(result).toEqual(mockCreatedCourse);
     });
 
     it('should throw BadRequestException when course creation fails', async () => {
       mockCoursesService.createCourses.mockRejectedValue(
-        new BadRequestException('Photo is required')
+        new BadRequestException('Photo is required'),
       );
 
-      await expect(controller.createCourse(mockUser, mockCourseData, mockPhoto))
-        .rejects
-        .toThrow(BadRequestException);
-      
+      await expect(
+        controller.createCourse(mockUser, mockCourseData, mockPhoto),
+      ).rejects.toThrow(BadRequestException);
+
       expect(coursesService.createCourses).toHaveBeenCalledWith(
         mockCourseData,
         mockPhoto,
-        mockUser
+        mockUser,
       );
     });
   });
@@ -252,26 +258,32 @@ describe('CoursesController', () => {
     };
 
     it('should update course publish status successfully', async () => {
-      mockCoursesService.updateCourseStatus.mockResolvedValue(mockUpdatedCourse);
+      mockCoursesService.updateCourseStatus.mockResolvedValue(
+        mockUpdatedCourse,
+      );
 
-      const result = await controller.updateCoursePublishStatus(courseId, published, mockUser);
+      const result = await controller.updateCoursePublishStatus(
+        courseId,
+        published,
+        mockUser,
+      );
 
       expect(coursesService.updateCourseStatus).toHaveBeenCalledWith(
         courseId,
         published,
-        mockUser.id
+        mockUser.id,
       );
       expect(result).toEqual(mockUpdatedCourse);
     });
 
     it('should throw ForbiddenException when user is not authorized', async () => {
       mockCoursesService.updateCourseStatus.mockRejectedValue(
-        new ForbiddenException('Not authorized to update this course')
+        new ForbiddenException('Not authorized to update this course'),
       );
 
-      await expect(controller.updateCoursePublishStatus(courseId, published, mockUser))
-        .rejects
-        .toThrow(ForbiddenException);
+      await expect(
+        controller.updateCoursePublishStatus(courseId, published, mockUser),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -340,14 +352,14 @@ describe('CoursesController', () => {
         courseId,
         mockUser,
         JSON.stringify(mockLessons),
-        mockVideos
+        mockVideos,
       );
 
       expect(coursesService.putLessons).toHaveBeenCalledWith(
         courseId,
         mockLessons,
         mockVideos,
-        mockUser
+        mockUser,
       );
       expect(result).toEqual(mockCreatedLessons);
     });
@@ -357,7 +369,12 @@ describe('CoursesController', () => {
       mockCoursesService.putLessons.mockRejectedValue(new Error(errorMessage));
 
       await expect(
-        controller.uploadLessonVideos(courseId, mockUser, JSON.stringify(mockLessons), mockVideos)
+        controller.uploadLessonVideos(
+          courseId,
+          mockUser,
+          JSON.stringify(mockLessons),
+          mockVideos,
+        ),
       ).rejects.toThrow(Error);
     });
   });
@@ -408,27 +425,34 @@ describe('CoursesController', () => {
     };
 
     it('should create a course review successfully', async () => {
-      mockCoursesService.createCourseReview.mockResolvedValue(mockCreatedReview);
+      mockCoursesService.createCourseReview.mockResolvedValue(
+        mockCreatedReview,
+      );
 
-      const result = await controller.createCourseReview(courseId, mockUser, rating, comment);
+      const result = await controller.createCourseReview(
+        courseId,
+        mockUser,
+        rating,
+        comment,
+      );
 
       expect(coursesService.createCourseReview).toHaveBeenCalledWith(
         courseId,
         mockUser.id,
         rating,
-        comment
+        comment,
       );
       expect(result).toEqual(mockCreatedReview);
     });
 
     it('should throw BadRequestException when user already reviewed', async () => {
       mockCoursesService.createCourseReview.mockRejectedValue(
-        new BadRequestException('User has already reviewed this course')
+        new BadRequestException('User has already reviewed this course'),
       );
 
-      await expect(controller.createCourseReview(courseId, mockUser, rating, comment))
-        .rejects
-        .toThrow(BadRequestException);
+      await expect(
+        controller.createCourseReview(courseId, mockUser, rating, comment),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

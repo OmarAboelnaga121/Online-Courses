@@ -96,7 +96,11 @@ describe('CoursesService', () => {
       const result = await service.getCourses();
 
       expect(mockPrisma.course.findMany).toHaveBeenCalled();
-      expect(mockRedisService.set).toHaveBeenCalledWith('courses:all', JSON.stringify(mockCourses), 300);
+      expect(mockRedisService.set).toHaveBeenCalledWith(
+        'courses:all',
+        JSON.stringify(mockCourses),
+        300,
+      );
       expect(result).toEqual(mockCourses);
     });
   });
@@ -119,10 +123,16 @@ describe('CoursesService', () => {
 
     it('should create course successfully', async () => {
       const mockCourse = { id: 'course-1', ...mockCourseData };
-      mockCloudinaryService.uploadFile.mockResolvedValue({ url: 'http://test.jpg' });
+      mockCloudinaryService.uploadFile.mockResolvedValue({
+        url: 'http://test.jpg',
+      });
       mockPrisma.course.create.mockResolvedValue(mockCourse);
 
-      const result = await service.createCourses(mockCourseData, mockPhoto, mockUser);
+      const result = await service.createCourses(
+        mockCourseData,
+        mockPhoto,
+        mockUser,
+      );
 
       expect(mockCloudinaryService.uploadFile).toHaveBeenCalledWith(mockPhoto);
       expect(mockPrisma.course.create).toHaveBeenCalled();
@@ -130,22 +140,25 @@ describe('CoursesService', () => {
     });
 
     it('should throw error if photo is not provided', async () => {
-      await expect(service.createCourses(mockCourseData, undefined as any, mockUser))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.createCourses(mockCourseData, undefined as any, mockUser),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if user is not instructor', async () => {
       const studentUser = { ...mockUser, role: 'student' };
 
-      await expect(service.createCourses(mockCourseData, mockPhoto, studentUser as any))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.createCourses(mockCourseData, mockPhoto, studentUser as any),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if photo upload fails', async () => {
       mockCloudinaryService.uploadFile.mockResolvedValue(null);
 
-      await expect(service.createCourses(mockCourseData, mockPhoto, mockUser))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.createCourses(mockCourseData, mockPhoto, mockUser),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -169,8 +182,14 @@ describe('CoursesService', () => {
 
       const result = await service.getSingleCourse(courseId);
 
-      expect(mockPrisma.course.findUnique).toHaveBeenCalledWith({ where: { id: courseId } });
-      expect(mockRedisService.set).toHaveBeenCalledWith(`course:${courseId}`, JSON.stringify(mockCourse), 600);
+      expect(mockPrisma.course.findUnique).toHaveBeenCalledWith({
+        where: { id: courseId },
+      });
+      expect(mockRedisService.set).toHaveBeenCalledWith(
+        `course:${courseId}`,
+        JSON.stringify(mockCourse),
+        600,
+      );
       expect(result).toEqual(mockCourse);
     });
 
@@ -178,8 +197,9 @@ describe('CoursesService', () => {
       mockRedisService.get.mockResolvedValue(null);
       mockPrisma.course.findUnique.mockResolvedValue(null);
 
-      await expect(service.getSingleCourse(courseId))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.getSingleCourse(courseId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -197,7 +217,11 @@ describe('CoursesService', () => {
       mockPrisma.user.findUnique.mockResolvedValue(mockAdmin);
       mockPrisma.course.update.mockResolvedValue(mockUpdatedCourse);
 
-      const result = await service.updateCourseStatus(courseId, published, userId);
+      const result = await service.updateCourseStatus(
+        courseId,
+        published,
+        userId,
+      );
 
       expect(mockPrisma.course.update).toHaveBeenCalledWith({
         where: { id: courseId },
@@ -209,8 +233,9 @@ describe('CoursesService', () => {
     it('should throw error if course not found', async () => {
       mockPrisma.course.findUnique.mockResolvedValue(null);
 
-      await expect(service.updateCourseStatus(courseId, published, userId))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.updateCourseStatus(courseId, published, userId),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if user is not admin', async () => {
@@ -220,8 +245,9 @@ describe('CoursesService', () => {
       mockPrisma.course.findUnique.mockResolvedValue(mockCourse);
       mockPrisma.user.findUnique.mockResolvedValue(mockUser);
 
-      await expect(service.updateCourseStatus(courseId, published, userId))
-        .rejects.toThrow(ForbiddenException);
+      await expect(
+        service.updateCourseStatus(courseId, published, userId),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -231,21 +257,36 @@ describe('CoursesService', () => {
       { title: 'Lesson 1', videoUrl: '', courseId },
     ];
     const mockVideos = [
-      { buffer: Buffer.from('video'), originalname: 'video1.mp4' } as Express.Multer.File,
+      {
+        buffer: Buffer.from('video'),
+        originalname: 'video1.mp4',
+      } as Express.Multer.File,
     ];
 
     it('should upload lessons successfully', async () => {
       const mockCourse = { id: courseId, instructorId: mockUser.id };
-      const mockUpdatedCourse = { id: courseId, lessons: [{ id: 'lesson-1', title: 'Lesson 1' }] };
+      const mockUpdatedCourse = {
+        id: courseId,
+        lessons: [{ id: 'lesson-1', title: 'Lesson 1' }],
+      };
 
       mockPrisma.course.findUnique.mockResolvedValue(mockCourse);
-      mockCloudinaryService.uploadVideoFile.mockResolvedValue({ url: 'http://video.mp4' });
+      mockCloudinaryService.uploadVideoFile.mockResolvedValue({
+        url: 'http://video.mp4',
+      });
       mockPrisma.lesson.createMany.mockResolvedValue({ count: 1 });
       mockPrisma.course.update.mockResolvedValue(mockUpdatedCourse);
 
-      const result = await service.putLessons(courseId, mockLessons, mockVideos, mockUser);
+      const result = await service.putLessons(
+        courseId,
+        mockLessons,
+        mockVideos,
+        mockUser,
+      );
 
-      expect(mockCloudinaryService.uploadVideoFile).toHaveBeenCalledWith(mockVideos[0]);
+      expect(mockCloudinaryService.uploadVideoFile).toHaveBeenCalledWith(
+        mockVideos[0],
+      );
       expect(mockPrisma.lesson.createMany).toHaveBeenCalled();
       expect(result).toEqual(mockUpdatedCourse.lessons);
     });
@@ -253,24 +294,27 @@ describe('CoursesService', () => {
     it('should throw error if course not found', async () => {
       mockPrisma.course.findUnique.mockResolvedValue(null);
 
-      await expect(service.putLessons(courseId, mockLessons, mockVideos, mockUser))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.putLessons(courseId, mockLessons, mockVideos, mockUser),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if user is not course instructor', async () => {
       const mockCourse = { id: courseId, instructorId: 'other-instructor' };
       mockPrisma.course.findUnique.mockResolvedValue(mockCourse);
 
-      await expect(service.putLessons(courseId, mockLessons, mockVideos, mockUser))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.putLessons(courseId, mockLessons, mockVideos, mockUser),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if lessons and videos count mismatch', async () => {
       const mockCourse = { id: courseId, instructorId: mockUser.id };
       mockPrisma.course.findUnique.mockResolvedValue(mockCourse);
 
-      await expect(service.putLessons(courseId, mockLessons, [], mockUser))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.putLessons(courseId, mockLessons, [], mockUser),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -290,7 +334,12 @@ describe('CoursesService', () => {
       mockPrisma.user.findUnique.mockResolvedValue(mockStudent);
       mockPrisma.review.create.mockResolvedValue(mockReview);
 
-      const result = await service.createCourseReview(courseId, userId, rating, comment);
+      const result = await service.createCourseReview(
+        courseId,
+        userId,
+        rating,
+        comment,
+      );
 
       expect(mockPrisma.review.create).toHaveBeenCalled();
       expect(result).toEqual(mockReview);
@@ -299,8 +348,9 @@ describe('CoursesService', () => {
     it('should throw error if course not found', async () => {
       mockPrisma.course.findUnique.mockResolvedValue(null);
 
-      await expect(service.createCourseReview(courseId, userId, rating, comment))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.createCourseReview(courseId, userId, rating, comment),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if user already reviewed', async () => {
@@ -310,8 +360,9 @@ describe('CoursesService', () => {
       mockPrisma.course.findUnique.mockResolvedValue(mockCourse);
       mockPrisma.review.findFirst.mockResolvedValue(mockExistingReview);
 
-      await expect(service.createCourseReview(courseId, userId, rating, comment))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.createCourseReview(courseId, userId, rating, comment),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if user is not student', async () => {
@@ -322,8 +373,9 @@ describe('CoursesService', () => {
       mockPrisma.review.findFirst.mockResolvedValue(null);
       mockPrisma.user.findUnique.mockResolvedValue(mockInstructor);
 
-      await expect(service.createCourseReview(courseId, userId, rating, comment))
-        .rejects.toThrow(ForbiddenException);
+      await expect(
+        service.createCourseReview(courseId, userId, rating, comment),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -341,7 +393,9 @@ describe('CoursesService', () => {
 
       const result = await service.getAllCourseReviews(instructorId);
 
-      expect(mockRedisService.get).toHaveBeenCalledWith(`instructor:${instructorId}:reviews`);
+      expect(mockRedisService.get).toHaveBeenCalledWith(
+        `instructor:${instructorId}:reviews`,
+      );
       expect(result).toEqual(mockReviews);
       expect(mockPrisma.course.findMany).not.toHaveBeenCalled();
     });
@@ -351,8 +405,12 @@ describe('CoursesService', () => {
         { id: 'course-1', instructorId },
         { id: 'course-2', instructorId },
       ];
-      const mockReviews1 = [{ id: 'review-1', courseId: 'course-1', rating: 5, comment: 'Great!' }];
-      const mockReviews2 = [{ id: 'review-2', courseId: 'course-2', rating: 4, comment: 'Good!' }];
+      const mockReviews1 = [
+        { id: 'review-1', courseId: 'course-1', rating: 5, comment: 'Great!' },
+      ];
+      const mockReviews2 = [
+        { id: 'review-2', courseId: 'course-2', rating: 4, comment: 'Good!' },
+      ];
       const mockInstructor = { id: instructorId, role: 'instructor' };
 
       mockPrisma.user.findUnique.mockResolvedValue(mockInstructor);
@@ -364,12 +422,14 @@ describe('CoursesService', () => {
 
       const result = await service.getAllCourseReviews(instructorId);
 
-      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({ where: { instructorId } });
+      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({
+        where: { instructorId },
+      });
       expect(mockPrisma.review.findMany).toHaveBeenCalledTimes(2);
       expect(mockRedisService.set).toHaveBeenCalledWith(
         `instructor:${instructorId}:reviews`,
         JSON.stringify([...mockReviews1, ...mockReviews2]),
-        600
+        600,
       );
       expect(result).toEqual([...mockReviews1, ...mockReviews2]);
     });

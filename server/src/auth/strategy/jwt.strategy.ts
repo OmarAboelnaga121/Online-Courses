@@ -34,8 +34,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         enrolledCourses: true,
         wishList: true,
         resetPasswordToken: true,
-        resetPasswordExpires: true
-      }
+        resetPasswordExpires: true,
+      },
     });
     if (!user) {
       throw new UnauthorizedException('User not found');

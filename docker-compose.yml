@@ -21,6 +21,8 @@ services:
   server:
     build: ./server
     restart: always
+    env_file:
+      - ./server/.env
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/eduflex
       REDIS_URL: redis://redis:6379
@@ -48,6 +50,16 @@ services:
     depends_on:
       - db
     command: npx prisma studio --hostname 0.0.0.0
+
+  client:
+    build: ./client
+    restart: always
+    env_file:
+      - ./client/.env.local
+    ports:
+      - "3001:3001"
+    depends_on:
+      - server
 
 volumes:
   redis_data:

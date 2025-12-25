@@ -89,22 +89,22 @@ export default function Navbar() {
       {/* Mobile Navigation Menu */}
       <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50`}>
         <div className="px-4 py-3 space-y-2">
-          <Link 
-            href={"/"} 
+          <Link
+            href={"/"}
             className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Home
           </Link>
-          <Link 
-            href={"/"} 
+          <Link
+            href={"/"}
             className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Courses
           </Link>
-          <Link 
-            href={"/"} 
+          <Link
+            href={"/"}
             className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors duration-200"
             onClick={() => setIsMobileMenuOpen(false)}
           >

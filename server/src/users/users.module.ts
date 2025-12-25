@@ -7,6 +7,6 @@ import { RedisModule } from '../redis/redis.module';
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
-  imports:[CloudinaryModule, RedisModule]
+  imports: [CloudinaryModule, RedisModule],
 })
 export class UsersModule {}

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-
 import { useAuth } from '@/hooks/useAuth';
 import { useCourse } from '@/hooks/useCourse';
 import { apiService } from '@/services/api';
@@ -19,6 +18,10 @@ export default function SingleCourse() {
 
     const checkOutCourse = async () => {
         try {
+            if (userProfile?.role !== 'student') {
+                alert("You are not authorized to purchase this course.")
+                return;
+            }
             const data = await apiService.initiateCheckout(courseId);
             window.location.href = data.url;
         } catch (err) {
@@ -36,7 +39,7 @@ export default function SingleCourse() {
 
     return (
         <div className="min-h-screen w-full">
-            {course ? 
+            {course ?
                 <div className="flex flex-col-reverse lg:flex-row w-full px-10 ">
                     <div className="w-full lg:w-1/2 flex flex-col p-8 mb-5">
                         <div>
@@ -48,21 +51,21 @@ export default function SingleCourse() {
                             <span className="font-semibold">{getAverageRating()}</span>
                             <span className="text-gray-500">({reviews.length} reviews)</span>
                         </div>
-                       
+
                         <ul className="flex gap-6 mb-6">
-                            <li 
+                            <li
                                 className={`cursor-pointer pb-2 ${activeTab === 'overview' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
                                 onClick={() => handleTabClick('overview')}
                             >
                                 Overview
                             </li>
-                            <li 
+                            <li
                                 className={`cursor-pointer pb-2 ${activeTab === 'learn' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
                                 onClick={() => handleTabClick('learn')}
                             >
                                 What You Will Learn
                             </li>
-                            <li 
+                            <li
                                 className={`cursor-pointer pb-2 ${activeTab === 'review' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}`}
                                 onClick={() => handleTabClick('review')}
                             >
@@ -70,18 +73,18 @@ export default function SingleCourse() {
                             </li>
                         </ul>
                         <div className="flex flex-col gap-5">
-                            <div id="overview">
+                            <div id="overview" className="scroll-mt-40">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Course Overview</h2>
                                 <p>{course.overView}</p>
                             </div>
-                            <div id="learn">
+                            <div id="learn" className="scroll-mt-40">
                                 <h2 className="text-2xl font-bold text-gray-900 mb-5">What you&apos;ll learn</h2>
                                 <ul className="flex flex-col gap-5">
                                     {course.whatYouWillLearn.split(',').map((item, index) => (
                                         <li key={index} className="flex items-center gap-3 mx-5">
-                                            <input 
-                                                type="checkbox" 
-                                                disabled 
+                                            <input
+                                                type="checkbox"
+                                                disabled
                                                 aria-label={`Learning objective: ${item.trim()}`}
                                                 className="w-5 h-5 text-green-600 bg-green-100 border-green-300 rounded focus:ring-green-500"
                                             />
@@ -95,11 +98,11 @@ export default function SingleCourse() {
                                 {instructor && (
                                     <div className="flex items-center gap-5">
                                         <div>
-                                            <Image 
-                                            src={instructor.avatarUrl} 
-                                            alt={instructor.name} 
-                                            width={100} 
-                                            height={100}
+                                            <Image
+                                                src={instructor.avatarUrl || "/default-avatar.png"}
+                                                alt={instructor.name}
+                                                width={100}
+                                                height={100}
                                             />
                                         </div>
                                         <div>
@@ -129,33 +132,33 @@ export default function SingleCourse() {
                                 )}
                             </div>
                         </div>
-                    </div>  
+                    </div>
                     <div className="w-full lg:w-1/2 gap-10 flex flex-col items-center lg:items-end justify-start m-8">
                         <div className="w-full max-w-[300px] gap-10 flex flex-col">
-                            <Image 
-                                src={course.thumbnail} 
-                                alt={course.title} 
-                                width={300} 
-                                height={200} 
+                            <Image
+                                src={course.thumbnail}
+                                alt={course.title}
+                                width={300}
+                                height={200}
                                 className="object-cover"
                             />
-                            {userProfile?.enrolledCourses?.some(enrolledCourse => enrolledCourse.id === course.id) ?
-                                <Link 
-                                    href={`/course-player/${course.id}`} 
+                            {userProfile?.enrolledCourses?.some(enrolledCourse => enrolledCourse.id === course.id) && userProfile?.role === 'STUDENT' ?
+                                <Link
+                                    href={`/course-player/${course.id}`}
                                     className="primaryBtn w-full block text-center"
                                 >
                                     Continue Learning
                                 </Link>
-                            : 
-                            <button 
-                                type="button"
-                                onClick={checkOutCourse}
-                                className="primaryBtn w-full block"
-                            >
-                                Enroll Now
-                            </button>
+                                :
+                                <button
+                                    type="button"
+                                    onClick={checkOutCourse}
+                                    className="primaryBtn w-full block"
+                                >
+                                    Enroll Now
+                                </button>
                             }
-                            
+
                         </div>
                     </div>
                 </div>
@@ -164,8 +167,8 @@ export default function SingleCourse() {
                     <div className=" text-center p-8 bg-white rounded-lg shadow-md max-w-md mx-4">
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Course Unavailable</h2>
                         <p className="text-gray-600 mb-6">Sorry, this course is currently not available or may have been removed.</p>
-                        <Link 
-                            href="/courses" 
+                        <Link
+                            href="/courses"
                             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
                         >
                             Browse All Courses
@@ -176,5 +179,3 @@ export default function SingleCourse() {
         </div>
     );
 }
-
-

@@ -1,5 +1,4 @@
 'use client';
-import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api';
 import Link from 'next/link'

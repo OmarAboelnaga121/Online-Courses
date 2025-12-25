@@ -79,9 +79,11 @@ describe('CloudinaryService', () => {
       const result = await service.uploadFile(mockFile);
 
       expect(mockCloudinary.uploader.upload_stream).toHaveBeenCalledWith(
-        expect.any(Function)
+        expect.any(Function),
       );
-      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(mockFile.buffer);
+      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(
+        mockFile.buffer,
+      );
       expect(mockReadStream.pipe).toHaveBeenCalledWith(mockUploadStream);
       expect(result).toEqual(mockCloudinaryResponse);
     });
@@ -98,10 +100,14 @@ describe('CloudinaryService', () => {
         return mockUploadStream;
       });
 
-      await expect(service.uploadFile(mockFile)).rejects.toThrow('Upload failed');
+      await expect(service.uploadFile(mockFile)).rejects.toThrow(
+        'Upload failed',
+      );
 
       expect(mockCloudinary.uploader.upload_stream).toHaveBeenCalled();
-      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(mockFile.buffer);
+      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(
+        mockFile.buffer,
+      );
     });
 
     it('should handle no result from Cloudinary', async () => {
@@ -116,7 +122,7 @@ describe('CloudinaryService', () => {
       });
 
       await expect(service.uploadFile(mockFile)).rejects.toThrow(
-        'No result returned from Cloudinary'
+        'No result returned from Cloudinary',
       );
     });
 
@@ -132,7 +138,9 @@ describe('CloudinaryService', () => {
 
       await service.uploadFile(mockFile);
 
-      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(mockFile.buffer);
+      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(
+        mockFile.buffer,
+      );
       expect(mockReadStream.pipe).toHaveBeenCalledWith(mockUploadStream);
     });
   });
@@ -150,19 +158,23 @@ describe('CloudinaryService', () => {
         pipe: jest.fn(),
       };
 
-      mockCloudinary.uploader.upload_stream.mockImplementation((options, callback) => {
-        // Simulate successful video upload
-        setTimeout(() => callback(null, mockVideoResponse), 0);
-        return mockUploadStream;
-      });
+      mockCloudinary.uploader.upload_stream.mockImplementation(
+        (options, callback) => {
+          // Simulate successful video upload
+          setTimeout(() => callback(null, mockVideoResponse), 0);
+          return mockUploadStream;
+        },
+      );
 
       const result = await service.uploadVideoFile(mockVideoFile);
 
       expect(mockCloudinary.uploader.upload_stream).toHaveBeenCalledWith(
         { resource_type: 'video' },
-        expect.any(Function)
+        expect.any(Function),
       );
-      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(mockVideoFile.buffer);
+      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(
+        mockVideoFile.buffer,
+      );
       expect(mockReadStream.pipe).toHaveBeenCalledWith(mockUploadStream);
       expect(result).toEqual(mockVideoResponse);
     });
@@ -173,19 +185,21 @@ describe('CloudinaryService', () => {
         pipe: jest.fn(),
       };
 
-      mockCloudinary.uploader.upload_stream.mockImplementation((options, callback) => {
-        // Simulate video upload error
-        setTimeout(() => callback(uploadError, null), 0);
-        return mockUploadStream;
-      });
+      mockCloudinary.uploader.upload_stream.mockImplementation(
+        (options, callback) => {
+          // Simulate video upload error
+          setTimeout(() => callback(uploadError, null), 0);
+          return mockUploadStream;
+        },
+      );
 
       await expect(service.uploadVideoFile(mockVideoFile)).rejects.toThrow(
-        'Video upload failed'
+        'Video upload failed',
       );
 
       expect(mockCloudinary.uploader.upload_stream).toHaveBeenCalledWith(
         { resource_type: 'video' },
-        expect.any(Function)
+        expect.any(Function),
       );
     });
 
@@ -194,14 +208,16 @@ describe('CloudinaryService', () => {
         pipe: jest.fn(),
       };
 
-      mockCloudinary.uploader.upload_stream.mockImplementation((options, callback) => {
-        // Simulate no result for video
-        setTimeout(() => callback(null, null), 0);
-        return mockUploadStream;
-      });
+      mockCloudinary.uploader.upload_stream.mockImplementation(
+        (options, callback) => {
+          // Simulate no result for video
+          setTimeout(() => callback(null, null), 0);
+          return mockUploadStream;
+        },
+      );
 
       await expect(service.uploadVideoFile(mockVideoFile)).rejects.toThrow(
-        'No result returned from Cloudinary'
+        'No result returned from Cloudinary',
       );
     });
 
@@ -210,17 +226,19 @@ describe('CloudinaryService', () => {
         pipe: jest.fn(),
       };
 
-      mockCloudinary.uploader.upload_stream.mockImplementation((options, callback) => {
-        expect(options).toEqual({ resource_type: 'video' });
-        setTimeout(() => callback(null, mockVideoResponse), 0);
-        return mockUploadStream;
-      });
+      mockCloudinary.uploader.upload_stream.mockImplementation(
+        (options, callback) => {
+          expect(options).toEqual({ resource_type: 'video' });
+          setTimeout(() => callback(null, mockVideoResponse), 0);
+          return mockUploadStream;
+        },
+      );
 
       await service.uploadVideoFile(mockVideoFile);
 
       expect(mockCloudinary.uploader.upload_stream).toHaveBeenCalledWith(
         { resource_type: 'video' },
-        expect.any(Function)
+        expect.any(Function),
       );
     });
 
@@ -229,14 +247,18 @@ describe('CloudinaryService', () => {
         pipe: jest.fn(),
       };
 
-      mockCloudinary.uploader.upload_stream.mockImplementation((options, callback) => {
-        setTimeout(() => callback(null, mockVideoResponse), 0);
-        return mockUploadStream;
-      });
+      mockCloudinary.uploader.upload_stream.mockImplementation(
+        (options, callback) => {
+          setTimeout(() => callback(null, mockVideoResponse), 0);
+          return mockUploadStream;
+        },
+      );
 
       await service.uploadVideoFile(mockVideoFile);
 
-      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(mockVideoFile.buffer);
+      expect(mockStreamifier.createReadStream).toHaveBeenCalledWith(
+        mockVideoFile.buffer,
+      );
       expect(mockReadStream.pipe).toHaveBeenCalledWith(mockUploadStream);
     });
   });
@@ -253,7 +275,9 @@ describe('CloudinaryService', () => {
         return mockUploadStream;
       });
 
-      await expect(service.uploadFile(mockFile)).rejects.toThrow('Stream error');
+      await expect(service.uploadFile(mockFile)).rejects.toThrow(
+        'Stream error',
+      );
     });
 
     it('should handle undefined callback parameters', async () => {
@@ -267,7 +291,7 @@ describe('CloudinaryService', () => {
       });
 
       await expect(service.uploadFile(mockFile)).rejects.toThrow(
-        'No result returned from Cloudinary'
+        'No result returned from Cloudinary',
       );
     });
   });

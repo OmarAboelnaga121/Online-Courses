@@ -78,6 +78,7 @@ export interface Review {
   user?: {
     name: string;
   };
+  
 }
 
 export interface Instructor {

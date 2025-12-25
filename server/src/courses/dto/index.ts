@@ -1,5 +1,4 @@
-import { LessonDto } from "./lessons.dto";
-import { CourseDto } from "./courses.dto";
+import { LessonDto } from './lessons.dto';
+import { CourseDto } from './courses.dto';
 
-
-export {LessonDto, CourseDto}
+export { LessonDto, CourseDto };

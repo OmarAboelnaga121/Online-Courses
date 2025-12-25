@@ -10,7 +10,8 @@ export class CloudinaryService {
       const uploadStream = cloudinary.uploader.upload_stream(
         (error, result) => {
           if (error) return reject(error);
-          if (!result) return reject(new Error('No result returned from Cloudinary'));
+          if (!result)
+            return reject(new Error('No result returned from Cloudinary'));
           resolve(result);
         },
       );
@@ -25,7 +26,8 @@ export class CloudinaryService {
         { resource_type: 'video' },
         (error, result) => {
           if (error) return reject(error);
-          if (!result) return reject(new Error('No result returned from Cloudinary'));
+          if (!result)
+            return reject(new Error('No result returned from Cloudinary'));
           resolve(result);
         },
       );

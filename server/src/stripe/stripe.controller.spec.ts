@@ -55,13 +55,15 @@ describe('StripeController', () => {
     };
 
     it('should create a checkout session successfully', async () => {
-      mockStripeService.createOrderByStripe.mockResolvedValue(mockStripeSession);
+      mockStripeService.createOrderByStripe.mockResolvedValue(
+        mockStripeSession,
+      );
 
       const result = await controller.createCheckoutSession(mockBody, mockUser);
 
       expect(stripeService.createOrderByStripe).toHaveBeenCalledWith(
         mockBody.courseId,
-        mockUser
+        mockUser,
       );
       expect(result).toEqual({
         success: true,
@@ -72,19 +74,19 @@ describe('StripeController', () => {
 
     it('should throw BadRequestException when service fails', async () => {
       const errorMessage = 'Course not found';
-      mockStripeService.createOrderByStripe.mockRejectedValue(new Error(errorMessage));
+      mockStripeService.createOrderByStripe.mockRejectedValue(
+        new Error(errorMessage),
+      );
 
-      await expect(controller.createCheckoutSession(mockBody, mockUser))
-        .rejects
-        .toThrow(BadRequestException);
+      await expect(
+        controller.createCheckoutSession(mockBody, mockUser),
+      ).rejects.toThrow(BadRequestException);
 
       expect(stripeService.createOrderByStripe).toHaveBeenCalledWith(
         mockBody.courseId,
-        mockUser
+        mockUser,
       );
     });
-
-
   });
 
   describe('controller initialization', () => {

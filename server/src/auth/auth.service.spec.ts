@@ -75,9 +75,13 @@ describe('AuthService', () => {
     } as Express.Multer.File;
 
     it('should register a new user successfully', async () => {
-      mockPrisma.user.findFirst.mockResolvedValueOnce(null).mockResolvedValueOnce(null);
+      mockPrisma.user.findFirst
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null);
       (argon2.hash as jest.Mock).mockResolvedValue('hashedPassword');
-      mockCloudinaryService.uploadFile.mockResolvedValue({ secure_url: 'http://test.jpg' });
+      mockCloudinaryService.uploadFile.mockResolvedValue({
+        secure_url: 'http://test.jpg',
+      });
       mockPrisma.user.create.mockResolvedValue({
         id: 'user-1',
         ...mockRegisterData,
@@ -96,20 +100,25 @@ describe('AuthService', () => {
     it('should throw error if username is taken', async () => {
       mockPrisma.user.findFirst.mockResolvedValueOnce({ id: 'existing-user' });
 
-      await expect(service.register(mockRegisterData, mockPhoto))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.register(mockRegisterData, mockPhoto),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if email is taken', async () => {
-      mockPrisma.user.findFirst.mockResolvedValueOnce(null).mockResolvedValueOnce({ id: 'existing-user' });
+      mockPrisma.user.findFirst
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({ id: 'existing-user' });
 
-      await expect(service.register(mockRegisterData, mockPhoto))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.register(mockRegisterData, mockPhoto),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw error if photo is not provided', async () => {
-      await expect(service.register(mockRegisterData, undefined as any))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.register(mockRegisterData, undefined as any),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -133,8 +142,13 @@ describe('AuthService', () => {
 
       const result = await service.login(mockLoginData);
 
-      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({ where: { email: mockLoginData.email } });
-      expect(argon2.verify).toHaveBeenCalledWith(mockUser.password, mockLoginData.password);
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+        where: { email: mockLoginData.email },
+      });
+      expect(argon2.verify).toHaveBeenCalledWith(
+        mockUser.password,
+        mockLoginData.password,
+      );
       expect(result).toHaveProperty('user');
       expect(result).toHaveProperty('access_token');
       expect(result.user).not.toHaveProperty('password');
@@ -143,17 +157,23 @@ describe('AuthService', () => {
     it('should throw error if user not found', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.login(mockLoginData))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.login(mockLoginData)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw error if password is invalid', async () => {
-      const mockUser = { id: 'user-1', email: 'john@example.com', password: 'hashedPassword' };
+      const mockUser = {
+        id: 'user-1',
+        email: 'john@example.com',
+        password: 'hashedPassword',
+      };
       mockPrisma.user.findUnique.mockResolvedValue(mockUser);
       (argon2.verify as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login(mockLoginData))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.login(mockLoginData)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -168,7 +188,9 @@ describe('AuthService', () => {
 
       await service.resetPassword(email);
 
-      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({ where: { email } });
+      expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+        where: { email },
+      });
       expect(mockPrisma.user.update).toHaveBeenCalled();
       expect(mockMailerService.sendMail).toHaveBeenCalled();
     });
@@ -176,8 +198,9 @@ describe('AuthService', () => {
     it('should throw error if user not found', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.resetPassword(email))
-        .rejects.toThrow('User not found');
+      await expect(service.resetPassword(email)).rejects.toThrow(
+        'User not found',
+      );
     });
   });
 
@@ -198,7 +221,9 @@ describe('AuthService', () => {
 
       await service.updatePassword(token, newPassword);
 
-      expect(mockPrisma.user.findFirst).toHaveBeenCalledWith({ where: { resetPasswordToken: token } });
+      expect(mockPrisma.user.findFirst).toHaveBeenCalledWith({
+        where: { resetPasswordToken: token },
+      });
       expect(argon2.hash).toHaveBeenCalledWith(newPassword);
       expect(mockPrisma.user.update).toHaveBeenCalled();
     });
@@ -206,8 +231,9 @@ describe('AuthService', () => {
     it('should throw error if token is invalid', async () => {
       mockPrisma.user.findFirst.mockResolvedValue(null);
 
-      await expect(service.updatePassword(token, newPassword))
-        .rejects.toThrow('Invalid or expired token');
+      await expect(service.updatePassword(token, newPassword)).rejects.toThrow(
+        'Invalid or expired token',
+      );
     });
 
     it('should throw error if token is expired', async () => {
@@ -219,8 +245,9 @@ describe('AuthService', () => {
 
       mockPrisma.user.findFirst.mockResolvedValue(mockUser);
 
-      await expect(service.updatePassword(token, newPassword))
-        .rejects.toThrow('Invalid or expired token');
+      await expect(service.updatePassword(token, newPassword)).rejects.toThrow(
+        'Invalid or expired token',
+      );
     });
   });
 

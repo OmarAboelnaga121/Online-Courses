@@ -1,8 +1,27 @@
-import { Controller, Post, Body, UseGuards, Req, Get, UsePipes, ValidationPipe, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Get,
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { RegisterUserDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, getSchemaPath, ApiConsumes } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  getSchemaPath,
+  ApiConsumes,
+} from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto';
@@ -32,7 +51,10 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 201, description: 'Student registered successfully.' })
-  @ApiResponse({ status: 400, description: 'Validation or registration error.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation or registration error.',
+  })
   async registerStudent(
     @Body() registerData: RegisterUserDto,
     @UploadedFile() photo: Express.Multer.File,
@@ -43,9 +65,16 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login a user' })
   @ApiBody({ type: LoginUserDto })
-  @ApiResponse({ status: 201, description: 'User logged in successfully, returns JWT token and user data.' })
+  @ApiResponse({
+    status: 201,
+    description:
+      'User logged in successfully, returns JWT token and user data.',
+  })
   @ApiResponse({ status: 400, description: 'Invalid email or password.' })
-  async login(@Body() loginData: LoginUserDto, @Res({ passthrough: true }) res: Response,) {
+  async login(
+    @Body() loginData: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const result = await this.authService.login(loginData);
 
     // store token in cookie
@@ -56,7 +85,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
 
-    return { user: result.user }; 
+    return { user: result.user };
   }
 
   @Post('forgot-password')

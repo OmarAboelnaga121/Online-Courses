@@ -1,6 +1,5 @@
 "use client"
 import { useAuth } from "@/contexts/AuthContext";
-import { useCourse } from "@/hooks/useCourse";
 import { Course } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function MyCourses() {
 
-    const { userProfile, isLoggedIn, loading: authLoading } = useAuth()
+    const { userProfile } = useAuth()
     const instructorCourses = userProfile?.myCourses
     const route = useRouter()
 

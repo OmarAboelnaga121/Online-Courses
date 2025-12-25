@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsIn } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsStrongPassword,
+  IsIn,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '../../../generated/prisma';
 

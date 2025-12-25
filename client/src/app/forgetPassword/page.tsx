@@ -19,8 +19,9 @@ export default function ForgetPassword() {
             const response = await apiService.forgetPassword({email: emailBody});
             console.log("Response:", response);
             router.push("/forgetPassword/confirmPassword");
-        } catch (error) {
-            setError("Failed to send reset password link. Please try again.");
+        } catch {
+            // setError(error.message || "Failed to send reset link. Please try again.");
+            alert("Failed to send reset link. Please try again.");
         }
     };
 
@@ -32,7 +33,7 @@ export default function ForgetPassword() {
                     <p className="text-gray-600 mb-8">Enter your email to reset your password.</p>
 
                     <form className="space-y-6" onSubmit={handleSubmit}>
-                         {error && (
+                        {error && (
                             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                                 <span className="block sm:inline">{error}</span>
                             </div>

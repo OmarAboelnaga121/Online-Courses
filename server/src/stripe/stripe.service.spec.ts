@@ -125,20 +125,26 @@ describe('StripeService', () => {
     it('should create Stripe checkout session successfully', async () => {
       const result = await service.createOrderByStripe(courseId, mockUser);
 
-      expect(mockPrisma.course.findUnique).toHaveBeenCalledWith({ where: { id: courseId } });
-      expect((service as any).stripe.checkout.sessions.create).toHaveBeenCalledWith({
-        line_items: [{
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: mockCourse.title,
-              description: mockCourse.description,
-              images: [mockCourse.thumbnail],
+      expect(mockPrisma.course.findUnique).toHaveBeenCalledWith({
+        where: { id: courseId },
+      });
+      expect(
+        (service as any).stripe.checkout.sessions.create,
+      ).toHaveBeenCalledWith({
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: mockCourse.title,
+                description: mockCourse.description,
+                images: [mockCourse.thumbnail],
+              },
+              unit_amount: Math.round(mockCourse.price * 100),
             },
-            unit_amount: Math.round(mockCourse.price * 100),
+            quantity: 1,
           },
-          quantity: 1,
-        }],
+        ],
         mode: 'payment',
         success_url: 'http://localhost:3000',
         cancel_url: 'http://localhost:3000',
@@ -155,15 +161,19 @@ describe('StripeService', () => {
     it('should throw error if course not found', async () => {
       mockPrisma.course.findUnique.mockResolvedValue(null);
 
-      await expect(service.createOrderByStripe(courseId, mockUser))
-        .rejects.toThrow('Failed to create payment session: Course not found');
+      await expect(
+        service.createOrderByStripe(courseId, mockUser),
+      ).rejects.toThrow('Failed to create payment session: Course not found');
     });
 
     it('should throw error if user is not a student', async () => {
       const instructorUser = { ...mockUser, role: 'instructor' };
 
-      await expect(service.createOrderByStripe(courseId, instructorUser as any))
-        .rejects.toThrow('Failed to create payment session: User is not a student');
+      await expect(
+        service.createOrderByStripe(courseId, instructorUser as any),
+      ).rejects.toThrow(
+        'Failed to create payment session: User is not a student',
+      );
     });
 
     it('should throw error if course already purchased', async () => {
@@ -172,15 +182,21 @@ describe('StripeService', () => {
         enrolledCourses: [courseId],
       });
 
-      await expect(service.createOrderByStripe(courseId, mockUser))
-        .rejects.toThrow('Failed to create payment session: Course already purchased');
+      await expect(
+        service.createOrderByStripe(courseId, mockUser),
+      ).rejects.toThrow(
+        'Failed to create payment session: Course already purchased',
+      );
     });
 
     it('should handle Stripe API errors', async () => {
-      (service as any).stripe.checkout.sessions.create.mockRejectedValue(new Error('Stripe API error'));
+      (service as any).stripe.checkout.sessions.create.mockRejectedValue(
+        new Error('Stripe API error'),
+      );
 
-      await expect(service.createOrderByStripe(courseId, mockUser))
-        .rejects.toThrow('Failed to create payment session: Stripe API error');
+      await expect(
+        service.createOrderByStripe(courseId, mockUser),
+      ).rejects.toThrow('Failed to create payment session: Stripe API error');
     });
   });
 
@@ -216,27 +232,27 @@ describe('StripeService', () => {
           status: 'Pay',
           method: 'stripe',
           user: {
-            connect: { id: 'user-1' }
-          }
-        }
+            connect: { id: 'user-1' },
+          },
+        },
       });
 
       expect(mockPrisma.user.update).toHaveBeenCalledWith({
         where: { id: 'user-1' },
         data: {
           enrolledCourses: {
-            push: 'course-1'
-          }
-        }
+            push: 'course-1',
+          },
+        },
       });
 
       expect(mockPrisma.course.update).toHaveBeenCalledWith({
         where: { id: 'course-1' },
         data: {
           studentsEnrolled: {
-            push: 'user-1'
-          }
-        }
+            push: 'user-1',
+          },
+        },
       });
 
       expect(result).toEqual(mockPayment);
@@ -249,15 +265,17 @@ describe('StripeService', () => {
         metadata: {},
       } as unknown as Stripe.Checkout.Session;
 
-      await expect(service.handlePaymentSuccess(sessionWithoutMetadata))
-        .rejects.toThrow('Missing required metadata in session');
+      await expect(
+        service.handlePaymentSuccess(sessionWithoutMetadata),
+      ).rejects.toThrow('Missing required metadata in session');
     });
 
     it('should handle database errors', async () => {
       mockPrisma.payment.create.mockRejectedValue(new Error('Database error'));
 
-      await expect(service.handlePaymentSuccess(mockSession))
-        .rejects.toThrow('Failed to process payment success: Database error');
+      await expect(service.handlePaymentSuccess(mockSession)).rejects.toThrow(
+        'Failed to process payment success: Database error',
+      );
     });
 
     it('should handle session with zero amount', async () => {
@@ -266,7 +284,10 @@ describe('StripeService', () => {
         amount_total: 0,
       } as unknown as Stripe.Checkout.Session;
 
-      mockPrisma.payment.create.mockResolvedValue({ ...mockPayment, amount: 0 });
+      mockPrisma.payment.create.mockResolvedValue({
+        ...mockPayment,
+        amount: 0,
+      });
       mockPrisma.user.update.mockResolvedValue({});
       mockPrisma.course.update.mockResolvedValue({});
 
@@ -275,7 +296,7 @@ describe('StripeService', () => {
       expect(mockPrisma.payment.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           amount: 0,
-        })
+        }),
       });
     });
 
@@ -285,7 +306,10 @@ describe('StripeService', () => {
         amount_total: null,
       } as unknown as Stripe.Checkout.Session;
 
-      mockPrisma.payment.create.mockResolvedValue({ ...mockPayment, amount: 0 });
+      mockPrisma.payment.create.mockResolvedValue({
+        ...mockPayment,
+        amount: 0,
+      });
       mockPrisma.user.update.mockResolvedValue({});
       mockPrisma.course.update.mockResolvedValue({});
 
@@ -294,7 +318,7 @@ describe('StripeService', () => {
       expect(mockPrisma.payment.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           amount: 0,
-        })
+        }),
       });
     });
   });

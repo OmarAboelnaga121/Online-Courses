@@ -83,13 +83,19 @@ describe('UsersService', () => {
       };
 
       mockPrisma.user.findUnique.mockResolvedValue(null);
-      mockCloudinaryService.uploadFile.mockResolvedValue({ url: 'http://new-avatar.jpg' });
+      mockCloudinaryService.uploadFile.mockResolvedValue({
+        url: 'http://new-avatar.jpg',
+      });
       mockPrisma.user.update.mockResolvedValue(mockUpdatedUser);
 
-      const result = await service.updateUserProfile(mockUser, mockUpdateData, mockPhoto);
+      const result = await service.updateUserProfile(
+        mockUser,
+        mockUpdateData,
+        mockPhoto,
+      );
 
       expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-        where: { username: mockUpdateData.username }
+        where: { username: mockUpdateData.username },
       });
       expect(mockCloudinaryService.uploadFile).toHaveBeenCalledWith(mockPhoto);
       expect(mockPrisma.user.update).toHaveBeenCalled();
@@ -113,11 +119,15 @@ describe('UsersService', () => {
     });
 
     it('should throw error if username is already taken', async () => {
-      const existingUser = { id: 'other-user', username: mockUpdateData.username };
+      const existingUser = {
+        id: 'other-user',
+        username: mockUpdateData.username,
+      };
       mockPrisma.user.findUnique.mockResolvedValue(existingUser);
 
-      await expect(service.updateUserProfile(mockUser, mockUpdateData))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.updateUserProfile(mockUser, mockUpdateData),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should allow same user to keep their username', async () => {
@@ -132,10 +142,13 @@ describe('UsersService', () => {
 
     it('should throw error if photo upload fails', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
-      mockCloudinaryService.uploadFile.mockRejectedValue(new Error('Upload failed'));
+      mockCloudinaryService.uploadFile.mockRejectedValue(
+        new Error('Upload failed'),
+      );
 
-      await expect(service.updateUserProfile(mockUser, mockUpdateData, mockPhoto))
-        .rejects.toThrow(BadRequestException);
+      await expect(
+        service.updateUserProfile(mockUser, mockUpdateData, mockPhoto),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should invalidate instructor cache for instructor users', async () => {
@@ -145,7 +158,9 @@ describe('UsersService', () => {
 
       await service.updateUserProfile(instructorUser as any, mockUpdateData);
 
-      expect(mockRedisService.del).toHaveBeenCalledWith(`instructor:${instructorUser.id}`);
+      expect(mockRedisService.del).toHaveBeenCalledWith(
+        `instructor:${instructorUser.id}`,
+      );
     });
   });
 
@@ -164,7 +179,9 @@ describe('UsersService', () => {
 
       const result = await service.getInstructorProfile(instructorId);
 
-      expect(mockRedisService.get).toHaveBeenCalledWith(`instructor:${instructorId}`);
+      expect(mockRedisService.get).toHaveBeenCalledWith(
+        `instructor:${instructorId}`,
+      );
       expect(result).toEqual(mockInstructor);
       expect(mockPrisma.user.findUnique).not.toHaveBeenCalled();
     });
@@ -192,12 +209,12 @@ describe('UsersService', () => {
           avatarUrl: true,
           role: true,
           myCourses: true,
-        }
+        },
       });
       expect(mockRedisService.set).toHaveBeenCalledWith(
         `instructor:${instructorId}`,
         JSON.stringify(mockInstructor),
-        900
+        900,
       );
       expect(result).toEqual(mockInstructor);
     });
@@ -206,8 +223,9 @@ describe('UsersService', () => {
       mockRedisService.get.mockResolvedValue(null);
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.getInstructorProfile(instructorId))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.getInstructorProfile(instructorId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw error if user is not instructor', async () => {
@@ -220,8 +238,9 @@ describe('UsersService', () => {
       mockRedisService.get.mockResolvedValue(null);
       mockPrisma.user.findUnique.mockResolvedValue(mockStudent);
 
-      await expect(service.getInstructorProfile(instructorId))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.getInstructorProfile(instructorId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -242,7 +261,9 @@ describe('UsersService', () => {
 
       const result = await service.getComprehensiveUserProfile(userId);
 
-      expect(mockRedisService.get).toHaveBeenCalledWith(`user:${userId}:comprehensive`);
+      expect(mockRedisService.get).toHaveBeenCalledWith(
+        `user:${userId}:comprehensive`,
+      );
       expect(result).toEqual(mockProfile);
     });
 
@@ -262,7 +283,7 @@ describe('UsersService', () => {
             amount: 99.99,
             courseId: 'course-1',
             date: new Date(),
-          }
+          },
         ],
         myCourses: [],
       };
@@ -302,11 +323,11 @@ describe('UsersService', () => {
           myCourses: {
             include: {
               lessons: {
-                select: { id: true, title: true }
-              }
-            }
-          }
-        }
+                select: { id: true, title: true },
+              },
+            },
+          },
+        },
       });
 
       expect(result).toHaveProperty('enrolledCourses');
@@ -321,8 +342,9 @@ describe('UsersService', () => {
       mockRedisService.get.mockResolvedValue(null);
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.getComprehensiveUserProfile(userId))
-        .rejects.toThrow(BadRequestException);
+      await expect(service.getComprehensiveUserProfile(userId)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should cache the comprehensive profile after fetching', async () => {
@@ -344,7 +366,7 @@ describe('UsersService', () => {
       expect(mockRedisService.set).toHaveBeenCalledWith(
         `user:${userId}:comprehensive`,
         expect.any(String),
-        600
+        600,
       );
     });
   });

@@ -42,16 +42,30 @@ export default function CreateCourse() {
             <form onSubmit={submitCourse} className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-10 space-y-6">
                 <input onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Course Title" className="input" />
                 <input onChange={(e) => setDescription(e.target.value)} type="text" placeholder="Course Description" className="input" />
-                <input onChange={(e) => setCategory(e.target.value)} type="text" placeholder="Course Category" className="input" />
-                <input onChange={(e) => setPrice(e.target.value)} type="text" placeholder="Course Price" className="input" />
+                <select onChange={(e) => setCategory(e.target.value.toLowerCase())} id="category" name="category" className="input">
+                    <option>Category</option>
+                    <option>Programming</option>
+                    <option>Marketing</option>
+                    <option>Design</option>
+                    <option>Business</option>
+                    <option>Photography</option>
+                </select>
+                <input onChange={(e) => setPrice(e.target.value)} type="number" placeholder="Course Price" className="input" />
                 <input onChange={(e) => setOverView(e.target.value)} type="text" placeholder="Course Overview" className="input" />
                 <input onChange={(e) => setWhatYouWillLearn(e.target.value)} type="text" placeholder="What You Will Learn" className="input" />
-                <input onChange={(e) => setLanguage(e.target.value)} type="text" placeholder="Course Language" className="input" />
+                <p className="text-sm text-gray-500">To make one point please put &quot;,&quot; after each</p>
+                <select onChange={(e) => setLanguage(e.target.value.toLowerCase())} id="language" name="language" className="input">
+                    <option>Language</option>
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>German</option>
+                    <option>French</option>
+                </select>
                 <div>
                     <label className="block w-full px-6 py-12 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all cursor-pointer text-center bg-gray-50 group">
                         <input type="file" className="hidden" accept="image/*" onChange={(e) => setPhoto(e.target.files?.[0] || null)} />
                         <span className="text-gray-600 text-lg font-medium group-hover:text-blue-600 transition-colors flex flex-col items-center gap-3">
-                            
+
                             <span>{photo ? `✅ ${photo.name}` : "Click to upload course thumbnail"}</span>
                             <span className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB</span>
                         </span>

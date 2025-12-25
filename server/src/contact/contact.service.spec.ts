@@ -68,8 +68,9 @@ describe('ContactService', () => {
       const error = new Error('Failed to send email');
       mockMailerService.sendMail.mockRejectedValue(error);
 
-      await expect(service.sendContactEmail(mockEmailData))
-        .rejects.toThrow('Failed to send email');
+      await expect(service.sendContactEmail(mockEmailData)).rejects.toThrow(
+        'Failed to send email',
+      );
 
       expect(mockMailerService.sendMail).toHaveBeenCalled();
     });
@@ -91,7 +92,7 @@ describe('ContactService', () => {
       const specialCharData: SendEmailDto = {
         name: 'John <script>alert("test")</script> Doe',
         email: 'john+test@example.com',
-        message: 'Message with special chars: <>&"\'\'',
+        message: "Message with special chars: <>&\"''",
       };
 
       mockMailerService.sendMail.mockResolvedValue({ messageId: 'test' });

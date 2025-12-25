@@ -10,7 +10,6 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
@@ -19,21 +18,29 @@ export class AuthService {
 
   async register(registerData: RegisterUserDto, photo: Express.Multer.File) {
     // Check username
-    const checkUsername = await prisma.user.findFirst({ where: { username: registerData.username } });
-    
+    const checkUsername = await prisma.user.findFirst({
+      where: { username: registerData.username },
+    });
+
     if (checkUsername) {
-      throw new BadRequestException("Username is already taken please enter new username");
+      throw new BadRequestException(
+        'Username is already taken please enter new username',
+      );
     }
     // Check Email
-    const checkEmail = await prisma.user.findFirst({ where: { email: registerData.email } });
+    const checkEmail = await prisma.user.findFirst({
+      where: { email: registerData.email },
+    });
 
-    if(checkEmail){
-        throw new BadRequestException("Email is already taken please enter new Email Or login");
+    if (checkEmail) {
+      throw new BadRequestException(
+        'Email is already taken please enter new Email Or login',
+      );
     }
 
     // Enforce photo required (to match controller's required field)
     if (!photo) {
-      throw new BadRequestException("Photo is required for registration");
+      throw new BadRequestException('Photo is required for registration');
     }
 
     // Hash Password
@@ -65,7 +72,9 @@ export class AuthService {
 
   async login(loginData: LoginUserDto) {
     // Find user by email
-    const user = await prisma.user.findUnique({ where: { email: loginData.email } });
+    const user = await prisma.user.findUnique({
+      where: { email: loginData.email },
+    });
     if (!user) {
       throw new BadRequestException('Invalid email or password');
     }
@@ -76,14 +85,14 @@ export class AuthService {
     }
     // Remove password before returning
     const { password, ...userWithoutPassword } = user;
-    
+
     // Generate JWT token
     const token = await this.generateJwtToken(user);
     return { user: userWithoutPassword, access_token: token.access_token };
   }
 
-  async resetPassword(email: string){
-    const user = await prisma.user.findUnique({where:{email: email}});
+  async resetPassword(email: string) {
+    const user = await prisma.user.findUnique({ where: { email: email } });
     if (!user) throw new Error('User not found');
 
     // Generate a professional 6-digit numeric reset code
@@ -124,8 +133,14 @@ export class AuthService {
 
   async updatePassword(token: string, newPassword: string): Promise<void> {
     // Find user by reset token and check expiry
-    const user = await prisma.user.findFirst({ where: { resetPasswordToken: token } });
-    if (!user || !user.resetPasswordExpires || new Date() > user.resetPasswordExpires) {
+    const user = await prisma.user.findFirst({
+      where: { resetPasswordToken: token },
+    });
+    if (
+      !user ||
+      !user.resetPasswordExpires ||
+      new Date() > user.resetPasswordExpires
+    ) {
       throw new Error('Invalid or expired token');
     }
 
@@ -140,8 +155,8 @@ export class AuthService {
     });
   }
 
-  async generateJwtToken(user: UserDto){
-    const payload = { sub: user.id, username: user.username};
+  async generateJwtToken(user: UserDto) {
+    const payload = { sub: user.id, username: user.username };
 
     const access_token = await this.jwtService.signAsync(payload);
 

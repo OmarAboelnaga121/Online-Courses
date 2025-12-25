@@ -99,7 +99,7 @@ export default function CreateLesson() {
             <div className="flex flex-col gap-4">
                 {lessons.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 rounded-lg">
-                        <p className="text-gray-500 text-lg">No lessons yet. Click "Add New Lesson" to get started!</p>
+                        <p className="text-gray-500 text-lg">No lessons yet. Click &quot;Add New Lesson&quot; to get started!</p>
                     </div>
                 ) : (
                     lessons.map((lesson: LessonBody, index: number) => (

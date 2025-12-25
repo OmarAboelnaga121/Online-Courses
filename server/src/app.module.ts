@@ -10,6 +10,8 @@ import { StripeModule } from './stripe/stripe.module';
 import { RedisModule } from './redis/redis.module';
 import { ContactModule } from './contact/contact.module';
 
+import { MailModule } from './shared/mail.module';
+
 @Module({
   imports: [
     RedisModule,
@@ -30,7 +32,8 @@ import { ContactModule } from './contact/contact.module';
     UsersModule,
     StripeModule,
     ContactModule,
- ],
+    MailModule,
+  ],
   providers: [
     {
       provide: APP_GUARD,

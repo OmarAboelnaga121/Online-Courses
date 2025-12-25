@@ -120,25 +120,31 @@ describe('UsersController', () => {
     };
 
     it('should return comprehensive user profile', async () => {
-      mockUsersService.getComprehensiveUserProfile.mockResolvedValue(mockComprehensiveProfile);
+      mockUsersService.getComprehensiveUserProfile.mockResolvedValue(
+        mockComprehensiveProfile,
+      );
 
       const result = await controller.getProfile(MOCK_USER);
 
-      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(MOCK_USER.id);
+      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(
+        MOCK_USER.id,
+      );
       expect(result).toEqual(mockComprehensiveProfile);
     });
 
     it('should handle service errors', async () => {
       const errorMessage = 'User not found';
       mockUsersService.getComprehensiveUserProfile.mockRejectedValue(
-        new BadRequestException(errorMessage)
+        new BadRequestException(errorMessage),
       );
 
-      await expect(controller.getProfile(MOCK_USER))
-        .rejects
-        .toThrow(BadRequestException);
-      
-      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(MOCK_USER.id);
+      await expect(controller.getProfile(MOCK_USER)).rejects.toThrow(
+        BadRequestException,
+      );
+
+      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(
+        MOCK_USER.id,
+      );
     });
 
     it('should return profile with instructor data for instructor users', async () => {
@@ -173,11 +179,15 @@ describe('UsersController', () => {
         },
       };
 
-      mockUsersService.getComprehensiveUserProfile.mockResolvedValue(instructorProfile);
+      mockUsersService.getComprehensiveUserProfile.mockResolvedValue(
+        instructorProfile,
+      );
 
       const result = await controller.getProfile(instructorUser);
 
-      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(instructorUser.id);
+      expect(usersService.getComprehensiveUserProfile).toHaveBeenCalledWith(
+        instructorUser.id,
+      );
       expect(result).toEqual(instructorProfile);
       expect(result.myCourses).toHaveLength(1);
       expect(result.statistics.totalCoursesCreated).toBe(1);
@@ -232,34 +242,40 @@ describe('UsersController', () => {
     };
 
     it('should return instructor profile successfully', async () => {
-      mockUsersService.getInstructorProfile.mockResolvedValue(mockInstructorProfile);
+      mockUsersService.getInstructorProfile.mockResolvedValue(
+        mockInstructorProfile,
+      );
 
       const result = await controller.getInstructorProfile(instructorId);
 
-      expect(usersService.getInstructorProfile).toHaveBeenCalledWith(instructorId);
+      expect(usersService.getInstructorProfile).toHaveBeenCalledWith(
+        instructorId,
+      );
       expect(result).toEqual(mockInstructorProfile);
     });
 
     it('should throw BadRequestException when instructor not found', async () => {
       mockUsersService.getInstructorProfile.mockRejectedValue(
-        new BadRequestException('Instructor not found or invalid role')
+        new BadRequestException('Instructor not found or invalid role'),
       );
 
-      await expect(controller.getInstructorProfile(instructorId))
-        .rejects
-        .toThrow(BadRequestException);
-      
-      expect(usersService.getInstructorProfile).toHaveBeenCalledWith(instructorId);
+      await expect(
+        controller.getInstructorProfile(instructorId),
+      ).rejects.toThrow(BadRequestException);
+
+      expect(usersService.getInstructorProfile).toHaveBeenCalledWith(
+        instructorId,
+      );
     });
 
     it('should throw BadRequestException when user is not an instructor', async () => {
       mockUsersService.getInstructorProfile.mockRejectedValue(
-        new BadRequestException('Instructor not found or invalid role')
+        new BadRequestException('Instructor not found or invalid role'),
       );
 
-      await expect(controller.getInstructorProfile('student-123'))
-        .rejects
-        .toThrow(BadRequestException);
+      await expect(
+        controller.getInstructorProfile('student-123'),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -292,12 +308,16 @@ describe('UsersController', () => {
     it('should update user profile successfully', async () => {
       mockUsersService.updateUserProfile.mockResolvedValue(mockUpdatedProfile);
 
-      const result = await controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto);
+      const result = await controller.updateProfile(
+        MOCK_USER,
+        mockUpdateData,
+        mockPhoto,
+      );
 
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
         MOCK_USER,
         mockUpdateData,
-        mockPhoto
+        mockPhoto,
       );
       expect(result).toEqual(mockUpdatedProfile);
     });
@@ -305,40 +325,44 @@ describe('UsersController', () => {
     it('should update profile without photo', async () => {
       mockUsersService.updateUserProfile.mockResolvedValue(mockUpdatedProfile);
 
-      const result = await controller.updateProfile(MOCK_USER, mockUpdateData, undefined);
+      const result = await controller.updateProfile(
+        MOCK_USER,
+        mockUpdateData,
+        undefined,
+      );
 
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
         MOCK_USER,
         mockUpdateData,
-        undefined
+        undefined,
       );
       expect(result).toEqual(mockUpdatedProfile);
     });
 
     it('should throw BadRequestException when username is already taken', async () => {
       mockUsersService.updateUserProfile.mockRejectedValue(
-        new BadRequestException('Username already taken')
+        new BadRequestException('Username already taken'),
       );
 
-      await expect(controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto))
-        .rejects
-        .toThrow(BadRequestException);
-      
+      await expect(
+        controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto),
+      ).rejects.toThrow(BadRequestException);
+
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
         MOCK_USER,
         mockUpdateData,
-        mockPhoto
+        mockPhoto,
       );
     });
 
     it('should throw BadRequestException when photo upload fails', async () => {
       mockUsersService.updateUserProfile.mockRejectedValue(
-        new BadRequestException('Failed to upload photo')
+        new BadRequestException('Failed to upload photo'),
       );
 
-      await expect(controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto))
-        .rejects
-        .toThrow(BadRequestException);
+      await expect(
+        controller.updateProfile(MOCK_USER, mockUpdateData, mockPhoto),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should handle partial updates', async () => {
@@ -351,14 +375,20 @@ describe('UsersController', () => {
         username: 'johndoe', // Keep original username
       };
 
-      mockUsersService.updateUserProfile.mockResolvedValue(partialUpdatedProfile);
+      mockUsersService.updateUserProfile.mockResolvedValue(
+        partialUpdatedProfile,
+      );
 
-      const result = await controller.updateProfile(MOCK_USER, partialUpdateData, undefined);
+      const result = await controller.updateProfile(
+        MOCK_USER,
+        partialUpdateData,
+        undefined,
+      );
 
       expect(usersService.updateUserProfile).toHaveBeenCalledWith(
         MOCK_USER,
         partialUpdateData,
-        undefined
+        undefined,
       );
       expect(result).toEqual(partialUpdatedProfile);
       expect(result.username).toBe('johndoe'); // Original username preserved

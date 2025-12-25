@@ -10,7 +10,7 @@ export class ContactController {
   @Post()
   @ApiOperation({ summary: 'Message has sent to the email' })
   @ApiResponse({ status: 200, description: 'Email sent successfully' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error'   })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
   async sendMessage(@Body() body: SendEmailDto) {
     await this.contactService.sendContactEmail(body);
     return { message: 'Email sent successfully' };

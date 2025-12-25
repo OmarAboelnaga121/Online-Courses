@@ -68,7 +68,10 @@ describe('RedisService', () => {
     it('should set up error handler', () => {
       new RedisService(configService);
 
-      expect(mockRedisClient.on).toHaveBeenCalledWith('error', expect.any(Function));
+      expect(mockRedisClient.on).toHaveBeenCalledWith(
+        'error',
+        expect.any(Function),
+      );
     });
   });
 
@@ -241,7 +244,9 @@ describe('RedisService', () => {
       const error = new Error('Pattern delete failed');
       mockRedisClient.keys.mockRejectedValue(error);
 
-      await expect(service.delByPattern(pattern)).rejects.toThrow('Pattern delete failed');
+      await expect(service.delByPattern(pattern)).rejects.toThrow(
+        'Pattern delete failed',
+      );
     });
 
     it('should handle del errors after finding keys', async () => {
@@ -262,7 +267,9 @@ describe('RedisService', () => {
       new RedisService(configService);
 
       // Simulate error event
-      const errorHandler = mockRedisClient.on.mock.calls.find(call => call[0] === 'error')[1];
+      const errorHandler = mockRedisClient.on.mock.calls.find(
+        (call) => call[0] === 'error',
+      )[1];
       errorHandler(error);
 
       expect(consoleSpy).toHaveBeenCalledWith('Redis Client Error:', error);

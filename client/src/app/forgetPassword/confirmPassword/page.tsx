@@ -20,8 +20,9 @@ export default function ConfirmPassword() {
             const response = await apiService.confirmPassword({ token, newPassword });
             console.log("Response:", response);
             router.push("/login");
-        } catch (error: any) {
-            setError(error.message || "Failed to reset password. Please try again.");
+        } catch (error) {
+            const errorMessage = (error as { message?: string })?.message || "Failed to reset password. Please try again.";
+            setError(errorMessage);
         }
     };
 

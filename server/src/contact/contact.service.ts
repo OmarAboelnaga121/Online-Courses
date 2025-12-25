@@ -7,10 +7,7 @@ import { SendEmailDto } from './dto/sendEmail.dto';
 export class ContactService {
   constructor(private readonly mailerService: MailerService) {}
 
-
-  async sendContactEmail(body : SendEmailDto) {
-    
-
+  async sendContactEmail(body: SendEmailDto) {
     return await this.mailerService.sendMail({
       from: process.env.MAIL_USER,
       to: process.env.MAIL_USER,

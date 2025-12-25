@@ -173,7 +173,7 @@ class ApiService {
       }
 
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed To get Instructor Review');
     }
   }
@@ -227,7 +227,7 @@ class ApiService {
       }
 
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to send mail');
     }
   }
@@ -247,7 +247,7 @@ class ApiService {
       }
 
       return response.json();
-    } catch (error) {
+    } catch {
       throw new Error('Failed to change password');
     }
   }
@@ -300,6 +300,58 @@ class ApiService {
     } catch (error) {
       console.error('Delete lesson error:', error);
       throw new Error('Failed to delete lesson');
+    }
+  }
+
+  async getPayments() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/Stripe/get-payments`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch payments');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Get payments error:', error);
+      throw new Error('Failed to get payments');
+    }
+  }
+
+  async getUser() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/users`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Get user error:', error);
+      throw new Error('Failed to get user');
+    }
+  }
+
+  async updateCourseStatus(courseId: string, status: boolean) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/courses/${courseId}/publish`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "published": status })
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update course status');
+      }
+      return response.json();
+    } catch (error) {
+      console.error('Update course status error:', error);
+      throw new Error('Failed to update course status');
     }
   }
 }
