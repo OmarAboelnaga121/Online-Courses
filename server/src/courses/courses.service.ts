@@ -172,6 +172,8 @@ export class CoursesService {
       await this.invalidateCoursesCache();
       await this.invalidateCourseCache(id);
       await this.redisService.del(`instructor:${course?.instructorId}`);
+      await this.redisService.del(`courses:published`);
+      await this.redisService.del(`courses:all`)
       await this.redisService.del(`user:${course?.instructorId}:comprehensive`);
 
       // Send rejection email

@@ -4,6 +4,7 @@ jest.mock('../prismaClient', () => ({
     user: {
       findUnique: jest.fn(),
       update: jest.fn(),
+      findMany: jest.fn(),
     },
     course: {
       findMany: jest.fn(),
@@ -368,6 +369,44 @@ describe('UsersService', () => {
         expect.any(String),
         600,
       );
+    });
+  });
+
+  describe('getAllUsers', () => {
+    it('should return cached users if available', async () => {
+      const mockUsers = [mockUser, { ...mockUser, id: 'user-2' }];
+      mockRedisService.get.mockResolvedValue(JSON.stringify(mockUsers));
+
+      const adminUser = { ...mockUser, role: 'admin' };
+      const result = await service.getAllUsers(adminUser as any);
+
+      expect(mockRedisService.get).toHaveBeenCalledWith('users');
+      expect(result).toEqual(mockUsers);
+      expect(mockPrisma.user.findMany).not.toHaveBeenCalled();
+    });
+
+    it('should fetch users from database and cache if not cached', async () => {
+      const mockUsers = [mockUser, { ...mockUser, id: 'user-2' }];
+      mockRedisService.get.mockResolvedValue(null);
+      mockPrisma.user.findMany.mockResolvedValue(mockUsers);
+
+      const adminUser = { ...mockUser, role: 'admin' };
+      const result = await service.getAllUsers(adminUser as any);
+
+      expect(mockPrisma.user.findMany).toHaveBeenCalled();
+      expect(mockRedisService.set).toHaveBeenCalledWith(
+        'users',
+        JSON.stringify(mockUsers),
+        600,
+      );
+      expect(result).toEqual(mockUsers);
+    });
+
+    it('should throw error if user is not admin', async () => {
+      await expect(service.getAllUsers(mockUser)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(mockPrisma.user.findMany).not.toHaveBeenCalled();
     });
   });
 });

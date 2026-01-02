@@ -28,6 +28,7 @@ jest.mock('stripe', () => {
 import { Test, TestingModule } from '@nestjs/testing';
 import { StripeService } from './stripe.service';
 import { ConfigService } from '@nestjs/config';
+import { RedisService } from '../redis/redis.service';
 import { ForbiddenException } from '@nestjs/common';
 import { UserDto } from '../auth/dto';
 import Stripe from 'stripe';
@@ -40,6 +41,10 @@ describe('StripeService', () => {
 
   const mockConfigService = {
     get: jest.fn(),
+  };
+
+  const mockRedisService = {
+    del: jest.fn(),
   };
 
   const mockUser: UserDto = {
@@ -68,6 +73,7 @@ describe('StripeService', () => {
       providers: [
         StripeService,
         { provide: ConfigService, useValue: mockConfigService },
+        { provide: RedisService, useValue: mockRedisService },
       ],
     }).compile();
 

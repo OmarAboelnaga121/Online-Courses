@@ -54,7 +54,7 @@ export default function Courses() {
         setFilteredCourses(filtered);
     }, [filters, courses]);
 
-    const getData = async() => {
+    const getData = async () => {
         try {
             setLoading(true);
             const data = await apiService.getPublishedCourses();
@@ -193,7 +193,7 @@ export default function Courses() {
                                     ✅ Already Enrolled
                                 </div>
                             ) : (
-                                <Link href={`/courses/${course.id}`} className="primaryBtn w-full text-center block h-full flex items-center justify-center text-sm sm:text-base">
+                                <Link href={`/courses/${course.id}`} className="primaryBtn w-full text-center h-full flex items-center justify-center text-sm sm:text-base">
                                     View Details
                                 </Link>
                             )}

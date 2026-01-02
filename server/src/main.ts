@@ -14,7 +14,10 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3001',
+    origin: [
+      process.env.FRONTEND_URL,
+      process.env.FRONTEND_URL_DEV,
+    ].filter(Boolean),
     credentials: true,
   });
 
@@ -29,14 +32,17 @@ async function bootstrap() {
     .addTag('Users', 'User management')
     .addTag('Stripe', 'Payment management')
     .addTag('Contact', '')
-    .addServer('http://localhost:3000', 'Local server')
+    .addServer(process.env.BACKEND_URL || 'http://localhost:3000', 'Server')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   // Security and optimization middleware
-  app.use(helmet());
+  app.use(helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: false,
+  }));
   app.use(cookieParser());
   app.use(compression());
 

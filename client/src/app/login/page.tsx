@@ -16,10 +16,9 @@ export default function Login() {
     if (authLoading) return;
 
     if (isLoggedIn === true) {
-
       router.push('/');
     }
-  })
+  }, [authLoading, isLoggedIn, router])
 
   const sendData = async (e: React.FormEvent) => {
     e.preventDefault();

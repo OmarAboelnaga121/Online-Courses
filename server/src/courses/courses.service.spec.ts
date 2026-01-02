@@ -26,6 +26,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CoursesService } from './courses.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { RedisService } from '../redis/redis.service';
+import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { CourseDto, LessonDto } from './dto';
 import { UserDto } from '../auth/dto';
@@ -49,6 +50,10 @@ describe('CoursesService', () => {
     delByPattern: jest.fn(),
   };
 
+  const mockMailerService = {
+    sendMail: jest.fn(),
+  };
+
   const mockUser: UserDto = {
     id: 'user-1',
     name: 'John Doe',
@@ -64,6 +69,7 @@ describe('CoursesService', () => {
         CoursesService,
         { provide: CloudinaryService, useValue: mockCloudinaryService },
         { provide: RedisService, useValue: mockRedisService },
+        { provide: MailerService, useValue: mockMailerService },
       ],
     }).compile();
 
