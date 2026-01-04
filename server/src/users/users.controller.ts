@@ -7,6 +7,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Header,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -264,8 +265,9 @@ export class UsersController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   @ApiCookieAuth()
+  @Header('Cache-Control', 'no-store, no-cache, must-revalidate')
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'All users retrieved successfully' })
+  @ApiResponse({ status: 200, description: 'All users retrieved successfully', headers: { 'Cache-Control': { description: 'no-store' } } })
   async getAllUsers(@User() user: UserDto) {
     return this.usersService.getAllUsers(user);
   }

@@ -34,19 +34,15 @@ class ApiService {
 
   async getCourseById(id: string): Promise<Course> {
     try {
-      console.log('Fetching course:', `${API_BASE_URL}/courses/${id}`);
       const response = await fetch(`${API_BASE_URL}/courses/${id}`, {
         credentials: 'include'
       });
-      console.log('Course response status:', response.status);
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Course fetch error:', errorText);
+        await response.text();
         throw new Error(`Failed to fetch course: ${response.status}`);
       }
       return response.json();
-    } catch (error) {
-      console.error('Course fetch exception:', error);
+    } catch {
       throw new Error('Failed to fetch course details');
     }
   }
@@ -81,7 +77,6 @@ class ApiService {
 
   async getInstructor(instructorId: string): Promise<Instructor> {
     try {
-      console.log('Fetching instructor:', `${API_BASE_URL}/users/instructor/${instructorId}`);
       const response = await fetch(`${API_BASE_URL}/users/instructor/${instructorId}`, {
         credentials: 'include'
       });
@@ -206,8 +201,7 @@ class ApiService {
       }
 
       return response.json();
-    } catch (error) {
-      console.error('Create course error:', error);
+    } catch {
       throw new Error('Failed to create course');
     }
   }
@@ -278,8 +272,7 @@ class ApiService {
       }
 
       return response.json();
-    } catch (error) {
-      console.error('Create lessons error:', error);
+    } catch {
       throw new Error('Failed to create lessons');
     }
   }
@@ -297,8 +290,7 @@ class ApiService {
       }
 
       return response.json();
-    } catch (error) {
-      console.error('Delete lesson error:', error);
+    } catch {
       throw new Error('Failed to delete lesson');
     }
   }
@@ -323,7 +315,8 @@ class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/users`, {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
+        cache: 'no-store'
       });
       if (!response.ok) {
         throw new Error('Failed to fetch user');
@@ -353,6 +346,19 @@ class ApiService {
       console.error('Update course status error:', error);
       throw new Error('Failed to update course status');
     }
+  }
+
+  async verifySession(sessionId: string): Promise<{ success: boolean }> {
+    const response = await fetch(`${API_BASE_URL}/Stripe/verify-session`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to verify session');
+    }
+    return response.json();
   }
 }
 

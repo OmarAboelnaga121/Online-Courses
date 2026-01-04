@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,8 +13,23 @@ export default function SingleCourse() {
     const params = useParams();
     const courseId = params.id as string;
     const [activeTab, setActiveTab] = useState('overview');
-    const { userProfile } = useAuth();
+    const { userProfile, refreshAuth } = useAuth();
     const { course, reviews, instructor, loading, error, getAverageRating } = useCourse(courseId);
+
+    // Refresh user profile when component mounts (to catch post-payment enrollments)
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        if (sessionId) {
+            // Verify payment and enroll user
+            apiService.verifySession(sessionId).then(() => {
+                refreshAuth();
+            }).catch(err => {
+                console.error('Failed to verify payment:', err);
+            });
+        }
+    }, [refreshAuth]);
 
     const checkOutCourse = async () => {
         try {
@@ -142,7 +157,7 @@ export default function SingleCourse() {
                                 height={200}
                                 className="object-cover"
                             />
-                            {userProfile?.enrolledCourses?.some(enrolledCourse => enrolledCourse.id === course.id) && userProfile?.role === 'STUDENT' ?
+                            {userProfile?.enrolledCourses?.some(enrolledCourse => enrolledCourse.id === course.id) ?
                                 <Link
                                     href={`/course-player/${course.id}`}
                                     className="primaryBtn w-full block text-center"

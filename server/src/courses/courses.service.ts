@@ -155,17 +155,12 @@ export class CoursesService {
       throw new ForbiddenException('Not authorized to update this course');
     }
 
-    if (course.published === published) {
-      throw new BadRequestException(
-        'Course status is already ' + (published ? 'published' : 'draft'),
-      );
-    }
-
     const instructor = await prisma.user.findUnique({
       where: { id: course.instructorId },
     });
 
-    if (course.published === false) {
+    // If rejecting a draft course, delete it
+    if (course.published === false && published === false) {
       const deleteCourse = await prisma.course.delete({
         where: { id },
       });

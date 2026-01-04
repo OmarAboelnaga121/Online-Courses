@@ -35,14 +35,15 @@ export default function AdminOverviewPage() {
     const handleRequests = async (courseId: string, status : boolean) => {
         try {
             await apiService.updateCourseStatus(courseId, status);
-            if (status) {
-                const courseToUpdate = onRequestCourses.find(c => c.id === courseId);
-                if (courseToUpdate) setCourses([...courses, { ...courseToUpdate, published: true }]);
-            }
-            setOnRequestCourses(onRequestCourses.filter(c => c.id !== courseId));
+            
+            // Refresh the courses list after update
+            const allCourses = await apiService.getCourses();
+            setCourses(allCourses.filter(course => course.published));
+            setOnRequestCourses(allCourses.filter(course => !course.published));
 
         } catch (error) {
-            console.error('Error accepting course:', error);
+            console.error('Error updating course:', error);
+            alert('Failed to update course status');
         }
     };
 

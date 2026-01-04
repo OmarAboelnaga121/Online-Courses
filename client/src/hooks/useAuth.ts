@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { UserProfile } from '@/types';
 import { apiService } from '@/services/api';
 
@@ -7,22 +7,22 @@ export const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const profile = await apiService.getUserProfile();
-        setUserProfile(profile);
-        setIsLoggedIn(!!profile);
-      } catch {
-        setUserProfile(null);
-        setIsLoggedIn(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
+  const fetchProfile = useCallback(async () => {
+    try {
+      const profile = await apiService.getUserProfile();
+      setUserProfile(profile);
+      setIsLoggedIn(!!profile);
+    } catch {
+      setUserProfile(null);
+      setIsLoggedIn(false);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { userProfile, isLoggedIn, loading };
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  return { userProfile, isLoggedIn, loading, refreshAuth: fetchProfile };
 };

@@ -13,11 +13,9 @@ export default function ForgetPassword() {
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
         setError("")
-        console.log("Reset password for:", emailBody);
 
         try {
-            const response = await apiService.forgetPassword({email: emailBody});
-            console.log("Response:", response);
+            await apiService.forgetPassword({email: emailBody});
             router.push("/forgetPassword/confirmPassword");
         } catch {
             // setError(error.message || "Failed to send reset link. Please try again.");

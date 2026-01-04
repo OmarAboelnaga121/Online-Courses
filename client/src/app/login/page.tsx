@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +31,7 @@ export default function Login() {
         setErrors(["Email and password are required"]);
         return;
       }
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,9 +57,9 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-between items-center">
-      <div className="flex-1 flex justify-center">
-        <div className="w-full max-w-md">
+    <div className="flex flex-col-reverse md:flex-row justify-between items-center">
+        <div className="flex-1 flex justify-center w-full px-7">
+          <div className="w-full max-w-md">
           <h1 className="text-3xl font-bold mb-8 text-gray-800">Welcome Back</h1>
           {errors.length > 0 && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">

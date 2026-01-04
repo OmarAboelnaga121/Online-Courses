@@ -8,6 +8,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function Register() {
 
   const [name, setName] = useState<string>("");
@@ -50,7 +52,7 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         body: formData,
       });
@@ -68,7 +70,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex flex-col-reverse md:flex-row justify-between items-center">
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-md">
             <h1 className="text-3xl font-bold mb-8 text-gray-800">Create Your Account</h1>

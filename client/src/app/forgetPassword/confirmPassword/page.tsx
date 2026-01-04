@@ -14,11 +14,9 @@ export default function ConfirmPassword() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
-        console.log("Resetting password with token:", token);
 
         try {
-            const response = await apiService.confirmPassword({ token, newPassword });
-            console.log("Response:", response);
+            await apiService.confirmPassword({ token, newPassword });
             router.push("/login");
         } catch (error) {
             const errorMessage = (error as { message?: string })?.message || "Failed to reset password. Please try again.";

@@ -66,8 +66,8 @@ export class StripeService {
           },
         ],
         mode: 'payment',
-        success_url: this.configService.get<string>('FRONTEND_URL'),
-        cancel_url: this.configService.get<string>('FRONTEND_URL'),
+        success_url: `${this.configService.get<string>('FRONTEND_URL')}/courses/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${this.configService.get<string>('FRONTEND_URL')}/courses/${courseId}`,
         client_reference_id: user.id,
         customer_email: user.email,
         metadata: {
@@ -104,7 +104,20 @@ export class StripeService {
       }
 
       const { courseId, userId } = session.metadata;
-      const amount = session.amount_total ? session.amount_total / 100 : 0; // Convert from cents to dollars
+      const amount = session.amount_total ? session.amount_total / 100 : 0;
+
+      // Check if payment already exists to avoid duplicates
+      const existingPayment = await prisma.payment.findFirst({
+        where: {
+          userId: userId,
+          courseId: courseId,
+        },
+      });
+
+      if (existingPayment) {
+        console.log('Payment already processed');
+        return existingPayment;
+      }
 
       // Store payment in database
       const payment = await prisma.payment.create({
@@ -146,6 +159,22 @@ export class StripeService {
     } catch (error) {
       console.error('Error handling payment success:', error);
       throw new Error(`Failed to process payment success: ${error.message}`);
+    }
+  }
+
+  async verifySession(sessionId: string) {
+    try {
+      const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+      
+      if (session.payment_status === 'paid') {
+        await this.handlePaymentSuccess(session);
+        return { success: true, session };
+      }
+      
+      return { success: false, session };
+    } catch (error) {
+      console.error('Error verifying session:', error);
+      throw new Error(`Failed to verify session: ${error.message}`);
     }
   }
 

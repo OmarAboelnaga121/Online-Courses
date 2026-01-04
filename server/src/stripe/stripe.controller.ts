@@ -82,6 +82,20 @@ export class StripeController {
     }
   }
 
+  @Post('verify-session')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiCookieAuth()
+  @ApiOperation({ summary: 'Verify Stripe session and process payment' })
+  @ApiResponse({ status: 200, description: 'Session verified successfully' })
+  async verifySession(@Body() body: { sessionId: string }) {
+    try {
+      const result = await this.stripeService.verifySession(body.sessionId);
+      return result;
+    } catch (error) {
+      throw new BadRequestException(`Failed to verify session: ${error.message}`);
+    }
+  }
+
   @Post('webhook')
   @ApiOperation({ summary: 'Handle Stripe webhook events' })
   async handleWebhook(

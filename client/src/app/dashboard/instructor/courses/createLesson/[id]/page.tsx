@@ -20,7 +20,6 @@ export default function CreateLesson() {
 
     useEffect(() => {
         if (params.id) {
-            console.log(params.id);
             getLessons(params.id as string);
         }
     }, [params.id]);
@@ -51,8 +50,7 @@ export default function CreateLesson() {
             setVideoFile(null);
 
             alert("Lesson created successfully!");
-        } catch (error) {
-            console.error("Error creating lesson:", error);
+        } catch {
             alert("Failed to create lesson. Please try again.");
         } finally {
             setIsSubmitting(false);
@@ -64,8 +62,7 @@ export default function CreateLesson() {
             await apiService.deleteLesson(lessonId, params.id as string);
             await getLessons(params.id as string);
             alert("Lesson deleted successfully!");
-        } catch (error) {
-            console.error("Error deleting lesson:", error);
+        } catch {
             alert("Failed to delete lesson. Please try again.");
         }
     };
