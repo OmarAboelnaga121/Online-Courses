@@ -78,8 +78,6 @@ export class CoursesController {
   }
 
   @Get(':id/lessons')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiCookieAuth()
   @ApiOperation({ summary: 'Get all lessons for a course' })
   @ApiResponse({
     status: 200,

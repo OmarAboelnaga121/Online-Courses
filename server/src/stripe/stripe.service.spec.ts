@@ -11,6 +11,7 @@ jest.mock('../prismaClient', () => ({
     },
     payment: {
       create: jest.fn(),
+      findFirst: jest.fn(),
     },
   },
 }));
@@ -152,8 +153,8 @@ describe('StripeService', () => {
           },
         ],
         mode: 'payment',
-        success_url: 'http://localhost:3000',
-        cancel_url: 'http://localhost:3000',
+        success_url: `http://localhost:3000/courses/${courseId}?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `http://localhost:3000/courses/${courseId}`,
         client_reference_id: mockUser.id,
         customer_email: mockUser.email,
         metadata: {
@@ -225,9 +226,11 @@ describe('StripeService', () => {
     };
 
     it('should handle payment success successfully', async () => {
+      mockPrisma.payment.findFirst.mockResolvedValue(null);
       mockPrisma.payment.create.mockResolvedValue(mockPayment);
       mockPrisma.user.update.mockResolvedValue({});
       mockPrisma.course.update.mockResolvedValue({});
+      mockRedisService.del.mockResolvedValue(1);
 
       const result = await service.handlePaymentSuccess(mockSession);
 
@@ -277,6 +280,7 @@ describe('StripeService', () => {
     });
 
     it('should handle database errors', async () => {
+      mockPrisma.payment.findFirst.mockResolvedValue(null);
       mockPrisma.payment.create.mockRejectedValue(new Error('Database error'));
 
       await expect(service.handlePaymentSuccess(mockSession)).rejects.toThrow(
@@ -290,12 +294,14 @@ describe('StripeService', () => {
         amount_total: 0,
       } as unknown as Stripe.Checkout.Session;
 
+      mockPrisma.payment.findFirst.mockResolvedValue(null);
       mockPrisma.payment.create.mockResolvedValue({
         ...mockPayment,
         amount: 0,
       });
       mockPrisma.user.update.mockResolvedValue({});
       mockPrisma.course.update.mockResolvedValue({});
+      mockRedisService.del.mockResolvedValue(1);
 
       const result = await service.handlePaymentSuccess(zeroAmountSession);
 
@@ -312,12 +318,14 @@ describe('StripeService', () => {
         amount_total: null,
       } as unknown as Stripe.Checkout.Session;
 
+      mockPrisma.payment.findFirst.mockResolvedValue(null);
       mockPrisma.payment.create.mockResolvedValue({
         ...mockPayment,
         amount: 0,
       });
       mockPrisma.user.update.mockResolvedValue({});
       mockPrisma.course.update.mockResolvedValue({});
+      mockRedisService.del.mockResolvedValue(1);
 
       await service.handlePaymentSuccess(nullAmountSession);
 

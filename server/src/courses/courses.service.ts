@@ -17,20 +17,7 @@ export class CoursesService {
   ) {}
 
   async getCourses() {
-    // Try to get from cache first
-    const cacheKey = 'courses:all';
-    const cachedCourses = await this.redisService.get(cacheKey);
-
-    if (cachedCourses) {
-      return JSON.parse(cachedCourses);
-    }
-
-    // If not in cache, fetch from database
     const courses = await prisma.course.findMany();
-
-    // Cache the result for 5 minutes (300 seconds)
-    await this.redisService.set(cacheKey, JSON.stringify(courses), 300);
-
     return courses;
   }
 

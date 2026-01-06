@@ -18,12 +18,13 @@ export default function AdminOverviewPage() {
             try {
                 const allCourses = await apiService.getCourses();
                 const payments = await apiService.getPayments();
+                const users = await apiService.getUser();
                 // const users = await apiService.getUser();
 
                 setCourses(allCourses.filter(course => course.published));
                 setOnRequestCourses(allCourses.filter(course => !course.published));
                 setPayments(payments);
-                // setUsers(users);
+                setUsers(users);
 
             } catch (error) {
                 console.error('Error fetching courses:', error);
@@ -75,7 +76,7 @@ export default function AdminOverviewPage() {
                     <div className="flex items-center justify-between">
                         <div>
                             <h3 className="text-lg font-semibold text-gray-800 mb-1">Total Users</h3>
-                            <p className="text-3xl font-bold text-purple-600">{userProfile?.statistics.totalPayments || 0}</p>
+                            <p className="text-3xl font-bold text-purple-600">{users.length || 0}</p>
                             <p className="text-sm text-gray-500 mt-1">Total Users</p>
                         </div>
                         <div className="text-purple-500 text-3xl">🧾</div>

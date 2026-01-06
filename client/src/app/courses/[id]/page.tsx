@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +11,7 @@ import ErrorMessage from '@/app/components/ui/ErrorMessage';
 
 export default function SingleCourse() {
     const params = useParams();
+    const route = useRouter();
     const courseId = params.id as string;
     const [activeTab, setActiveTab] = useState('overview');
     const { userProfile, refreshAuth } = useAuth();
@@ -28,6 +29,11 @@ export default function SingleCourse() {
             }).catch(err => {
                 console.error('Failed to verify payment:', err);
             });
+        }
+
+        if(!userProfile){
+            route.push('/login');
+            return;
         }
     }, [refreshAuth]);
 

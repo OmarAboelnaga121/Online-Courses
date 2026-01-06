@@ -49,7 +49,7 @@ export default function CreateCourse() {
             <form onSubmit={submitCourse} className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-10 space-y-6">
                 <input onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Course Title" className="input" />
                 <input onChange={(e) => setDescription(e.target.value)} type="text" placeholder="Course Description" className="input" />
-                <select aria-label="Category" onChange={(e) => setCategory(e.target.value.toLowerCase())} id="category" name="category" className="input">
+                <select aria-label="Category" onChange={(e) => setCategory(e.target.value)} id="category" name="category" className="input">
                     <option>Category</option>
                     <option>Programming</option>
                     <option>Marketing</option>
@@ -61,7 +61,7 @@ export default function CreateCourse() {
                 <input onChange={(e) => setOverView(e.target.value)} type="text" placeholder="Course Overview" className="input" />
                 <input onChange={(e) => setWhatYouWillLearn(e.target.value)} type="text" placeholder="What You Will Learn" className="input" />
                 <p className="text-sm text-gray-500">To make one point please put &quot;,&quot; after each</p>
-                <select aria-label="Language" onChange={(e) => setLanguage(e.target.value.toLowerCase())} id="language" name="language" className="input">
+                <select aria-label="Language" onChange={(e) => setLanguage(e.target.value)} id="language" name="language" className="input">
                     <option>Language</option>
                     <option>English</option>
                     <option>Spanish</option>

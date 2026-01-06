@@ -250,20 +250,11 @@ export class UsersService {
   }
 
   async getAllUsers(user: UserDto) {
-    // Try to get from cache first
-    const cacheKey = `users`;
-    const cachedUser = await this.redisService.get(cacheKey);
-
-    if (cachedUser) {
-      return JSON.parse(cachedUser);
-    }
-
     if (user.role !== 'admin') {
       throw new BadRequestException('You are not authorized to get all users');
     }
 
     const users = await prisma.user.findMany();
-    await this.redisService.set(cacheKey, JSON.stringify(users), 600);
     return users;
   }
 }
