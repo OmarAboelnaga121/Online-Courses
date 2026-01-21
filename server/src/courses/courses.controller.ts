@@ -36,7 +36,7 @@ import { Throttle } from '@nestjs/throttler';
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(private readonly coursesService: CoursesService) { }
 
   @Get()
   @ApiOperation({ summary: 'Get all courses' })

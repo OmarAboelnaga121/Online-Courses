@@ -1,6 +1,6 @@
 import { Course, UserProfile, Review, Instructor, EmailContactBody, CreateCourse, confirmPasswordBody } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 class ApiService {
   async getCourses(): Promise<Course[]> {
@@ -277,7 +277,7 @@ class ApiService {
     }
   }
 
-  async deleteLesson(lessonId: string, courseId : string) {
+  async deleteLesson(lessonId: string, courseId: string) {
     try {
       const response = await fetch(`${API_BASE_URL}/courses/${courseId}/lessons/${lessonId}`, {
         method: 'DELETE',

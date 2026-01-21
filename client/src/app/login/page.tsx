@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -58,8 +58,8 @@ export default function Login() {
 
   return (
     <div className="flex flex-col-reverse md:flex-row justify-between items-center">
-        <div className="flex-1 flex justify-center w-full px-7">
-          <div className="w-full max-w-md">
+      <div className="flex-1 flex justify-center w-full px-7">
+        <div className="w-full max-w-md">
           <h1 className="text-3xl font-bold mb-8 text-gray-800">Welcome Back</h1>
           {errors.length > 0 && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">

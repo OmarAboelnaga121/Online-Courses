@@ -152,6 +152,14 @@ export class StripeService {
         },
       });
 
+      // Invalidate course-related caches so updated enrollment is visible
+      await this.redisService.del(`course:${courseId}`);
+      await this.redisService.del(`course:${courseId}:lessons`);
+      await this.redisService.del(`course:${courseId}:reviews`);
+      // Also invalidate published/all courses caches to be safe
+      await this.redisService.del(`courses:published`);
+      await this.redisService.del(`courses:all`);
+
       // Invalidate user's comprehensive profile cache
       await this.redisService.del(`user:${userId}:comprehensive`);
 

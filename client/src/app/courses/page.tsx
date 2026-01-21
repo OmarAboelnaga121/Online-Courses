@@ -29,7 +29,7 @@ export default function Courses() {
     const languages = ['All', 'English', 'Spanish', 'French', 'German'];
     const priceRanges = ['All', 'Free', '$1-$50', '$51-$100', '$100+'];
 
-    
+
     useEffect(() => {
         let filtered = courses;
 
@@ -71,8 +71,8 @@ export default function Courses() {
 
     const isEnrolled = (courseId: string) => {
         if (!userProfile) return false;
-        return userProfile.enrolledCourses?.some(course => course.id === courseId) || 
-        courses.find(c => c.id === courseId)?.studentsEnrolled?.includes(userProfile.id);
+        return userProfile.enrolledCourses?.some(course => course.id === courseId) ||
+            courses.find(c => c.id === courseId)?.studentsEnrolled?.includes(userProfile.id);
     };
 
     useEffect(() => {
@@ -85,7 +85,7 @@ export default function Courses() {
     return (
         <div className="flex flex-col lg:flex-row gap-6 p-4 lg:p-6">
             {/* Mobile Filter Toggle */}
-            <button 
+            <button
                 onClick={() => setShowFilters(!showFilters)}
                 className="lg:hidden bg-blue-600 text-white px-4 py-2 rounded-lg mb-4"
             >
@@ -93,11 +93,10 @@ export default function Courses() {
             </button>
 
             {/* Filter Sidebar */}
-            <div className={`w-full lg:w-64 bg-white rounded-lg shadow-md p-4 h-fit ${
-                showFilters ? 'block' : 'hidden lg:block'
-            }`}>
+            <div className={`w-full lg:w-64 bg-white rounded-lg shadow-md p-4 h-fit ${showFilters ? 'block' : 'hidden lg:block'
+                }`}>
                 <h2 className="font-bold text-xl mb-4">Filters</h2>
-                
+
                 {/* Category Filter */}
                 <div className="mb-6">
                     <h3 className="font-semibold mb-3">Category</h3>
@@ -105,12 +104,11 @@ export default function Courses() {
                         {categories.map((category) => (
                             <button
                                 key={category}
-                                onClick={() => setFilters({...filters, category})}
-                                className={`w-full text-left p-2 rounded-md transition-colors duration-200 ${
-                                    filters.category === category
+                                onClick={() => setFilters({ ...filters, category })}
+                                className={`w-full text-left p-2 rounded-md transition-colors duration-200 ${filters.category === category
                                         ? 'bg-blue-600 text-white'
                                         : 'hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 {category}
                             </button>
@@ -125,12 +123,11 @@ export default function Courses() {
                         {languages.map((language) => (
                             <button
                                 key={language}
-                                onClick={() => setFilters({...filters, language})}
-                                className={`w-full text-left p-2 rounded-md transition-colors duration-200 ${
-                                    filters.language === language
+                                onClick={() => setFilters({ ...filters, language })}
+                                className={`w-full text-left p-2 rounded-md transition-colors duration-200 ${filters.language === language
                                         ? 'bg-blue-600 text-white'
                                         : 'hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 {language}
                             </button>
@@ -145,12 +142,11 @@ export default function Courses() {
                         {priceRanges.map((priceRange) => (
                             <button
                                 key={priceRange}
-                                onClick={() => setFilters({...filters, price: priceRange})}
-                                className={`w-full text-left p-2 rounded-md transition-colors duration-200 ${
-                                    filters.price === priceRange
+                                onClick={() => setFilters({ ...filters, price: priceRange })}
+                                className={`w-full text-left p-2 rounded-md transition-colors duration-200 ${filters.price === priceRange
                                         ? 'bg-blue-600 text-white'
                                         : 'hover:bg-gray-100'
-                                }`}
+                                    }`}
                             >
                                 {priceRange}
                             </button>
@@ -174,31 +170,31 @@ export default function Courses() {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                         {filteredCourses.map((course) => (
-                    <div key={course.id} className="p-4 bg-white rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl w-full">
-                        <Link href={`/courses/${course.id}`}>
-                            <Image src={course.thumbnail} alt={course.title} width={300} height={200} className="w-full h-32 sm:h-48 object-cover rounded-md mb-3 cursor-pointer" />
-                        </Link>
-                        <Link href={`/courses/${course.id}`}>
-                            <h3 className="font-semibold text-lg mb-2 hover:text-blue-600 cursor-pointer">{course.title}</h3>
-                        </Link>
-                        <p className="text-gray-600 mb-3 line-clamp-2 h-12 text-sm sm:text-base">{course.description}</p>
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
-                            <span className="text-blue-600 font-bold text-lg">${course.price}</span>
-                            <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">{course.category}</span>
-                        </div>
-                        
-                        <div className="h-10">
-                            {isLoggedIn && isEnrolled(course.id) ? (
-                                <div className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-center h-full flex items-center justify-center">
-                                    ✅ Already Enrolled
-                                </div>
-                            ) : (
-                                <Link href={`/courses/${course.id}`} className="primaryBtn w-full text-center h-full flex items-center justify-center text-sm sm:text-base">
-                                    View Details
+                            <div key={course.id} className="p-4 bg-white rounded-lg shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl w-full">
+                                <Link href={`/courses/${course.id}`}>
+                                    <Image src={course.thumbnail} alt={course.title} width={300} height={200} className="w-full h-32 sm:h-48 object-cover rounded-md mb-3 cursor-pointer" />
                                 </Link>
-                            )}
-                        </div>
-                    </div>
+                                <Link href={`/courses/${course.id}`}>
+                                    <h3 className="font-semibold text-lg mb-2 hover:text-blue-600 cursor-pointer">{course.title}</h3>
+                                </Link>
+                                <p className="text-gray-600 mb-3 line-clamp-2 h-12 text-sm sm:text-base">{course.description}</p>
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
+                                    <span className="text-blue-600 font-bold text-lg">${course.price}</span>
+                                    <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">{course.category}</span>
+                                </div>
+
+                                <div className="h-10">
+                                    {isLoggedIn && isEnrolled(course.id) ? (
+                                        <div className="bg-green-100 border border-green-400 text-green-700 px-3 py-2 rounded text-center h-full flex items-center justify-center">
+                                            ✅ Already Enrolled
+                                        </div>
+                                    ) : (
+                                        <Link href={`/courses/${course.id}`} className="primaryBtn w-full text-center h-full flex items-center justify-center text-sm sm:text-base">
+                                            View Details
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
                         ))}
                     </div>
                 )}

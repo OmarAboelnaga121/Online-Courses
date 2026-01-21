@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { useCourse } from '@/hooks/useCourse';
 import { apiService } from '@/services/api';
 import LoadingSpinner from '@/app/components/ui/LoadingSpinner';
@@ -14,32 +14,37 @@ export default function SingleCourse() {
     const route = useRouter();
     const courseId = params.id as string;
     const [activeTab, setActiveTab] = useState('overview');
-    const { userProfile, refreshAuth } = useAuth();
+    const { userProfile, loading: authLoading, refreshAuth } = useAuth();
     const { course, reviews, instructor, loading, error, getAverageRating } = useCourse(courseId);
 
-    // Refresh user profile when component mounts (to catch post-payment enrollments)
+    // Verify payment session
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('session_id');
-        
+
         if (sessionId) {
-            // Verify payment and enroll user
             apiService.verifySession(sessionId).then(() => {
                 refreshAuth();
             }).catch(err => {
                 console.error('Failed to verify payment:', err);
             });
         }
-
-        if(!userProfile){
-            route.push('/login');
-            return;
-        }
     }, [refreshAuth]);
+
+    // Handle authentication redirect
+    useEffect(() => {
+        if (!authLoading && !userProfile) {
+            route.push('/login');
+        }
+    }, [userProfile, authLoading, route]);
 
     const checkOutCourse = async () => {
         try {
-            if (userProfile?.role !== 'student') {
+            if (!userProfile) {
+                route.push('/login');
+                return;
+            }
+            if (userProfile.role !== 'student') {
                 alert("You are not authorized to purchase this course.")
                 return;
             }
@@ -55,7 +60,7 @@ export default function SingleCourse() {
         document.getElementById(tab)?.scrollIntoView({ behavior: 'smooth' });
     }
 
-    if (loading) return <LoadingSpinner />;
+    if (loading || authLoading) return <LoadingSpinner />;
     if (error) return <ErrorMessage message={error} />;
 
     return (

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Course } from '@/types';
 import { apiService } from '@/services/api';
+import { useEffect, useState } from "react";
 
 const categories = [
   {
@@ -53,19 +54,22 @@ const testimonials = [
 ]
 
 export default async function Home() {
-  // const [courses, useCourses] = useState<coursesType[]>([])
+  const [courses, setCourses] = useState<Course[]>([])
 
-  const getCourses = async () => {
+  useEffect(() => {
+    const getCourses = async () => {
     try {
       const data = await apiService.getPublishedCourses();
-      return data.slice(0, 3);
+      setCourses(data.slice(0, 3));
     } catch (error) {
       console.error('Failed to fetch courses:', error);
       return [];
     }
   }
+  }, []);
 
-  const courses = await getCourses()
+  
+
 
   return (
     <div className="flex flex-col gap-10 justify-center text-center">

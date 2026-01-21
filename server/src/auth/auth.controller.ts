@@ -30,7 +30,7 @@ import { ForgotPasswordDto, ResetPasswordDto } from './dto';
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('register')
   @UseInterceptors(FileInterceptor('photo'))

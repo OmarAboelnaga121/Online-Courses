@@ -29,7 +29,7 @@ import { User } from '../auth/decorators/user.decorator';
 import { UserDto } from '../auth/dto';
 import { CreateCheckoutSessionDto } from './dto/order.dto';
 
-@ApiTags('stripe')
+@ApiTags('Stripe')
 @Controller('Stripe')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class StripeController {

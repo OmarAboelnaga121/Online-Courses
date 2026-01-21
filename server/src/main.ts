@@ -20,6 +20,12 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   });
 
+  // CRITICAL: Increase payload limits for large video uploads
+  // Default is 100kb which causes 413/401 errors for videos
+  const { json, urlencoded } = require('body-parser');
+  app.use(json({ limit: '1000mb' }));
+  app.use(urlencoded({ limit: '1000mb', extended: true }));
+
   const config = new DocumentBuilder()
     .setTitle('Online Course (EduFlex)')
     .setDescription('The Documentation of Online Courses Website')
@@ -30,7 +36,7 @@ async function bootstrap() {
     .addTag('Courses', 'Course management')
     .addTag('Users', 'User management')
     .addTag('Stripe', 'Payment management')
-    .addTag('Contact', '')
+    .addTag('Contact', 'Contact management')
     .addServer(process.env.BACKEND_URL || 'http://localhost:3000', 'Server')
     .build();
 

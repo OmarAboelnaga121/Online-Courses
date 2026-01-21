@@ -33,7 +33,7 @@ export default function CoursePlayerPage() {
             router.push('/courses');
         }
 
-    }, [course, lessons]);
+    }, [course, lessons, userProfile]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
